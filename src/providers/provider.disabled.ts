@@ -4,7 +4,7 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
-import {ImageDescriptor, ImageProvider} from './provider';
+import { ImageDescriptor, ImageProvider } from './provider';
 
 export default class DisabledImageProvider implements ImageProvider<ImageDescriptor> {
 

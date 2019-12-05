@@ -6,7 +6,7 @@
 
 import {ImageDescriptor, ImageProvider} from './provider';
 import FileInput from '../components/fileinput';
-import LocalImageDescriptor from './local.descriptor';
+import LocalImageDescriptor from './provider.local.descriptor';
 
 export default class LocalImageProvider implements ImageProvider<LocalImageDescriptor> {
 

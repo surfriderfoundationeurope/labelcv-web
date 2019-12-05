@@ -5,9 +5,9 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
-import {ImageDescriptor, ImageProvider} from './provider';
-import LocalImageProvider from './local.provider';
-import DisabledImageProvider from './disabled.provider';
+import { ImageDescriptor, ImageProvider } from '../providers/provider';
+import LocalImageProvider from '../providers/provider.local';
+import DisabledImageProvider from '../providers/provider.disabled';
 
 class ImageProviderService {
 

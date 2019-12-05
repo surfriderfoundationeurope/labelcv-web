@@ -25,7 +25,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import {imageProviderService} from '../providers/provider.service';
+import { imageProviderService } from '../services/provider.service';
 
 @Component({})
 export default class Upload extends Vue {

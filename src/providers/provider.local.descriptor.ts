@@ -4,7 +4,7 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
-import {ImageDescriptor} from './provider';
+import { ImageDescriptor } from './provider';
 
 export default class LocalImageDescriptor implements ImageDescriptor {
 
