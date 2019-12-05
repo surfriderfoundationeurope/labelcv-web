@@ -8,6 +8,8 @@
 import Vue, { VNode } from 'vue';
 import Component from 'vue-class-component';
 
+import SUPPORTED_EXTENSIONS from '../models/image.supported';
+
 @Component({})
 export default class FileInput extends Vue {
 
@@ -22,14 +24,15 @@ export default class FileInput extends Vue {
             attrs: {
                 type: 'file',
                 multiple: true,
-                accept: '.png, .jpg, .jpeg',
+                accept: SUPPORTED_EXTENSIONS.join(','),
             },
             style: {display: 'none'},
         });
     }
 
     /** Mount point, trigger file dialog. */
-    protected mounted() {
+    public getFiles(resolve: (value?: Blob[] | PromiseLike<Blob[]> | undefined) => void) {
+        this.resolve = resolve;
         const input = this.$refs.input;
         if (input instanceof HTMLElement) {
             input.click();
@@ -40,6 +43,7 @@ export default class FileInput extends Vue {
     private onFileChange(e: any) {
         if (this.resolve) {
             this.resolve(e.target.files);
+            this.resolve = undefined;
         }
     }
 

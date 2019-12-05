@@ -4,9 +4,20 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
-import { ImageDescriptor } from './provider';
+import ImageDescriptor from './image.descriptor';
 
-export default class LocalImageDescriptor implements ImageDescriptor {
+export default class BlobImageDescriptor implements ImageDescriptor {
+
+    /**
+     * Static factory methods for creating a collection of
+     * descriptors from a given collection of blob.
+     *
+     * @param urls 
+     */
+    public static fromBlobs(blobs: Blob[]): BlobImageDescriptor[] {
+        return blobs
+            .map((blob) => new BlobImageDescriptor(blob));
+    }
 
     /** Local file as <input> value. */
     public descriptor: Blob;

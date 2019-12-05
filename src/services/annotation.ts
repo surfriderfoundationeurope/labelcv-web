@@ -5,7 +5,7 @@
 
 import axios, { AxiosInstance } from 'axios';
 
-import { ImageDescriptor } from '../providers/provider';
+import ImageDescriptor from '../models/image.descriptor';
 
 class AnnotationService {
 

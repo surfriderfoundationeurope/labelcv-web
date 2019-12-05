@@ -1,22 +1,24 @@
 <template>
   <div id="upload">
-    <div id="upload-provider">
+    <div id="upload-provider" v-if="!uploading">
       <ul class="upload-provider-list">
         <li
-            class="upload-provider-item"
-            v-for="provider in providers"
-            v-bind:key="provider"
-            @click="onClick(provider)">
-          <img class="upload-provider-item-icon" :src="`/images/providers/${provider.toLowerCase()}.png`" />
+          class="upload-provider-item"
+          v-for="provider in providers"
+          v-bind:key="provider"
+          @click="onClick(provider)"
+        >
+          <img
+            class="upload-provider-item-icon"
+            :src="`/images/providers/${provider.toLowerCase()}.png`"
+          />
           <div class="upload-provider-item-label">{{ provider }}</div>
         </li>
       </ul>
     </div>
-    <div id="upload-container">
-        
-    </div>
-    <div class="preview">
-        <img id="preview-container" />
+    <div id="upload-provider-container"></div>
+    <div id="upload-progress" v-if="uploading">
+        <!-- TODO: Add progress bar -->
     </div>
   </div>
 </template>
@@ -25,30 +27,55 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import { imageProviderService } from '@/services/provider.service';
-import { uploadService } from '@/services/upload.service';
+import { Event } from '@/models/event';
+import { eventService } from '@/services/event';
+import { imageProviderService } from '@/services/provider';
+import { uploadService } from '@/services/upload';
 
 @Component({})
 export default class Upload extends Vue {
+  /** Flag that indicates if currently uploading. */
+  private uploading: boolean;
 
+  /** List of supported image provider. */
   private providers: string[];
 
+  /** Default constructor. */
   constructor() {
     super();
     this.providers = imageProviderService.getAvailableImageProvider();
+    this.uploading = false;
   }
 
+  private mounted(): void {
+    imageProviderService.register('#upload-provider-container');
+    eventService.on(Event.UPLOADING, this.onUploadingEvent);
+    eventService.on(Event.UPLOADED, this.onUploadedEvent);
+  }
+
+  private onUploadingEvent() {
+    this.uploading = true;
+  }
+
+  private onUploadedEvent() {
+    this.uploading = false;  
+  }
+
+  /**
+   * Provider click listener method.
+   *
+   * @param provider Target provider that has been clicked.
+   */
   private async onClick(provider: string) {
-      const imageProvider = imageProviderService.getImageProvider(provider);
-      if (imageProvider) {
-        const descriptors = await imageProvider.getImages('#upload-container');
-        for (const descriptor of descriptors) {
-            // TODO: Consider adding monitoring.
-            uploadService.upload(descriptor)
-        }
+    const imageProvider = imageProviderService.getImageProvider(provider);
+    if (imageProvider) {
+      const descriptors = await imageProvider.getImages();
+      for (const descriptor of descriptors) {
+        // TODO: Consider adding monitoring.
+        uploadService.upload(descriptor);
       }
+    }
   }
-
 }
 </script>
 
@@ -88,10 +115,14 @@ export default class Upload extends Vue {
 
 .upload-provider-item-label {
   color: white;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: normal;
   font-size: 13px;
   letter-spacing: 1.09px;
   line-height: 23px;
+}
+
+#upload-provider-container {
+  display: none;
 }
 </style>

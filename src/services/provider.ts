@@ -5,9 +5,11 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
-import { ImageDescriptor, ImageProvider } from '../providers/provider';
-import LocalImageProvider from '../providers/provider.local';
-import DisabledImageProvider from '../providers/provider.disabled';
+import ImageDescriptor from '../models/image.descriptor';
+import ImageProvider from '../models/image.provider';
+import DropboxImageProvider from '../models/image.provider.dropbox';
+import GoogleDriveImageProvider from '../models/image.provider.gdrive';
+import LocalImageProvider from '../models/image.provider.local';
 
 class ImageProviderService {
 
@@ -35,10 +37,23 @@ class ImageProviderService {
     private constructor() {
         this.providers = new Map<string, ImageProvider<ImageDescriptor>>();
         // TODO: Check for key l1on label.
+        // TODO: Perfoms Google drive and dropbox initialization.
         this.providers.set('Local', this.createLocalImageProvider());
-        this.providers.set('Google Drive', new DisabledImageProvider());
-        this.providers.set('Dropbox', new DisabledImageProvider());
+        this.providers.set('Google Drive', this.createLocalImageProvider());
+        this.providers.set('Dropbox', this.createLocalImageProvider());
         // Note: add new Provider factory here.
+    }
+
+    /**
+     * Register each provider to the given container.
+     *
+     * @see ImageProvider#register
+     * @param container Target DOM container to register every provider into.
+     */
+    public register(container: string): void {
+        this.providers.forEach((provider, _) => {
+            provider.register(container);
+        });
     }
 
     /**
