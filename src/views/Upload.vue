@@ -25,7 +25,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import { imageProviderService } from '../services/provider.service';
+import { imageProviderService } from '@/services/provider.service';
+import { uploadService } from '@/services/upload.service';
 
 @Component({})
 export default class Upload extends Vue {
@@ -41,6 +42,10 @@ export default class Upload extends Vue {
       const imageProvider = imageProviderService.getImageProvider(provider);
       if (imageProvider) {
         const descriptors = await imageProvider.getImages('#upload-container');
+        for (const descriptor of descriptors) {
+            // TODO: Consider adding monitoring.
+            uploadService.upload(descriptor)
+        }
       }
   }
 

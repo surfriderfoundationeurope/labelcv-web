@@ -24,9 +24,10 @@ export default class LocalImageDescriptor implements ImageDescriptor {
     public async getImageURI() {
         return await new Promise<string>((resolve, _) => {
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = (e: ProgressEvent) => {
                 const target = e.target;
                 if (target) {
+                    // TODO: figure out how to solve the missing property.
                     const result = target.result;
                     if (result) {
                         resolve(result.toString());

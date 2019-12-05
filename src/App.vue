@@ -6,17 +6,17 @@
       </div>
       <ul class="header-navigation">
         <li>
-          <a href="#">About</a>
+          <router-link to="/">About</router-link>
         </li>
         <li>
-          <a href="#">Upload</a>
+          <router-link to="/upload">Upload</router-link>
         </li>
         <li>
-          <a href="#">Tagging</a>
+          <router-link to="/annotate">Annotate</router-link>
         </li>
       </ul>
     </div>
-    <Upload />
+    <router-view />
   </div>
 </template>
 
@@ -76,6 +76,14 @@ export default class App extends Vue {}
 
 .header-navigation li a:hover {
   color: white;
+  padding-bottom: 6px;
+  border-bottom: 1px solid white;
+}
+
+.header-navigation li a.router-link-exact-active,
+.header-navigation li a.router-link-exact-active:hover {
+  color: white;
+  padding-bottom: 5px;
   border-bottom: 3px solid white;
 }
 </style>
