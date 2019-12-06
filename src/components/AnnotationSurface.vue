@@ -1,13 +1,13 @@
 <template>
   <div
-    id="annotator-surface"
-    ref="surface"
     :style="{'background-image': 'url(' + image + ')',}"
     @mousedown="onMouseDown"
-    @mouseup="onMouseUp"
-    @mousemove="onMouseMove"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
+    @mousemove="onMouseMove"
+    @mouseup="onMouseUp"
+    id="annotator-surface"
+    ref="surface"
   >
     <div
       :class="{ axis: true, 'x-axis': true, 'hover-axis': hoverbox, }"
@@ -29,15 +29,16 @@
       :style="{ left: selectionPoint.x + 'px' }"
       v-if="selection"
     ></div>
-    <BoundingBox v-for="box in boxes" :box="box.data" :id="box.id" :key="box.id" />
+    <BoundingBox :box="box.data" :id="box.id" :key="box.id" v-for="box in boxes" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import ResizeObserver from "resize-observer-polyfill";
 
 import { Event, BoundingBoxMoveEvent } from "../models/event";
-import { Box, Point, IdentifiableBox } from "../models/types";
+import { Box, IdentifiableBox, Point, Size } from "../models/types";
 import { eventService } from "../services/event";
 import BoundingBox from "./BoundingBox.vue";
 
@@ -50,7 +51,11 @@ function newBoxId() {
   );
 }
 
-@Component({ components: { BoundingBox } })
+@Component({
+  components: {
+    BoundingBox
+  }
+})
 export default class AnnotationSurface extends Vue {
   /** Boolean flag indicating if surface is active (hovered by mouse). */
   active: boolean = false;
@@ -62,7 +67,10 @@ export default class AnnotationSurface extends Vue {
   selection: boolean = false;
 
   /** Current relative position into the surface. */
-  position: Point = { x: 0, y: 0 };
+  position: Point = {
+    x: 0,
+    y: 0
+  };
 
   /** Established bounding box(es).  */
   // Note:  Map reactivity is not working but will be fully
@@ -72,14 +80,32 @@ export default class AnnotationSurface extends Vue {
   boxIndex: Map<string, number> = new Map<string, number>();
 
   /** Bounding box user is currently building. */
-  selectionPoint: Point = { x: 0, y: 0 };
+  selectionPoint: Point = {
+    x: 0,
+    y: 0
+  };
 
   /** URL of the currently annoted image. */
   image: string =
     "http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg";
 
+  size?: Size;
+
   public mounted(): void {
+    this.size = this.computeSurfaceSize();
+    console.log(this.size);
+    window.addEventListener("resize", this.onResize);
     eventService.on(Event.MOVE_BOX, this.onBoundingBoxMove);
+  }
+
+  /**
+   *
+   */
+  private computeSurfaceSize(): Size | undefined {
+    let surface = this.$refs.surface;
+    if (surface instanceof HTMLElement) {
+      return { width: surface.clientWidth, height: surface.clientHeight };
+    }
   }
 
   /**
@@ -93,6 +119,7 @@ export default class AnnotationSurface extends Vue {
     this.boxes = [];
     this.boxIndex.clear();
     this.image = image;
+    this.size = this.computeSurfaceSize();
   }
 
   /**
@@ -105,6 +132,30 @@ export default class AnnotationSurface extends Vue {
 
   private onMouseEnter() {
     this.active = true;
+  }
+
+  /**
+   * Handle surface resize by computing resize ratio
+   * and apply it to every BoundingBox.
+   *
+   * Note: Consider migrate to ResizeObserver API through polyfill.
+   * Note: Consider disabling current selection if any (shouldn't happen but still).
+   */
+  private onResize() {
+    const newSize: Size | undefined = this.computeSurfaceSize();
+    if (newSize && this.size) {
+      const vector: Point = {
+        x: newSize.width / this.size.width,
+        y: newSize.height / this.size.height
+      };
+      for (const box of this.boxes) {
+        box.data.x *= vector.x;
+        box.data.y *= vector.y;
+        box.data.width *= vector.x;
+        box.data.height *= vector.y;
+      }
+      this.size = newSize;
+    }
   }
 
   private onBoundingBoxMove(event: BoundingBoxMoveEvent): void {

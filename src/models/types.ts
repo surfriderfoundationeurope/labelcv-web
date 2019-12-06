@@ -9,10 +9,12 @@ interface Point {
     y: number;
 }
 
-interface Box extends Point {
+interface Size {
     width: number;
     height: number;
 }
+
+interface Box extends Point, Size {}
 
 interface IdentifiableBox {
     id: string;
@@ -20,7 +22,8 @@ interface IdentifiableBox {
 }
 
 export {
-    Point,
     Box,
     IdentifiableBox,
+    Point,
+    Size,
 };
