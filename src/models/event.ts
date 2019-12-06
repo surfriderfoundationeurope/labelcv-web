@@ -7,8 +7,7 @@
  enum Event {
     UPLOADING,
     UPLOADED,
-    ENTER_BOX,
-    LEAVE_BOX,
+    MOVE_SURFACE,
     MOVE_BOX,
 };
 

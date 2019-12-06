@@ -7,42 +7,51 @@
     @mouseup="onMouseUp"
     @mousemove="onMouseMove"
     @mouseenter="onMouseEnter"
-    @mouseleave="onMouseLeave">
+    @mouseleave="onMouseLeave"
+  >
     <div
-        :class="{ axis: true, 'x-axis': true, 'hover-axis': hoverbox, }"
-        :style="{ top: position.y + 'px' }" v-if="active"></div>
+      :class="{ axis: true, 'x-axis': true, 'hover-axis': hoverbox, }"
+      :style="{ top: position.y + 'px' }"
+      v-if="active"
+    ></div>
     <div
-        :class="{ axis:true, 'y-axis': true, 'hover-axis': hoverbox, }"
-        :style="{ left: position.x + 'px' }" v-if="active"></div>
+      :class="{ axis:true, 'y-axis': true, 'hover-axis': hoverbox, }"
+      :style="{ left: position.x + 'px' }"
+      v-if="active"
+    ></div>
     <div
-        :class="{ axis: true, 'x-axis': true, 'hover-axis': hoverbox, }"
-        :style="{ top: selectionPoint.y + 'px' }" v-if="selection"></div>
+      :class="{ axis: true, 'x-axis': true, 'hover-axis': hoverbox, }"
+      :style="{ top: selectionPoint.y + 'px' }"
+      v-if="selection"
+    ></div>
     <div
-        :class="{ axis:true, 'y-axis': true, 'hover-axis': hoverbox, }"
-        :style="{ left: selectionPoint.x + 'px' }" v-if="selection"></div>
-    <BoundingBox
-        v-for="box in boxes"
-        :box="box.data"
-        :id="box.id"
-        :key="box.id"/>
+      :class="{ axis:true, 'y-axis': true, 'hover-axis': hoverbox, }"
+      :style="{ left: selectionPoint.x + 'px' }"
+      v-if="selection"
+    ></div>
+    <BoundingBox v-for="box in boxes" :box="box.data" :id="box.id" :key="box.id" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-import { Event, BoundingBoxMoveEvent } from '../models/event';
+import { Event, BoundingBoxMoveEvent } from "../models/event";
 import { Box, Point, IdentifiableBox } from "../models/types";
-import { eventService } from '../services/event';
+import { eventService } from "../services/event";
 import BoundingBox from "./BoundingBox.vue";
 
 function newBoxId() {
-    return '_' + Math.random().toString(36).substr(2, 9);
+  return (
+    "_" +
+    Math.random()
+      .toString(36)
+      .substr(2, 9)
+  );
 }
 
 @Component({ components: { BoundingBox } })
 export default class AnnotationSurface extends Vue {
-
   /** Boolean flag indicating if surface is active (hovered by mouse). */
   active: boolean = false;
 
@@ -53,7 +62,7 @@ export default class AnnotationSurface extends Vue {
   selection: boolean = false;
 
   /** Current relative position into the surface. */
-  position: Point = {x: 0, y: 0};
+  position: Point = { x: 0, y: 0 };
 
   /** Established bounding box(es).  */
   // Note:  Map reactivity is not working but will be fully
@@ -63,15 +72,14 @@ export default class AnnotationSurface extends Vue {
   boxIndex: Map<string, number> = new Map<string, number>();
 
   /** Bounding box user is currently building. */
-  selectionPoint: Point = {x: 0, y: 0};
+  selectionPoint: Point = { x: 0, y: 0 };
 
   /** URL of the currently annoted image. */
-  image: string = "http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg";
+  image: string =
+    "http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg";
 
   public mounted(): void {
-      eventService.on(Event.ENTER_BOX, this.onBoundingBoxEnter);
-      eventService.on(Event.LEAVE_BOX, this.onBoundingBoxLeave);
-      eventService.on(Event.MOVE_BOX, this.onBoundingBoxMove);
+    eventService.on(Event.MOVE_BOX, this.onBoundingBoxMove);
   }
 
   /**
@@ -88,7 +96,7 @@ export default class AnnotationSurface extends Vue {
   }
 
   /**
-   * 
+   *
    */
   private onMouseLeave(): void {
     this.active = false;
@@ -99,77 +107,64 @@ export default class AnnotationSurface extends Vue {
     this.active = true;
   }
 
-  private onBoundingBoxEnter(id: string): void {
-      const box = this.boxIndex.get(id);
-      if (box != null) {
-        this.hoverbox = true;
-        this.selection = false;
-      }
-  }
-
-  private onBoundingBoxLeave(id: string): void {
-      const box = this.boxIndex.get(id);
-      if (box != null) {
-        this.hoverbox = false;
-      }      
-  }
-
   private onBoundingBoxMove(event: BoundingBoxMoveEvent): void {
-      const id = event.box;
-      const index = this.boxIndex.get(id);
-      if (index != null) {
-          const holder = this.boxes[index];
-          const box = holder.data;
-          this.position.x = box.x + event.x;
-          this.position.y = box.y + event.y;
-      }
-  }
-  
-  private onMouseDown(): void {
-        this.selection = true;
-        this.selectionPoint = {
-            x: this.position.x,
-            y: this.position.y,
-        };
+    const id = event.box;
+    const index = this.boxIndex.get(id);
+    if (index != null) {
+      this.hoverbox = true;
+      this.selection = false;
+      const holder = this.boxes[index];
+      const box = holder.data;
+      this.position.x = box.x + event.x;
+      this.position.y = box.y + event.y;
+    }
   }
 
-  private createSelectionBox() {
-      return {
-          x: Math.min(this.position.x, this.selectionPoint.x),
-          y: Math.min(this.position.y, this.selectionPoint.y),
-          width: Math.abs(this.position.x - this.selectionPoint.x),
-          height: Math.abs(this.position.y - this.selectionPoint.y),
+  private createSelectionBox(): Box {
+    return {
+      x: Math.min(this.position.x, this.selectionPoint.x),
+      y: Math.min(this.position.y, this.selectionPoint.y),
+      width: Math.abs(this.position.x - this.selectionPoint.x),
+      height: Math.abs(this.position.y - this.selectionPoint.y)
     };
   }
+
+  private onMouseDown(): void {
+    this.selection = true;
+    this.selectionPoint = {
+      x: this.position.x,
+      y: this.position.y
+    };
+  }
+
   private onMouseUp(): void {
-      if (!this.hoverbox) {
-        let id = newBoxId();
-        // Note: prevent from collision.
-        while (this.boxIndex.has(id)) {
-            id = newBoxId();
-        }
-        const index = this.boxes.push({
-            id: id,
-            data: this.createSelectionBox()});
-        this.boxIndex.set(id, index - 1);
-        this.selection = false;
+    if (!this.hoverbox && this.selection) {
+      let id = newBoxId();
+      // Note: prevent from collision.
+      while (this.boxIndex.has(id)) {
+        id = newBoxId();
       }
+      const index = this.boxes.push({
+        id: id,
+        data: this.createSelectionBox()
+      });
+      this.boxIndex.set(id, index - 1);
+      this.selection = false;
+    }
   }
 
   private onMouseMove(event: MouseEvent): void {
-      // Update current position if possible.
-      if (event.target == this.$refs.surface) {
-        this.position.x = event.offsetX;
-        this.position.y = event.offsetY;
-      }
-      // TODO: Trigger position event for zoom ?
-      //this.updateHovered();
+    if (event.target == this.$refs.surface) {
+      this.position.x = event.offsetX;
+      this.position.y = event.offsetY;
+      this.hoverbox = false;
+      eventService.emit(Event.MOVE_SURFACE, this.position);
+    }
   }
 
   private onBoundingBoxSelect(): void {
     // TODO: Implements.
   }
-
 }
 </script>
 
@@ -188,35 +183,35 @@ export default class AnnotationSurface extends Vue {
 
 #annotator-surface,
 #annotator-surface:hover {
-    cursor: crosshair;
+  cursor: crosshair;
 }
 
 #annotator-surface:focus {
-    cursor: crosshair;
+  cursor: crosshair;
 }
 #annotator-surface:active {
-    cursor: crosshair;
+  cursor: crosshair;
 }
 
 .axis {
-    z-index: 9;
-    position: absolute;
-    background: yellow;
+  z-index: 9;
+  position: absolute;
+  background: yellow;
 }
 
 .hover-axis {
-    background: red !important;
+  background: red !important;
 }
 
 .x-axis {
-    left: 0;
-    width: 100%;
-    height: 1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
 }
 
 .y-axis {
-    top: 0;
-    width: 1px;
-    height: 100%;   
+  top: 0;
+  width: 1px;
+  height: 100%;
 }
 </style>
