@@ -4,7 +4,21 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
-export enum Event {
+ enum Event {
     UPLOADING,
     UPLOADED,
+    ENTER_BOX,
+    LEAVE_BOX,
+    MOVE_BOX,
+};
+
+interface BoundingBoxMoveEvent {
+  box: string;
+  x: number;
+  y: number;
+}
+
+export {
+    Event,
+    BoundingBoxMoveEvent,
 };

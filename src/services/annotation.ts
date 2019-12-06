@@ -38,6 +38,14 @@ class AnnotationService {
         });
     }
 
+    /**
+     * @returns URL of the next image to annotate.
+     */
+    public getNextImageURL(): string {
+        // TODO: Call API ENDPOINT.
+        return '';
+    }
+
 }
 
 // Export singleton instance.

@@ -18,24 +18,32 @@
     </div>
     <div id="upload-provider-container"></div>
     <div id="upload-progress" v-if="uploading">
-        <!-- TODO: Add progress bar -->
+      <div class="upload-progress-label">
+          {{ progress }}%
+      </div>
+      <div class="upload-progress-bar">
+        <div class="progress"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Vue from "vue";
+import Component from "vue-class-component";
 
-import { Event } from '@/models/event';
-import { eventService } from '@/services/event';
-import { imageProviderService } from '@/services/provider';
-import { uploadService } from '@/services/upload';
+import { Event } from "@/models/event";
+import { eventService } from "@/services/event";
+import { imageProviderService } from "@/services/provider";
+import { uploadService } from "@/services/upload";
 
 @Component({})
 export default class Upload extends Vue {
   /** Flag that indicates if currently uploading. */
   private uploading: boolean;
+
+  /** */
+  private progress: number;
 
   /** List of supported image provider. */
   private providers: string[];
@@ -44,21 +52,23 @@ export default class Upload extends Vue {
   constructor() {
     super();
     this.providers = imageProviderService.getAvailableImageProvider();
+    this.progress = 0;
     this.uploading = false;
   }
 
   private mounted(): void {
-    imageProviderService.register('#upload-provider-container');
+    imageProviderService.register("#upload-provider-container");
     eventService.on(Event.UPLOADING, this.onUploadingEvent);
     eventService.on(Event.UPLOADED, this.onUploadedEvent);
   }
 
   private onUploadingEvent() {
     this.uploading = true;
+    // TODO: update progress
   }
 
   private onUploadedEvent() {
-    this.uploading = false;  
+    this.uploading = false;
   }
 
   /**
@@ -70,6 +80,7 @@ export default class Upload extends Vue {
     const imageProvider = imageProviderService.getImageProvider(provider);
     if (imageProvider) {
       const descriptors = await imageProvider.getImages();
+      const unit = 100 / descriptors.length;
       for (const descriptor of descriptors) {
         // TODO: Consider adding monitoring.
         uploadService.upload(descriptor);
@@ -124,5 +135,17 @@ export default class Upload extends Vue {
 
 #upload-provider-container {
   display: none;
+}
+
+.upload-progress-bar {
+  width: 100%;
+  height: 3px;
+  background: rgb(100, 100, 100);
+}
+
+.upload-progress-bar .progress {
+  width: 0%;
+  height: 100%;
+  background: rgb(200, 200, 200);
 }
 </style>

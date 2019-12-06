@@ -50,6 +50,7 @@ export default class App extends Vue {}
   display: flex;
   justify-content: space-between;
   width: 94%;
+  height: 5%;
   padding: 3% 3%;
 }
 
