@@ -1,6 +1,6 @@
 /**
  * Size interface.
- * 
+ *
  * @author Felix Voituret <oss@voituret.fr>
  */
 

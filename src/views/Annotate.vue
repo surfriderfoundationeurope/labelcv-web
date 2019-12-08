@@ -8,27 +8,31 @@
         <ZoomPanel />
       </div>
       <div id="annotator-action-panel-container">
-        <button class="boundingbox-action-button boundingbox-selector-button">
+        <button class="boundingbox-select-button">
           <chevron-left-icon />
         </button>
         <div id="annotation-action-panel">
-          <div id="annotation-class-selectors">
+          <div id="annotation-class-selectors" v-if="!boxSelected">
             <div v-for="annotationClass in annotationClasses" :key="annotationClass.id">
               <input type="radio" name="class" :value="annotationClass.id" />
               {{ annotationClass.label }}
             </div>
           </div>
+          <button class="action-button action-button-danger boundingbox-delete-button">
+            <trash-2-icon />
+            <span>Delete selection</span>
+          </button>
         </div>
-        <button class="boundingbox-action-button boundingbox-selector-button">
+        <button class="boundingbox-select-button">
           <chevron-right-icon />
         </button>
       </div>
       <div id="annotation-action-buttons">
-        <button class="annotation-action-button annotation-action-button-reset">
+        <button class="action-button action-button-danger annotation-action-button">
           <trash-2-icon />
           <span>Reset annotation</span>
         </button>
-        <button class="annotation-action-button annotation-action-button-validate">
+        <button class="action-button action-button-success annotation-action-button">
           <check-icon />
           <span>Validate annotation</span>
         </button>
@@ -38,19 +42,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 import {
   CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Trash2Icon
-} from "vue-feather-icons";
+} from 'vue-feather-icons';
 
-import AnnotationSurface from "@/components/AnnotationSurface.vue";
-import ZoomPanel from "@/components/ZoomPanel.vue";
+import AnnotationSurface from '@/components/AnnotationSurface.vue';
+import ZoomPanel from '@/components/ZoomPanel.vue';
 
-import { AnnotationClass } from "@/models/annotation";
-import { annotationService } from "@/services/annotation";
+import { AnnotationClass } from '@/models/annotation';
+import { annotationService } from '@/services/annotation';
 
 @Component({
   components: {
@@ -89,15 +93,15 @@ export default class Annotate extends Vue {
 #annotator-control-panel {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 27%;
   height: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 #annotator-zoom-panel-container {
   width: 100%;
-  height: 50%;
+  flex-basis: 40%;
+  margin-bottom: 10px;
   background: rgb(60, 60, 60);
   border: 1px solid rgb(25, 25, 25);
 }
@@ -105,47 +109,32 @@ export default class Annotate extends Vue {
 #annotator-action-panel-container {
   display: flex;
   flex-direction: row;
+  flex-grow: 1;
   justify-content: space-between;
   width: 100%;
-  height: 48%;
-  margin-top: 5%;
-  background-color: rgb(220, 220, 220);
+  padding: 0;
+  background-color: rgb(80, 80, 80);
   border: 1px solid rgb(25, 25, 25);
-  color: rgb(60, 60, 60);
+  color: white;
+}
+
+#annotation-action-buttons {
+  width: 100%;
 }
 
 #annotation-action-panel {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+  justify-content: space-between;
+  width: 94%;
+  margin: 3%;
 }
 
-#annotation-action-buttons {
-    width: 100%;
-}
-
-.boundingbox-action-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 32px;
-  height: 100%;
-  background: rgb(60, 60, 60);
-  border: 0;
-  color: white;
-  cursor: pointer;
-}
-
-.annotation-action-button {
+.action-button {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
   padding: 5px;
   padding-left: 10px;
   color: white;
@@ -153,27 +142,58 @@ export default class Annotate extends Vue {
   cursor: pointer;
 }
 
-.annotation-action-button span {
-    padding-left: 10px;
-}
-
-.annotation-action-button:hover {
+.action-button:hover {
   background-position: left bottom;
 }
 
-.annotation-action-button-reset {
-  background: linear-gradient(to right, rgb(152, 39, 39) 50%, rgb(181, 67, 67) 50%);
+.action-button span {
+  padding-left: 10px;
+}
+
+.action-button-danger {
+  background: linear-gradient(
+    to right,
+    rgb(234, 64, 64) 50%,
+    rgb(168, 38, 38) 50%
+  );
   background-size: 200% 100%;
   background-position: right bottom;
-  transition: all .2s ease-out;
+  transition: all 0.2s ease-out;
   border: 1px solid rgb(101, 24, 24);
 }
 
-.annotation-action-button-validate {
-  background: linear-gradient(to right, rgb(37, 78, 37) 50%, rgb(53, 125, 53) 50%);
+.action-button-success {
+  background: linear-gradient(
+    to right,
+    rgb(63, 169, 63) 50%,
+    rgb(46, 113, 46) 50%
+  );
   background-size: 200% 100%;
   background-position: right bottom;
-  transition: all .2s ease-out;
-  border: 1px solid rgb(18, 81, 18);
+  transition: all 0.2s ease-out;
+  background-size: 200% 100%;
+  border: 1px solid rgb(26, 64, 26);
+}
+
+.boundingbox-select-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  margin: 0;
+  background: rgb(60, 60, 60);
+  border: 0;
+  color: white;
+  cursor: pointer;
+}
+
+.boundingbox-delete-button {
+  width: 100%;
+}
+
+.annotation-action-button {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 </style>

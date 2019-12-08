@@ -22,10 +22,10 @@ import { eventService } from "../services/event";
 import Point from '@/models/geometry/point';
 import Size  from '@/models/geometry/size';
 
-import BackgroundImageMixin from './background/background.mixin';
+import BackgroundImageMixin from './annotate/background.mixin';
 
 @Component({})
-export default class ZoomPanel extends  Mixins<BackgroundImageMixin>(BackgroundImageMixin) {
+export default class ZoomPanel extends Mixins<BackgroundImageMixin>(BackgroundImageMixin) {
 
     /** */
     private active: boolean = true;

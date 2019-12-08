@@ -5,23 +5,21 @@ import Vue from 'vue';
 import { Mixin } from 'vue-mixin-decorator';
 
 import Point from '@/models/geometry/point';
-import Size from '@/models/geometry/size';
-import { OffsetEventListener } from '@/models/geometry/listeners';
+import { OffsetEventListener, RatioEventListener } from '@/models/geometry/listeners';
 
-import ResizableElement from '../resizable/resizable.element';
-import { ResizedMoveEventSupport } from '../resizable/resizable.support';
+import ResizableElement from './resizable.element';
+import { ResizedMoveEventSupport, ResizedChildSupport } from './resizable.support';
 
 @Mixin
-class BackgroundImageMixin extends Vue implements ResizedMoveEventSupport {
+export default class BackgroundImageMixin
+    extends Vue
+    implements ResizedChildSupport, ResizedMoveEventSupport {
 
     /** */
     public imageReady: Boolean = false;
 
     /** */
     private imageLoader?: HTMLImageElement;
-
-    /** */
-    private readonly backgroundSize: Size = { width: NaN, height: NaN };
 
     /** */
     // Note: consider using resizableElement directly.
@@ -32,6 +30,14 @@ class BackgroundImageMixin extends Vue implements ResizedMoveEventSupport {
 
     /** */
     private readonly moveListeners: OffsetEventListener[] = [];
+
+    /** @inheritdoc */
+    public addResizedEventListener(listener: RatioEventListener): void {
+        if (!this.backgroundElement) {
+            throw ''; // TODO: Customize error.
+        }
+        this.backgroundElement.addResizedEventListener(listener);
+    }
 
     /** @inheritdoc */
     public addResizedMoveEventListener(listener: OffsetEventListener): void {
@@ -49,22 +55,17 @@ class BackgroundImageMixin extends Vue implements ResizedMoveEventSupport {
         this.moveListeners.push(listener);
     }
 
-    /**
-     * 
-     * @param child 
-     */
+    /** @inheritdoc */
     public addChild(child: ResizableElement | HTMLElement): void {
         // TODO: Prevent from duplicate (consider ChildSet).
         if (child instanceof HTMLElement) {
             child = new ResizableElement(child);
         }
+        // TODO: Apply ratio to child.
         this.childs.push(child);
     }
 
-    /**
-     * 
-     * @param child 
-     */
+    /** @inheritdoc */
     public removeChild(child: ResizableElement | HTMLElement): void {
         for (let i = 0; i < this.childs.length; i++) {
             if ((child instanceof ResizableElement
@@ -93,13 +94,10 @@ class BackgroundImageMixin extends Vue implements ResizedMoveEventSupport {
      */
     protected onBackgroundLoaderMounted(loader: HTMLImageElement): void {
         loader.onload = () => {
-            this.applyBackground();
-            this.backgroundSize.width = loader.naturalWidth;
-            this.backgroundSize.height = loader.naturalHeight;
-            console.log(`Image size: ${loader.naturalWidth} x ${loader.naturalHeight}`);
             if (this.backgroundElement) {
-                this.backgroundElement.setResizableElementSize(
-                    this.backgroundSize);
+                this.backgroundElement.size.width = loader.naturalWidth;
+                this.backgroundElement.size.height = loader.naturalHeight;
+                this.applyBackground();
             }
             this.imageReady = true;
             // TODO: Handle non mounted case.
@@ -177,7 +175,7 @@ class BackgroundImageMixin extends Vue implements ResizedMoveEventSupport {
                 this.backgroundElement.onResizedMouseMove(offset);
             }
             else {
-                for (const child of this.childs) {
+                /**for (const child of this.childs) {
                     if (child.element == event.target) {
                         const offset = {
                             x: event.offsetX + child.offset.x,
@@ -186,11 +184,9 @@ class BackgroundImageMixin extends Vue implements ResizedMoveEventSupport {
                         this.emitMoveEvent(offset);
                         this.backgroundElement.onResizedMouseMove(offset);
                     }
-                }
+                }*/
             }
         }
     }
 
-}
-
-export default BackgroundImageMixin;
+};

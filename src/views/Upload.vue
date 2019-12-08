@@ -6,8 +6,7 @@
           class="upload-provider-item"
           v-for="provider in providers"
           v-bind:key="provider"
-          @click="onClick(provider)"
-        >
+          @click="onClick(provider)">
           <img
             class="upload-provider-item-icon"
             :src="`/images/providers/${provider.toLowerCase()}.png`"
@@ -18,9 +17,7 @@
     </div>
     <div id="upload-provider-container"></div>
     <div id="upload-progress" v-if="uploading">
-      <div class="upload-progress-label">
-          {{ progress }}%
-      </div>
+      <div class="upload-progress-label">{{ progress }}%</div>
       <div class="upload-progress-bar">
         <div class="progress"></div>
       </div>
@@ -29,13 +26,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
-import { Event } from "@/models/event";
-import { eventService } from "@/services/event";
-import { imageProviderService } from "@/services/provider";
-import { uploadService } from "@/services/upload";
+import { Event } from '@/models/event';
+import { eventService } from '@/services/event';
+import { imageProviderService } from '@/services/provider';
+import { uploadService } from '@/services/upload';
 
 @Component({})
 export default class Upload extends Vue {

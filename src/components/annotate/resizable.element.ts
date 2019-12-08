@@ -6,28 +6,34 @@
 import Point from '@/models/geometry/point';
 import Size from '@/models/geometry/size';
 
-import { OffsetEventListener } from  '@/models/geometry/listeners';
-// Note: Consider using mixin if more support is needed.
-import { ResizedMoveEventSupport } from './resizable.support';
+import {
+    OffsetEventListener,
+    RatioEventListener, } from '@/models/geometry/listeners';
+import {
+    ResizedMoveEventSupport,
+    ResizedEventSupport,  } from './resizable.support';
 
-export default class ResizableElement implements ResizedMoveEventSupport {
+export default class ResizableElement
+    implements ResizedEventSupport, ResizedMoveEventSupport {
 
-    /** Element offset relative to this parent container. */
-    public readonly offset: Point;
+    /** */
+    public readonly offset: Point = { x: 0, y: 0, };
+
+    /** Concrete size of this resizable element. */
+    public readonly size: Size;
 
     /** Wrapped element with resizing control feature. */
     public readonly element: HTMLElement;
-
-    /** Concrete size of this resizable element. */
-    // Note : consider switch to readonly for safety.
-    private size: Size;
 
     /** Resizing ratio currently applied. */
     // Note : consider switch to readonly for safety.
     private ratio: Size = { width: 1, height: 1, };
 
     /** Listeners that check for mouse move event with reversed ratio. */
-    private readonly listeners: OffsetEventListener[] = [];
+    private readonly moveListeners: OffsetEventListener[] = [];
+
+    /** */
+    private readonly resizeListeners: RatioEventListener[] = [];
 
     /**
      * Default constructor.
@@ -35,38 +41,35 @@ export default class ResizableElement implements ResizedMoveEventSupport {
      * @param element Wrapped element with resizing control feature.
      */
     public constructor(element: HTMLElement) {
-        this.element = element;
-        this.offset = { x: 0, y: 0 }; // TODO: Consider adding relative position.
-        this.size = {
+        this.element = element;    
+        this.size = this.resizeWatch({
             width: element.clientWidth,
             height: element.clientHeight,
-        };
+        });
         window.addEventListener('resize', () => this.onResize());
     }
 
-    /**
-     * Add the given resized move event listener.
-     *
-     * @param listener Listener to add.
-     */
-    public addResizedMoveEventListener(listener: OffsetEventListener) : void {
-        this.listeners.push(listener);
+    public resizeWatch<T>(target: T): T {
+        const self = this;
+        const handler = {
+            set(target: any, key: string | number | symbol, value: any, receiver: any): boolean {
+                const result = Reflect.set(target, key, value, receiver);
+                self.onResize();
+                return result;
+            },
+        };
+        return new Proxy(target, handler);
     }
 
-    /**
-     * Element size setter. To be used when we want to configure
-     * a specific target size such as an image natural size.
-     *
-     * Trigger an internal resize event.
-     *
-     * @param size Concrete size of this resizable element.
-     */
-    public setResizableElementSize(size: Size): void {
-        this.size = {
-            width: size.width,
-            height: size.height,
-        };
-        this.onResize();
+    /** @inheritdoc */
+    public addResizedMoveEventListener(listener: OffsetEventListener) : void {
+        this.moveListeners.push(listener);
+    }
+
+    /** @inheritdoc */
+    public addResizedEventListener(listener: RatioEventListener): void {
+        this.resizeListeners.push(listener);
+        listener(this.ratio);
     }
 
     /**
@@ -81,7 +84,7 @@ export default class ResizableElement implements ResizedMoveEventSupport {
             x: offset.x * this.ratio.width,
             y: offset.y * this.ratio.height,
         };
-        for (const listener of this.listeners) {
+        for (const listener of this.moveListeners) {
             listener(resizedOffset);
         }
     }
@@ -96,6 +99,9 @@ export default class ResizableElement implements ResizedMoveEventSupport {
         this.ratio.height = (
             this.size.height
             / this.element.clientHeight);
+        for (const listener of this.resizeListeners) {
+            listener(this.ratio);
+        }
     }
 
 };
