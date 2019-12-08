@@ -1,6 +1,8 @@
 <template>
   <div id="zoom-panel" ref="zoom">
     <img ref="loader" class="image-loader" />
+    <div class="axis x-axis"></div>
+    <div class="axis y-axis"></div>
     <div v-if="!active">
         Display message here when not active :).
     </div>
@@ -55,7 +57,31 @@ export default class ZoomPanel extends  Mixins<BackgroundImageMixin>(BackgroundI
 
 <style scoped>
 #zoom-panel {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
+}
+
+.axis {
+  z-index: 9;
+  position: relative;
+  background: rgba(234, 234, 32, 0.5);
+}
+
+.hover-axis {
+  background: red !important;
+}
+
+.x-axis {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+
+.y-axis {
+  top: -1px;
+  left: 50%;
+  width: 1px;
+  height: 100%;
 }
 </style>

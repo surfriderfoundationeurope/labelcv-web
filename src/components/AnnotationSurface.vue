@@ -8,26 +8,6 @@
         <GridLoader color="white" />
     </div>
     <img ref="loader" class="image-loader" />
-    <div
-      :class="{ axis: true, 'x-axis': true, 'hover-axis': hoverbox, }"
-      :style="{ top: cursor.y + 'px' }"
-      v-if="active && imageReady"
-    ></div>
-    <div
-      :class="{ axis:true, 'y-axis': true, 'hover-axis': hoverbox, }"
-      :style="{ left: cursor.x + 'px' }"
-      v-if="active && imageReady"
-    ></div>
-    <div
-      :class="{ axis: true, 'x-axis': true, 'hover-axis': hoverbox, }"
-      :style="{ top: selectionPoint.y + 'px' }"
-      v-if="selection"
-    ></div>
-    <div
-      :class="{ axis:true, 'y-axis': true, 'hover-axis': hoverbox, }"
-      :style="{ left: selectionPoint.x + 'px' }"
-      v-if="selection"
-    ></div>
     <BoundingBox :box="box.data" :id="box.id" :key="box.id" v-for="box in boxes" />
   </div>
 </template>
@@ -98,6 +78,7 @@ export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(Back
     this.addMoveEventListener(this.onMove);
     // Note: Test image.
     this.onImageLoad('http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg');
+    // Note: add axis as child to prevent move confilct.
   }
 
   /**
@@ -151,7 +132,7 @@ export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(Back
 <style scoped>
 #annotator-surface {
   position: relative;
-  width: 67%;
+  width: 100%;
   height: 100%;
   background: rgb(60, 60, 60);
   border: 1px solid rgb(25, 25, 25);
@@ -185,25 +166,4 @@ export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(Back
   cursor: crosshair;
 }
 
-.axis {
-  z-index: 9;
-  position: absolute;
-  background: yellow;
-}
-
-.hover-axis {
-  background: red !important;
-}
-
-.x-axis {
-  left: 0;
-  width: 100%;
-  height: 1px;
-}
-
-.y-axis {
-  top: 0;
-  width: 1px;
-  height: 100%;
-}
 </style>

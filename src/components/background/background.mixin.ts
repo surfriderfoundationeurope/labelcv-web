@@ -51,6 +51,33 @@ class BackgroundImageMixin extends Vue implements ResizedMoveEventSupport {
 
     /**
      * 
+     * @param child 
+     */
+    public addChild(child: ResizableElement | HTMLElement): void {
+        // TODO: Prevent from duplicate (consider ChildSet).
+        if (child instanceof HTMLElement) {
+            child = new ResizableElement(child);
+        }
+        this.childs.push(child);
+    }
+
+    /**
+     * 
+     * @param child 
+     */
+    public removeChild(child: ResizableElement | HTMLElement): void {
+        for (let i = 0; i < this.childs.length; i++) {
+            if ((child instanceof ResizableElement
+                && this.childs[i] == child)
+                || (child instanceof HTMLElement
+                    && this.childs[i].element == child)) {
+                this.childs.splice(i--, 1);
+            }
+        }
+    }
+
+    /**
+     * 
      * @param container 
      */
     protected onBackgroundElementMounted(element: HTMLElement): void {
@@ -123,7 +150,6 @@ class BackgroundImageMixin extends Vue implements ResizedMoveEventSupport {
                 viewport.y
                 - (this.backgroundElement.element.clientHeight / 2));
             this.backgroundElement.element.style.backgroundPosition = `-${x}px -${y}px`;
-            console.log(`New viewport : (${viewport.x}, ${viewport.y})`);
         }
     }
 
