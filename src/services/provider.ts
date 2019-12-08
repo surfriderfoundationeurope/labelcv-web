@@ -5,11 +5,11 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
-import ImageDescriptor from '../models/image.descriptor';
-import ImageProvider from '../models/image.provider';
-import DropboxImageProvider from '../models/image.provider.dropbox';
-import GoogleDriveImageProvider from '../models/image.provider.gdrive';
-import LocalImageProvider from '../models/image.provider.local';
+import ImageDescriptor from '../models/image/descriptor/image.descriptor';
+import ImageProvider from '../models/image/provider/image.provider';
+import DropboxImageProvider from '../models/image/provider/image.provider.dropbox';
+import GoogleDriveImageProvider from '../models/image/provider/image.provider.gdrive';
+import LocalImageProvider from '../models/image/provider/image.provider.local';
 
 class ImageProviderService {
 

@@ -1,24 +1,22 @@
 <template>
   <div
-    :style="{'background-image': 'url(' + image + ')',}"
-    @mousedown="onMouseDown"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
-    @mousemove="onMouseMove"
-    @mouseup="onMouseUp"
-    @click="onMouseClick"
     id="annotator-surface"
-    ref="surface"
-  >
+    ref="surface">
+    <div id="loader-animation" v-if="!imageReady">
+        <GridLoader color="white" />
+    </div>
+    <img ref="loader" class="image-loader" />
     <div
       :class="{ axis: true, 'x-axis': true, 'hover-axis': hoverbox, }"
-      :style="{ top: position.y + 'px' }"
-      v-if="active"
+      :style="{ top: cursor.y + 'px' }"
+      v-if="active && imageReady"
     ></div>
     <div
       :class="{ axis:true, 'y-axis': true, 'hover-axis': hoverbox, }"
-      :style="{ left: position.x + 'px' }"
-      v-if="active"
+      :style="{ left: cursor.x + 'px' }"
+      v-if="active && imageReady"
     ></div>
     <div
       :class="{ axis: true, 'x-axis': true, 'hover-axis': hoverbox, }"
@@ -35,29 +33,27 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import ResizeObserver from "resize-observer-polyfill";
+import Vue from 'vue';
+import { Component, Mixin, Mixins } from 'vue-mixin-decorator';
+import { GridLoader } from '@saeris/vue-spinners';
 
 import { Event, BoundingBoxMoveEvent } from "../models/event";
-import { Box, IdentifiableBox, Point, Size } from "../models/types";
+import { Box, IdentifiableBox } from "../models/types";
 import { eventService } from "../services/event";
 import BoundingBox from "./BoundingBox.vue";
 
-function newBoxId() {
-  return (
-    "_" +
-    Math.random()
-      .toString(36)
-      .substr(2, 9)
-  );
-}
+import Point from '@/models/geometry/point';
+import Size from '@/models/geometry/size';
+
+import BackgroundImageMixin from './background/background.mixin';
 
 @Component({
   components: {
-    BoundingBox
+    BoundingBox,
+    GridLoader,
   }
 })
-export default class AnnotationSurface extends Vue {
+export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(BackgroundImageMixin) {
   /** Boolean flag indicating if surface is active (hovered by mouse). */
   active: boolean = false;
 
@@ -68,7 +64,7 @@ export default class AnnotationSurface extends Vue {
   selection: boolean = false;
 
   /** Current relative position into the surface. */
-  position: Point = {
+  private readonly cursor: Point = {
     x: 0,
     y: 0
   };
@@ -90,25 +86,38 @@ export default class AnnotationSurface extends Vue {
   };
 
   /** URL of the currently annoted image. */
-  image: string =
-    "http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg";
+  image: string = "";
 
-  size?: Size;
+  /**
+   * 
+   */
+  public mounted(): void {
+    this.onBackgroundElementMounted(this.$refs.surface as HTMLElement);
+    this.onBackgroundLoaderMounted(this.$refs.loader as HTMLImageElement);
+    this.addResizedMoveEventListener(this.onResizedMove);
+    this.addMoveEventListener(this.onMove);
+    // Note: Test image.
+    this.onImageLoad('http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg');
+  }
+
+  /**
+   * Mouse move event listener with position relative
+   * to client coordinate system (effectivly displayed background).
+   *
+   * @param offset Cursor offset relative to this component origin.
+   */
+  private onMove(offset: Point): void {
+    this.cursor.x = offset.x;
+    this.cursor.y = offset.y;      
+  }
 
   /**
    *
+   * @param offset Cursor offset relative to the target image real size.
    */
-  private computeSurfaceSize(): Size | undefined {
-    let surface = this.$refs.surface;
-    if (surface instanceof HTMLElement) {
-      return { width: surface.clientWidth, height: surface.clientHeight };
-    }
-  }
-
-  public mounted(): void {
-    this.size = this.computeSurfaceSize();
-    window.addEventListener("resize", this.onResize);
-    eventService.on(Event.MOVE_BOX, this.onBoundingBoxMove);
+  private onResizedMove(offset: Point): void {
+      eventService.emit(Event.MOVE_SURFACE, offset);
+      // TODO: Check for bb as well.
   }
 
   /**
@@ -122,7 +131,7 @@ export default class AnnotationSurface extends Vue {
     this.boxes = [];
     this.boxIndex.clear();
     this.image = image;
-    this.size = this.computeSurfaceSize();
+    this.loadImage(image);
   }
 
   /** Desactivate surface when leaved. */
@@ -136,121 +145,6 @@ export default class AnnotationSurface extends Vue {
     this.active = true;
   }
 
-  /**
-   * Handle surface resize by computing resize ratio and apply
-   * it to every existing bounding boxes.
-   *
-   * Note: Consider migrate to ResizeObserver API through polyfill.
-   * Note: Consider disabling current selection if any (shouldn't happen but still).
-   */
-  private onResize() {
-    const newSize: Size | undefined = this.computeSurfaceSize();
-    if (newSize && this.size) {
-      const vector: Point = {
-        x: newSize.width / this.size.width,
-        y: newSize.height / this.size.height
-      };
-      for (const box of this.boxes) {
-        box.data.x *= vector.x;
-        box.data.y *= vector.y;
-        box.data.width *= vector.x;
-        box.data.height *= vector.y;
-      }
-      this.size = newSize;
-    }
-  }
-
-  /**
-   * As we are handling cursor position tracking only through
-   * mousemove event associated offset, we can't compute cursor
-   * position when hovering a bounding box as it takes offset focus.
-   *
-   * With this listener method we apply caught bounding box cursor
-   * movement offset and apply it to the parent surface.
-   */
-  private onBoundingBoxMove(event: BoundingBoxMoveEvent): void {
-    const id = event.box;
-    const index = this.boxIndex.get(id);
-    if (index != null) {
-      this.hoverbox = true;
-      this.hoveredBox = id;
-      this.selection = false;
-      const holder = this.boxes[index];
-      const box = holder.data;
-      this.position.x = box.x + event.x;
-      this.position.y = box.y + event.y;
-    }
-  }
-
-  /**
-   * Start area selection in order to create a new bounding
-   * box. Such operation only occurs while not hovering an
-   * existing bounding box.
-   */
-  private onMouseDown(event: MouseEvent): void {
-    if (!this.hoverbox) {
-      // Note:  prevent cursor to be set in drag mode
-      //        and thus having inappropriate icon.
-      event.preventDefault();
-      this.selection = true;
-      this.selectionPoint = {
-        x: this.position.x,
-        y: this.position.y
-      };
-    }
-  }
-
-  /**
-   * Finalizer bounding box creation if appropriate.
-   * First create a new unique identifier for the box,
-   * compute final box data and index it internally.
-   */
-  private onMouseUp(): void {
-    if (!this.hoverbox && this.selection) {
-      let id = newBoxId();
-      // Note: prevent from collision.
-      while (this.boxIndex.has(id)) {
-        id = newBoxId();
-      }
-      const index = this.boxes.push({
-        id: id,
-        data: {
-          x: Math.min(this.position.x, this.selectionPoint.x),
-          y: Math.min(this.position.y, this.selectionPoint.y),
-          width: Math.abs(this.position.x - this.selectionPoint.x),
-          height: Math.abs(this.position.y - this.selectionPoint.y)
-        },
-      });
-      this.boxIndex.set(id, index - 1);
-      // TODO: Trigger bounding box selection.
-      this.selection = false;
-    }
-  }
-
-  /**
-   * Update current cursor position by using event offset
-   * if the surface has the target focus.
-   */
-  private onMouseMove(event: MouseEvent): void {
-    if (event.target == this.$refs.surface) {
-      this.position.x = event.offsetX;
-      this.position.y = event.offsetY;
-      this.hoverbox = false;
-      eventService.emit(Event.MOVE_SURFACE, this.position);
-    }
-  }
-
-  /** Trigger a box selection if hovering. */
-  private onMouseClick(): void {
-    if (this.hoverbox && this.hoveredBox) {
-      this.onBoundingBoxSelect(this.hoveredBox);
-    }
-  }
-
-  private onBoundingBoxSelect(selected: string): void {
-    // TODO: Send selected box as event.
-    // TODO: Consider applying selection style to the box.
-  }
 }
 </script>
 
@@ -265,6 +159,18 @@ export default class AnnotationSurface extends Vue {
   background-repeat: no-repeat;
   background-position: 0 0;
   background-size: 100% 100% !important;
+}
+
+#loader-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.image-loader {
+  display: none;
 }
 
 #annotator-surface,

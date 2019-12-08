@@ -7,7 +7,7 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
-import ImageDescriptor from './image.descriptor';
+import ImageDescriptor from '../descriptor/image.descriptor';
 
 export default interface ImageProvider<D extends ImageDescriptor> {
 

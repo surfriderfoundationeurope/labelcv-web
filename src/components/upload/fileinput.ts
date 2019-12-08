@@ -8,7 +8,7 @@
 import Vue, { VNode } from 'vue';
 import Component from 'vue-class-component';
 
-import SUPPORTED_EXTENSIONS from '../models/image.supported';
+import SUPPORTED_EXTENSIONS from '../../models/image/image.supported';
 
 @Component({})
 export default class FileInput extends Vue {

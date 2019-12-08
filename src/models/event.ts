@@ -4,12 +4,14 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
+ import Point from './geometry/point';
+
  enum Event {
     UPLOADING,
     UPLOADED,
     MOVE_SURFACE,
     MOVE_BOX,
-};
+}; 
 
 interface BoundingBoxMoveEvent {
   box: string;

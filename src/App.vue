@@ -54,6 +54,9 @@ export default class App extends Vue {}
   padding: 3% 3%;
 }
 
+.image-loader {
+  display: none;
+}
 .header-brand {
   font-weight: 900;  
 }

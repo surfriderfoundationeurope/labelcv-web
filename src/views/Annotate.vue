@@ -2,12 +2,7 @@
   <div id="annotator">
       <AnnotationSurface/>
       <div id="annotator-control-panel">
-          <div id="annotator-current-box">
-          </div>
-          <div id="annotator-control-classes">
-          </div>
-          <div id="annotator-remove-button">
-          </div>
+          <ZoomPanel/>
       </div>
   </div>
 </template>
@@ -15,9 +10,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import AnnotationSurface from '../components/AnnotationSurface.vue';
+import AnnotationSurface from '@/components/AnnotationSurface.vue';
+import ZoomPanel from '@/components/ZoomPanel.vue';
 
-@Component({components:{AnnotationSurface}})
+@Component({components:{AnnotationSurface, ZoomPanel}})
 export default class Annotate extends Vue {
 
 }

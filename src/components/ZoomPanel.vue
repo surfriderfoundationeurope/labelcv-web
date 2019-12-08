@@ -1,0 +1,61 @@
+<template>
+  <div id="zoom-panel" ref="zoom">
+    <img ref="loader" class="image-loader" />
+    <div v-if="!active">
+        Display message here when not active :).
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue';
+import { Component, Mixin, Mixins } from 'vue-mixin-decorator';
+
+import { Event } from "../models/event";
+import { eventService } from "../services/event";
+
+import Point from '@/models/geometry/point';
+import Size  from '@/models/geometry/size';
+
+import BackgroundImageMixin from './background/background.mixin';
+
+@Component({})
+export default class ZoomPanel extends  Mixins<BackgroundImageMixin>(BackgroundImageMixin) {
+
+    /** */
+    private active: boolean = true;
+
+    /** Image relative cursor offset. */
+    private offset: Point = { x: 0, y: 0 };
+
+    private mounted(): void {
+        eventService.on(Event.MOVE_SURFACE, this.onSurfaceMove);
+        this.onBackgroundElementMounted(this.$refs.zoom as HTMLElement);
+        this.onBackgroundLoaderMounted(this.$refs.loader as HTMLImageElement);
+        // Note: Test image.
+        this.loadImage('http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg');
+    }
+
+    /**
+     * 
+     */
+    private onSurfaceActive() {
+        this.active = true;
+    }
+
+    /**
+     * 
+     */
+    private onSurfaceMove(offset: Point): void {
+        this.applyViewport(offset);
+    }
+
+}
+</script>
+
+<style scoped>
+#zoom-panel {
+    width: 100%;
+    height: 100%;
+}
+</style>

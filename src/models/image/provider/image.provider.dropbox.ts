@@ -5,8 +5,8 @@
  */
 
 import ImageProvider from './image.provider';
-import URLImageDescriptor from './image.descriptor.url';
-import SUPPORTED_EXTENSIONS from './image.supported';
+import URLImageDescriptor from '../descriptor/image.descriptor.url';
+import SUPPORTED_EXTENSIONS from '../image.supported';
 
 export default class DropboxImageProvider implements ImageProvider<URLImageDescriptor> {
 

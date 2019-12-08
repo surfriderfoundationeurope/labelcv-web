@@ -5,9 +5,9 @@
  */
 
 import ImageProvider from './image.provider';
-import BlobImageDescriptor from './image.descriptor.blob';
+import BlobImageDescriptor from '../descriptor/image.descriptor.blob';
 
-import FileInput from '../components/fileinput';
+import FileInput from '../../../components/upload/fileinput';
 
 export default class LocalImageProvider implements ImageProvider<BlobImageDescriptor> {
 
