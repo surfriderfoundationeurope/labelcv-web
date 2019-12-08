@@ -3,6 +3,9 @@
     <img ref="loader" class="image-loader" />
     <div class="axis x-axis"></div>
     <div class="axis y-axis"></div>
+    <div id="zoom-panel-coordinates">
+      {{ offset.x }}, {{ offset.y }}
+    </div>
     <div v-if="!active">
         Display message here when not active :).
     </div>
@@ -49,6 +52,8 @@ export default class ZoomPanel extends  Mixins<BackgroundImageMixin>(BackgroundI
      * 
      */
     private onSurfaceMove(offset: Point): void {
+        this.offset.x = Math.round(offset.x);
+        this.offset.y = Math.round(offset.y);
         this.applyViewport(offset);
     }
 
@@ -59,6 +64,12 @@ export default class ZoomPanel extends  Mixins<BackgroundImageMixin>(BackgroundI
 #zoom-panel {
   width: 100%;
   height: 100%;
+}
+
+#zoom-panel-coordinates {
+  padding-left: 5%;
+  background-color: rgba(100, 100, 100, 0.5);
+  color: rgba(234, 234, 32, 0.7);
 }
 
 .axis {
@@ -73,15 +84,15 @@ export default class ZoomPanel extends  Mixins<BackgroundImageMixin>(BackgroundI
 
 .x-axis {
   top: 50%;
-  left: 0;
-  width: 100%;
+  left: 5%;
+  width: 90%;
   height: 1px;
 }
 
 .y-axis {
-  top: -1px;
+  top: 5%;
   left: 50%;
   width: 1px;
-  height: 100%;
+  height: 90%;
 }
 </style>

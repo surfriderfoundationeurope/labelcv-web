@@ -4,3 +4,4 @@ declare module '*.vue' {
 }
 
 declare module '@saeris/vue-spinners'
+declare module 'vue-feather-icons'

@@ -5,7 +5,8 @@
 
 import axios, { AxiosInstance } from 'axios';
 
-import ImageDescriptor from '../models/image/descriptor/image.descriptor';
+import ImageDescriptor from '@/models/image/descriptor/image.descriptor';
+import { AnnotationClass } from '@/models/annotation';
 
 class AnnotationService {
 
@@ -44,6 +45,17 @@ class AnnotationService {
     public getNextImageURL(): string {
         // TODO: Call API ENDPOINT.
         return '';
+    }
+
+    /**
+     * 
+     */
+    public getAnnotationClasses(): AnnotationClass[] {
+        return [
+            { label: 'Bottle', id: 0, },
+            { label: 'Fragment', id: 1, },
+            { label: 'Other', id: 2, },
+        ];
     }
 
 }
