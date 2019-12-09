@@ -35,8 +35,8 @@ export default class ZoomPanel extends Mixins<BackgroundImageMixin>(BackgroundIm
 
     private mounted(): void {
         eventService.on(Event.MOVE_SURFACE, this.onSurfaceMove);
-        this.onBackgroundElementMounted(this.$refs.zoom as HTMLElement);
-        this.onBackgroundLoaderMounted(this.$refs.loader as HTMLImageElement);
+        this.onResizableElementReady(this.$refs.zoom as HTMLElement);
+        this.onBackgroundLoaderReady(this.$refs.loader as HTMLImageElement);
         // Note: Test image.
         this.loadImage('http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg');
     }
@@ -46,6 +46,19 @@ export default class ZoomPanel extends Mixins<BackgroundImageMixin>(BackgroundIm
      */
     private onSurfaceActive() {
         this.active = true;
+    }
+
+    /**
+     * TODO: Switch to ZoomPanel ?
+     * @param viewport 
+     */
+    public applyViewport(viewport: Point): void {
+        this.withResizableElement((resizableElement) => {
+            const x = viewport.x - (resizableElement.element.clientWidth / 2);
+            const y = viewport.y - (resizableElement.element.clientHeight / 2);
+            resizableElement.element.style.backgroundPosition =
+                `-${x}px -${y}px`;
+        });
     }
 
     /**

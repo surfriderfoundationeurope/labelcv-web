@@ -9,12 +9,7 @@
       <GridLoader color="white" />
     </div>
     <img ref="loader" class="image-loader"/>
-    <BoundingBox
-        :key="index"
-        :id="index"
-        :box="box"
-        :support="resizeEventSupport"
-        v-for="(box, index) in boxes"/>
+    <div id="boundingbox-container" ref="boundingboxContainer"></div>
   </div>
 </template>
 
@@ -27,21 +22,19 @@ import Box from '@/models/geometry/box';
 import Point from '@/models/geometry/point';
 import Size from '@/models/geometry/size';
 
-import { Event, BoundingBoxMoveEvent } from '@/models/event';
+import { Event } from '@/models/event';
 import { eventService } from '@/services/event';
 
 import BackgroundImageMixin from './annotate/background.mixin';
-import BoundingBox from './BoundingBox.vue';
-import { ResizedEventSupport } from './annotate/resizable.support';
+import BoundingBox from './annotate/boundingbox';
 
 @Component({
   components: {
-    BoundingBox,
     GridLoader,
   }
 })
-export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(
-    BackgroundImageMixin) {
+export default class AnnotationSurface
+    extends Mixins<BackgroundImageMixin>(BackgroundImageMixin) {
 
   /** Current relative position into the surface. */
   private readonly cursor: Point = { x: 0, y: 0, };
@@ -50,7 +43,7 @@ export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(
   private readonly resizedCursor: Point = { x: 0, y: 0, }
 
   /** Established bounding box(es).  */
-  private boxes: Box[] = [];
+  private boxes: BoundingBox[] = [];
 
   /** Boolean flag indicating if a selection is active. */
   private isSelecting: boolean = false;
@@ -61,46 +54,31 @@ export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(
   /** URL of the currently annoted image. */
   private image: string = '';
 
-  private resizeEventSupport: ResizedEventSupport = this;
-
   /**
    *
    */
   public mounted(): void {
-    this.onBackgroundElementMounted(this.$refs.surface as HTMLElement);
-    this.onBackgroundLoaderMounted(this.$refs.loader as HTMLImageElement);
-    this.addResizedMoveEventListener(this.onResizedMove);
-    this.addMoveEventListener(this.onMove);
+    this.onResizableElementReady(this.$refs.surface as HTMLElement);
+    this.onBackgroundLoaderReady(this.$refs.loader as HTMLImageElement);
+    this.withResizableElement((resizableElement) => {
+        resizableElement.addEventListener('mousemove', this.onMouseMove);
+        resizableElement.addEventListener('resizedmousemove', this.onResizedMouseMove);
+    });
     // Note: Test image.
     this.onImageLoad(
       'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg'
     );
-    // Note: add axis as child to prevent move confilct.
   }
 
-  /**
-   * Mouse move event listener with position relative
-   * to client coordinate system (effectivly displayed background).
-   *
-   * @param offset Cursor offset relative to this component origin.
-   */
-  private onMove(offset: Point): void {
-    this.cursor.x = offset.x;
-    this.cursor.y = offset.y;
-  }
 
-  /**
-   *
-   * @param offset Cursor offset relative to the target image real size.
-   */
-  private onResizedMove(offset: Point): void {
-    this.resizedCursor.x = offset.x;
-    this.resizedCursor.y = offset.y;
-    eventService.emit(Event.MOVE_SURFACE, offset);
-    if (this.isSelecting && this.selection) {
-      this.selection.width = offset.x - this.selection.x;
-      this.selection.height = offset.y - this.selection.y;
-    }
+  private addBox(box: Box): void {
+    const boundingBox = new BoundingBox();
+    const index = this.boxes.push(boundingBox);
+    this.withResizableElement((resizableElement) => {
+        boundingBox.configure(
+            box,
+            resizableElement);
+    });
   }
 
   /**
@@ -116,11 +94,39 @@ export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(
     this.loadImage(image);
   }
 
+  /**
+   * Mouse move event listener with position relative
+   * to client coordinate system (effectivly displayed background).
+   *
+   * @param offset Cursor offset relative to this component origin.
+   */
+  private onMouseMove(offset: Point): void {
+    this.cursor.x = offset.x;
+    this.cursor.y = offset.y;
+  }
+
+  /**
+   *
+   * @param offset Cursor offset relative to the target image real size.
+   */
+  private onResizedMouseMove(offset: Point): void {
+    this.resizedCursor.x = offset.x;
+    this.resizedCursor.y = offset.y;
+    eventService.emit(Event.MOVE_SURFACE, offset);
+    if (this.isSelecting && this.selection) {
+      this.selection.width = offset.x - this.selection.x;
+      this.selection.height = offset.y - this.selection.y;
+    }
+  }
+
   /** Desactivate surface when leaved. */
   private onMouseLeave(): void {
     this.isSelecting = false;
   }
 
+  /**
+   *
+   */
   private onMouseDown(event: MouseEvent): void {
     // Note:  prevent cursor to be set in drag mode
     //        and thus having inappropriate icon.
@@ -155,8 +161,7 @@ export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(
         box.y += box.height;
         box.height = Math.abs(box.height);
       }
-      this.boxes.push(box);
-      // TODO: create as Resize element.
+      this.addBox(box);
       this.selection = undefined;
       this.isSelecting = false;
     }
@@ -164,6 +169,17 @@ export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(
 
 }
 </script>
+
+<style>
+.bounding-box {
+  position: absolute;
+  border: 1px solid greenyellow;
+}
+
+.bounding-box:focus {
+  border: 1px solid rgb(105, 40, 13);
+}
+</style>
 
 <style scoped>
 #annotator-surface {
@@ -200,10 +216,5 @@ export default class AnnotationSurface extends Mixins<BackgroundImageMixin>(
 }
 #annotator-surface:active {
   cursor: crosshair;
-}
-
-.bounding-box {
-  position: absolute;
-  border: 1px solid greenyellow;
 }
 </style>

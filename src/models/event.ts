@@ -9,15 +9,12 @@ enum Event {
     UPLOADED,
     MOVE_SURFACE,
     MOVE_BOX,
+    REMOVE_BOX,
+    SELECT_BOX,
+    RESET_ANNOTATION,
+    VALIDATE_ANNOTATION,
 };
-
-interface BoundingBoxMoveEvent {
-    box: string;
-    x: number;
-    y: number;
-}
 
 export {
     Event,
-    BoundingBoxMoveEvent,
 };
