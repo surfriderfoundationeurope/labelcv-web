@@ -29,8 +29,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import { Event } from '@/models/event';
-import { eventService } from '@/services/event';
 import { imageProviderService } from '@/services/provider';
 import { uploadService } from '@/services/upload';
 
@@ -55,8 +53,8 @@ export default class Upload extends Vue {
 
   private mounted(): void {
     imageProviderService.register("#upload-provider-container");
-    eventService.on(Event.UPLOADING, this.onUploadingEvent);
-    eventService.on(Event.UPLOADED, this.onUploadedEvent);
+    //eventService.on(Event.UPLOADING, this.onUploadingEvent);
+    //eventService.on(Event.UPLOADED, this.onUploadedEvent);
   }
 
   private onUploadingEvent() {

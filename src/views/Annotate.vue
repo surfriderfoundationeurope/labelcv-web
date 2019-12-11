@@ -1,14 +1,26 @@
 <template>
-  <div id="annotator">
-    <div id="annotator-surface-container">
+  <div
+    id="annotator"
+    @mousemove="onMouseMove">
+    <img class="image-loader" ref="imageLoader" />
+    <div
+      id="annotator-surface-container"
+      ref="surface"
+      :style="{ width: `${surfaceWidth}%`}">
       <AnnotationSurface />
+    </div>
+    <div 
+      id="annotator-sizer"
+      ref="sizer"
+      @mousedown="onMouseDown"
+      @mouseup="onMouseUp">
     </div>
     <div id="annotator-control-panel">
       <div id="annotator-zoom-panel-container">
         <ZoomPanel />
       </div>
       <div id="annotator-action-panel-container">
-        <button class="boundingbox-select-button">
+        <button class="boundingbox-select-button"  @click="onSelectPrevious">
           <chevron-left-icon />
         </button>
         <div id="annotation-action-panel">
@@ -23,7 +35,7 @@
             <span>Delete selection</span>
           </button>
         </div>
-        <button class="boundingbox-select-button">
+        <button class="boundingbox-select-button" @click="onSelectNext">
           <chevron-right-icon />
         </button>
       </div>
@@ -42,7 +54,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { getModule } from 'vuex-module-decorators'
+
+
+import { AnnotationClass } from '@/models/annotation';
+import { annotationService } from '@/services/annotation';
+import AnnotationStore from '@/store/store.annotation';
+
 import {
   CheckIcon,
   ChevronLeftIcon,
@@ -50,11 +70,8 @@ import {
   Trash2Icon
 } from 'vue-feather-icons';
 
-import AnnotationSurface from '@/components/AnnotationSurface.vue';
-import ZoomPanel from '@/components/ZoomPanel.vue';
-
-import { AnnotationClass } from '@/models/annotation';
-import { annotationService } from '@/services/annotation';
+import AnnotationSurface from '@/components/annotation/AnnotationSurface.vue';
+import ZoomPanel from '@/components/annotation/ZoomPanel.vue';
 
 @Component({
   components: {
@@ -67,20 +84,81 @@ import { annotationService } from '@/services/annotation';
   }
 })
 export default class Annotate extends Vue {
+
+  /** */
+  private readonly state: AnnotationStore = getModule(AnnotationStore);
+
   /** */
   private annotationClasses: AnnotationClass[] = annotationService.getAnnotationClasses();
 
+  /** */
   private boxSelected: boolean = false;
+
+  /** */
+  private surfaceWidth: number = 70;
+
+  /** */
+  private isResizing: boolean = false;
+
+  private mounted(): void {
+    this.state.registerImageLoader(this.$refs.imageLoader as HTMLImageElement);
+  }
+
+  private onMouseMove(event: MouseEvent): void {
+    if (event.target == this.$refs.sizer && this.isResizing) {
+      // Width threshold normalization.
+      if (this.surfaceWidth <= 50) {
+          this.surfaceWidth = 50;
+      }
+      if (this.surfaceWidth >= 80) {
+          this.surfaceWidth = 80;
+      }
+    }
+  }
+
+  private onMouseDown(event: MouseEvent): void {
+    if (event.target == this.$refs.sizer) {
+      event.preventDefault();
+      this.isResizing = true;
+    }
+  }
+
+  private onMouseUp(event: MouseEvent): void {
+    if (event.target == this.$refs.sizer) {
+      this.isResizing = false;
+    }
+  }
+
+  private onSelectPrevious(): void {
+    this.state.selectPrevious();
+  }
+
+  private onSelectNext(): void {
+    this.state.selectNext();
+  }
+
 }
 </script>
 
 <style scoped>
+.image-loader {
+  display: none;
+}
+
 #annotator {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
   height: 100%;
+}
+
+#annotator-sizer {
+  width: 1px;
+  height: 100%;
+  margin: 0 10px 0 12px;
+  border-left: 1px solid rgb(150, 150, 150);
+  cursor: ew-resize;
 }
 
 #annotator-surface-container {
@@ -92,9 +170,9 @@ export default class Annotate extends Vue {
 
 #annotator-control-panel {
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: space-between;
-  width: 27%;
   height: 100%;
 }
 
