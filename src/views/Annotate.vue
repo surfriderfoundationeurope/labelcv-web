@@ -30,7 +30,9 @@
               {{ annotationClass.label }}
             </div>
           </div>
-          <button class="action-button action-button-danger boundingbox-delete-button">
+          <button
+            class="action-button action-button-danger boundingbox-delete-button"
+            @click="onDeleteAnnotationClick">
             <trash-2-icon />
             <span>Delete selection</span>
           </button>
@@ -102,6 +104,10 @@ export default class Annotate extends Vue {
 
   private mounted(): void {
     this.state.registerImageLoader(this.$refs.imageLoader as HTMLImageElement);
+  }
+
+  private onDeleteAnnotationClick() {
+    this.state.deleteSelectedAnnotation();
   }
 
   private onMouseMove(event: MouseEvent): void {

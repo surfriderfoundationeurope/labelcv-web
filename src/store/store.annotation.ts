@@ -84,6 +84,17 @@ export default class AnnotationStore extends VuexModule {
     }
 
     @Mutation
+    public deleteSelectedAnnotation(): void {
+        if (isNaN(this.selectedBox) || this.selectedBox >= this.boxes.length) {
+            return;
+        }
+        this.boxes.splice(this.selectedBox, 1);
+        if (this.selectedBox >= this.boxes.length) {
+            this.selectedBox = 0;
+        }
+    }
+
+    @Mutation
     public select(id: number): void {
         if (
             !isNaN(id)
