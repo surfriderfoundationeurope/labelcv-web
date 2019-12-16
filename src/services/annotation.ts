@@ -50,14 +50,6 @@ class AnnotationService {
     /**
      *
      */
-    public getAnnotationClasses(): AnnotationClass[] {
-        return [
-            { label: 'Bottle', id: 0 },
-            { label: 'Fragment', id: 1 },
-            { label: 'Other', id: 2 },
-        ];
-    }
-
 }
 
 // Export singleton instance.

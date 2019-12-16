@@ -3,11 +3,12 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
-import { Module, VuexModule, Mutation } from 'vuex-module-decorators';
+import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators';
 
-import Box from '../models/geometry/box';
-import Size from '../models/geometry/size';
+import Box from '@/models/geometry/box';
+import Size from '@/models/geometry/size';
 import Point from '@/models/geometry/point';
+import { Annotation, AnnotationClass } from '@/models/annotation';
 
 import store from './store';
 
@@ -22,30 +23,33 @@ export default class AnnotationStore extends VuexModule {
     // Note: consider using more complex structure like id.
     public image: string = '';
 
-    /** */
+    /** HTML <img> element used as image loader. */
     public imageLoader: HTMLImageElement | undefined;
 
-    /** */
+    /** Boolean flag indicated if the current image is fully loaded. */
     public imageLoaded: boolean = false;
 
-    /** */
+    /** Annotated image real size.  */
     public readonly imageSize: Size = { width: 0, height: 0 };
 
-    /** */
+    /** Applied image ratio to the annotation surface. */
     public readonly imageRatio: Size = { width: 1, height: 1 };
 
-    /** */
-    public boxes: Box[] = [];
+    /** List of user's drawn annotations. */
+    public annotations: Annotation[] = [];
 
-    /** */
-    public selectedBox: number = NaN;
+    /** List of annotation classes available for the current image. */
+    public annotationClasses: AnnotationClass[] = [];
 
-    /** */
+    /** Index of the currently selected annotation if any, NaN otherwise. */
+    public selectedAnnotation: number = NaN;
+
+    /** Current user cursor position (relative to real image size). */
     public readonly relativeCursor: Point = { x: 0, y: 0 };
 
     @Mutation
     public resetAnnotations(): void {
-        this.boxes = [];
+        this.annotations = [];
     }
 
     @Mutation
@@ -80,17 +84,27 @@ export default class AnnotationStore extends VuexModule {
     @Mutation
     public addAnnotation(box: Box): void {
         // TODO: Compare with size threshold (@see #12).
-        this.selectedBox = this.boxes.push(box) - 1;
+        this.selectedAnnotation = this.annotations.push({box}) - 1;
+    }
+
+    @Mutation
+    public updateAnnotationClass(annotationClass: AnnotationClass): void {
+        if (isNaN(this.selectedAnnotation)
+            || this.selectedAnnotation >= this.annotations.length) {
+            return;
+        }
+        this.annotations[this.selectedAnnotation].class = annotationClass;
     }
 
     @Mutation
     public deleteSelectedAnnotation(): void {
-        if (isNaN(this.selectedBox) || this.selectedBox >= this.boxes.length) {
+        if (isNaN(this.selectedAnnotation)
+            || this.selectedAnnotation >= this.annotations.length) {
             return;
         }
-        this.boxes.splice(this.selectedBox, 1);
-        if (this.selectedBox >= this.boxes.length) {
-            this.selectedBox = 0;
+        this.annotations.splice(this.selectedAnnotation, 1);
+        if (this.selectedAnnotation >= this.annotations.length) {
+            this.selectedAnnotation = 0;
         }
     }
 
@@ -98,39 +112,43 @@ export default class AnnotationStore extends VuexModule {
     public select(id: number): void {
         if (
             !isNaN(id)
-            && this.boxes.length > 0
+            && this.annotations.length > 0
             && id >= 0
-            && id < this.boxes.length) {
-            this.selectedBox = id;
+            && id < this.annotations.length) {
+            this.selectedAnnotation = id;
         }
     }
 
     @Mutation
     public selectPrevious(): void {
-        if (this.boxes.length > 0) {
-            if (isNaN(this.selectedBox) || this.selectedBox === 0) {
-                this.selectedBox = this.boxes.length - 1;
+        if (this.annotations.length > 0) {
+            if (isNaN(this.selectedAnnotation)
+                || this.selectedAnnotation === 0) {
+                this.selectedAnnotation = this.annotations.length - 1;
             } else {
-                this.selectedBox = this.selectedBox - 1;
+                this.selectedAnnotation = this.selectedAnnotation - 1;
             }
         }
     }
 
     @Mutation
     public selectNext(): void {
-        if (this.boxes.length > 0) {
-            if (isNaN(this.selectedBox) || this.selectedBox === this.boxes.length - 1) {
-                this.selectedBox = 0;
+        if (this.annotations.length > 0) {
+            if (isNaN(this.selectedAnnotation)
+                || this.selectedAnnotation === this.annotations.length - 1) {
+                this.selectedAnnotation = 0;
             } else {
-                this.selectedBox = this.selectedBox + 1;
+                this.selectedAnnotation = this.selectedAnnotation + 1;
             }
         }
     }
 
     @Mutation
     public updateRatio(imageHolder: HTMLElement): void {
-        this.imageRatio.width = this.imageSize.width / imageHolder.clientWidth;
-        this.imageRatio.height = this.imageSize.height / imageHolder.clientHeight;
+        this.imageRatio.width = this.imageSize.width /
+            imageHolder.clientWidth;
+        this.imageRatio.height = this.imageSize.height /
+            imageHolder.clientHeight;
     }
 
     @Mutation
@@ -142,6 +160,18 @@ export default class AnnotationStore extends VuexModule {
             this.relativeCursor.x = Math.round(offset.x);
             this.relativeCursor.y = Math.round(offset.y);
         }
+    }
+
+    @Action
+    public async fetchState(): Promise<void> {
+        // TODO: Fetch annotation classes.
+        // TODO: Fetch next image.
+    }
+
+    @Action
+    public async postAnnotations(): Promise<void> {
+        // TODO: Format annotations
+        // TODO: post serialized annotations.
     }
 
 }

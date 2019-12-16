@@ -2,6 +2,7 @@
   <div
     id="annotator"
     @mousemove="onMouseMove">
+    <v-dialog/>
     <img class="image-loader" ref="imageLoader" />
     <div
       id="annotator-surface-container"
@@ -25,8 +26,12 @@
         </button>
         <div id="annotation-action-panel">
           <div id="annotation-class-selectors" v-if="!boxSelected">
-            <div v-for="annotationClass in annotationClasses" :key="annotationClass.id">
-              <input type="radio" name="class" :value="annotationClass.id" />
+            <div v-for="annotationClass in state.annotationClasses" :key="annotationClass.id">
+              <input
+                type="radio"
+                name="class"
+                :value="annotationClass.id"
+                @change="onAnnotationClassChange"/>
               {{ annotationClass.label }}
             </div>
           </div>
@@ -42,11 +47,15 @@
         </button>
       </div>
       <div id="annotation-action-buttons">
-        <button class="action-button action-button-danger annotation-action-button">
+        <button
+          class="action-button action-button-danger annotation-action-button"
+          @click="onResetAnnotationsClick">
           <trash-2-icon />
           <span>Reset annotation</span>
         </button>
-        <button class="action-button action-button-success annotation-action-button">
+        <button
+          class="action-button action-button-success annotation-action-button"
+          @click="onValidateAnnotationsClick">
           <check-icon />
           <span>Validate annotation</span>
         </button>
@@ -62,7 +71,6 @@ import { getModule } from 'vuex-module-decorators';
 
 
 import { AnnotationClass } from '@/models/annotation';
-import { annotationService } from '@/services/annotation';
 import AnnotationStore from '@/store/store.annotation';
 
 import {
@@ -72,8 +80,11 @@ import {
   Trash2Icon,
 } from 'vue-feather-icons';
 
+import VModal from 'vue-js-modal';
+
 import AnnotationSurface from '@/components/annotation/AnnotationSurface.vue';
 import ZoomPanel from '@/components/annotation/ZoomPanel.vue';
+import store from '../store/store';
 
 @Component({
   components: {
@@ -91,9 +102,6 @@ export default class Annotate extends Vue {
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
   /** */
-  private annotationClasses: AnnotationClass[] = annotationService.getAnnotationClasses();
-
-  /** */
   private boxSelected: boolean = false;
 
   /** */
@@ -108,6 +116,29 @@ export default class Annotate extends Vue {
 
   private onDeleteAnnotationClick() {
     this.state.deleteSelectedAnnotation();
+  }
+
+  private onResetAnnotationsClick() {
+    this.$modal.show('dialog', {
+      title: 'Reset confirmation',
+      text: 'Would you like to reset existing annotations ?',
+      buttons: [
+        {
+          title: 'Reset',
+          default: true,
+          handler: () => this.state.resetAnnotations(),
+        },
+        { title: 'Cancel' },
+    ]});
+  }
+
+  private onValidateAnnotationsClick() {
+    this.state.postAnnotations();
+  }
+
+  private onAnnotationClassChange(event: UIEvent) {
+    // TODO: Retrieve annotation class.
+    this.state.updateAnnotationClass();
   }
 
   private onMouseMove(event: MouseEvent): void {

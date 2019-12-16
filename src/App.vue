@@ -66,6 +66,16 @@ export default class App extends Vue {
 .image-loader {
   display: none;
 }
+
+.v--modal-box {
+  color: rgb(50, 50, 50);
+}
+
+.v--modal-overlay {
+  background: rgba(0, 0, 0, 0.6) !important;
+}
+
+
 .header-brand {
   font-weight: 900;
 }

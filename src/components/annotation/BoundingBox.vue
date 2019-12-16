@@ -43,7 +43,7 @@ export default class BoundingBox extends Vue {
   get box(): Box {
     const id = this.$props.id;
     // TODO: boundaries control.
-    return this.state.boxes[id];
+    return this.state.annotations[id].box;
   }
 
   get reverseRatio(): Size {
@@ -54,7 +54,7 @@ export default class BoundingBox extends Vue {
   }
 
   get selected(): boolean {
-    return this.state.selectedBox === this.$props.id;
+    return this.state.selectedAnnotation === this.$props.id;
   }
 
   get x(): number {

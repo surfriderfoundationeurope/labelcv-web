@@ -9,7 +9,7 @@
     <div id="loader-animation" v-if="!state.imageLoaded">
       <GridLoader color="white" />
     </div>
-    <BoundingBox :id="id - 1" :key="id" v-for="id in state.boxes.length" />
+    <BoundingBox :id="id - 1" :key="id" v-for="id in state.annotations.length" />
   </div>
 </template>
 

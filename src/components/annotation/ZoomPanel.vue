@@ -6,9 +6,9 @@
         'background-image': state.imageLoaded ? 'url(' + state.image + ')' : 'none',
         'background-position': `-${viewportX}px -${viewportY}px`,
       }">
-    <div class="axis x-axis"></div>
-    <div class="axis y-axis"></div>
-    <div id="zoom-panel-coordinates">
+    <div class="axis x-axis" v-if="state.imageLoaded"></div>
+    <div class="axis y-axis" v-if="state.imageLoaded"></div>
+    <div id="zoom-panel-coordinates" v-if="state.imageLoaded">
       {{ state.relativeCursor.x }},
       {{ state.relativeCursor.y }}
     </div>
