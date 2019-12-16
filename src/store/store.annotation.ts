@@ -164,8 +164,22 @@ export default class AnnotationStore extends VuexModule {
 
     @Action
     public async fetchState(): Promise<void> {
-        // TODO: Fetch annotation classes.
-        // TODO: Fetch next image.
+        // TODO: Fetch annotation classes by API.
+        this.annotationClasses = [
+            {id: 0, label: 'Bottle',},
+            {id: 0, label: 'Fragments',},
+            {id: 0, label: 'Other',},
+        ]
+        // TODO: Fetch next image by API.
+        const url = 'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg';
+        const tokens: string[] = url.split('?');
+        const seed: number = Date.now();
+        const cacheless: string = `${tokens[0]}?${seed}`;
+        this.imageLoaded = false;
+        this.image = cacheless;
+        if (this.imageLoader) {
+            this.imageLoader.src = cacheless;
+        }
     }
 
     @Action

@@ -51,8 +51,6 @@ export default class AnnotationSurface extends Vue {
     window.addEventListener('resize', () => {
       this.state.updateRatio(this.$el as HTMLElement);
     });
-    this.state.loadImage(
-      'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg');
   }
 
   /**

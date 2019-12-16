@@ -113,6 +113,7 @@ export default class Annotate extends Vue {
 
   private mounted(): void {
     this.state.registerImageLoader(this.$refs.imageLoader as HTMLImageElement);
+    this.state.fetchState();
   }
 
   private onDeleteAnnotationClick() {
