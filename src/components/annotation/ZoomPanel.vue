@@ -4,7 +4,7 @@
       ref="zoom"
       :style="{
         'background-image': state.imageLoaded ? 'url(' + state.image + ')' : 'none',
-        'background-position': `-${viewportX}px -${viewportY}px`,
+        'background-position': `-${viewportX - offsetX}px -${viewportY - offsetY}px`,
       }">
     <div class="axis x-axis" v-if="state.imageLoaded"></div>
     <div class="axis y-axis" v-if="state.imageLoaded"></div>
@@ -12,8 +12,8 @@
       {{ state.relativeCursor.x }},
       {{ state.relativeCursor.y }}
     </div>
-    <div v-if="!state.imageLoaded">
-        Display message here when not active :).
+    <div id="zoom-panal-state" v-if="!state.imageLoaded">
+        Loading image from server
     </div>
   </div>
 </template>
@@ -32,12 +32,20 @@ export default class ZoomPanel extends Vue {
   /** */
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
+  get offsetX(): number {
+    return this.$el ? this.$el.clientWidth / 2 : 0;
+  }
+
+  get offsetY(): number {
+    return this.$el ? this.$el.clientHeight / 2 : 0;
+  }
+
   get viewportX(): number {
-    return this.state.relativeCursor.x; // - this.$el.clientWidth / 2;
+    return this.state.relativeCursor.x;
   }
 
   get viewportY(): number {
-    return this.state.relativeCursor.y; // - this.$el.clientHeight / 2;
+    return this.state.relativeCursor.y;
   }
 
 }
@@ -53,6 +61,14 @@ export default class ZoomPanel extends Vue {
   padding-left: 5%;
   background-color: rgba(100, 100, 100, 0.5);
   color: rgba(234, 234, 32, 0.7);
+}
+
+#zoom-panal-state {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 .axis {

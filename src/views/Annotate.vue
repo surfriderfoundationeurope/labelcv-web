@@ -21,11 +21,11 @@
         <ZoomPanel />
       </div>
       <div id="annotator-action-panel-container">
-        <button class="boundingbox-select-button"  @click="onSelectPrevious">
+        <button class="boundingbox-select-button" @click="onSelectPrevious">
           <chevron-left-icon />
         </button>
-        <div id="annotation-action-panel">
-          <div id="annotation-class-selectors" v-if="!boxSelected">
+        <div id="annotation-action-panel" v-if="!isNaN(state.selectedAnnotation)">
+          <div id="annotation-class-selectors">
             <div v-for="annotationClass in state.annotationClasses" :key="annotationClass.id">
               <input
                 type="radio"
@@ -37,7 +37,8 @@
           </div>
           <button
             class="action-button action-button-danger boundingbox-delete-button"
-            @click="onDeleteAnnotationClick">
+            @click="onDeleteAnnotationClick"
+            v-if="!boxSelected">
             <trash-2-icon />
             <span>Delete selection</span>
           </button>
@@ -126,7 +127,10 @@ export default class Annotate extends Vue {
         {
           title: 'Reset',
           default: true,
-          handler: () => this.state.resetAnnotations(),
+          handler: () => {
+            this.state.resetAnnotations();
+            this.$modal.hide('dialog');
+          },
         },
         { title: 'Cancel' },
     ]});
