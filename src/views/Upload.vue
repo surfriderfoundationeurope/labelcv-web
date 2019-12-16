@@ -52,9 +52,9 @@ export default class Upload extends Vue {
   }
 
   private mounted(): void {
-    imageProviderService.register("#upload-provider-container");
-    //eventService.on(Event.UPLOADING, this.onUploadingEvent);
-    //eventService.on(Event.UPLOADED, this.onUploadedEvent);
+    imageProviderService.register('#upload-provider-container');
+    // eventService.on(Event.UPLOADING, this.onUploadingEvent);
+    // eventService.on(Event.UPLOADED, this.onUploadedEvent);
   }
 
   private onUploadingEvent() {

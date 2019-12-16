@@ -12,7 +12,7 @@ export default class URLImageDescriptor implements ImageDescriptor {
      * Static factory methods for creating a collection of
      * descriptors from a given collection of URL.
      *
-     * @param urls 
+     * @param urls List of image URL to cast into list of descriptors.
      */
     public static fromURLs(urls: string[]): URLImageDescriptor[] {
         return urls

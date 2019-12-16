@@ -7,21 +7,22 @@
       :style="{
         left: `${x - 2}px`, top: `${y - 5}px`,
         width: `${width + 4}px`, height: `${height + 9}px`, }"
+      @mouseenter="onMouseEnter"
+      @mouseleave="onMouseLeave"
       @click="onMouseClick">
-    <div class="bounding-box-header" @click="onMouseClick"></div>
+    <div class="bounding-box-header"></div>
     <div
         class="bounding-box-content"
         :style="{
           width: `${width}px`,
-          height: `${height}px`, }"
-        @click="onMouseClick"></div>
+          height: `${height}px`, }"></div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { VNode } from 'vue';
 import Component from 'vue-class-component';
-import { getModule } from 'vuex-module-decorators'
+import { getModule } from 'vuex-module-decorators';
 
 import AnnotationStore from '@/store/store.annotation';
 
@@ -29,7 +30,7 @@ import Box from '@/models/geometry/box';
 import Size from '@/models/geometry/size';
 
 @Component({
-  props:['id'],
+  props: ['id'],
 })
 export default class BoundingBox extends Vue {
 
@@ -44,16 +45,16 @@ export default class BoundingBox extends Vue {
     // TODO: boundaries control.
     return this.state.boxes[id];
   }
-  
+
   get reverseRatio(): Size {
     return {
       width: 1 / this.state.imageRatio.width,
-      height: 1 / this.state.imageRatio.height,      
+      height: 1 / this.state.imageRatio.height,
     };
   }
 
   get selected(): boolean {
-    return this.state.selectedBox == this.$props.id;
+    return this.state.selectedBox === this.$props.id;
   }
 
   get x(): number {
@@ -72,8 +73,20 @@ export default class BoundingBox extends Vue {
     return Math.round(this.reverseRatio.height * this.box.height);
   }
 
+  private onMouseEnter(event: MouseEvent): void {
+    if (this.$el === event.target) {
+      this.hovered = true;
+    }
+  }
+
+  private onMouseLeave(event: MouseEvent): void {
+    if (this.$el === event.target) {
+      this.hovered = false;
+    }
+  }
+
   private onMouseClick(event: MouseEvent): void {
-    if (this.$el == event.target) {
+    if (this.hovered) {
       this.state.select(this.$props.id);
     }
   }

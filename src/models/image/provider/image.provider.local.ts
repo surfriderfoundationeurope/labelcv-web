@@ -12,7 +12,7 @@ import FileInput from '../../../components/upload/fileinput';
 export default class LocalImageProvider implements ImageProvider<BlobImageDescriptor> {
 
     /** Target hidden Vue component we proxy to get file inputs. */
-    input: FileInput;
+    private input: FileInput;
 
     /**
      * Default constructor.

@@ -12,7 +12,7 @@ export default class BlobImageDescriptor implements ImageDescriptor {
      * Static factory methods for creating a collection of
      * descriptors from a given collection of blob.
      *
-     * @param urls 
+     * @param blobs List of blobs to cast into a list of descriptors.
      */
     public static fromBlobs(blobs: Blob[]): BlobImageDescriptor[] {
         return blobs
@@ -36,9 +36,8 @@ export default class BlobImageDescriptor implements ImageDescriptor {
         return await new Promise<string>((resolve, _) => {
             const reader = new FileReader();
             reader.onload = (e: ProgressEvent) => {
-                const target = e.target;
+                const target = e.target as FileReader;
                 if (target) {
-                    // TODO: figure out how to solve the missing property.
                     const result = target.result;
                     if (result) {
                         resolve(result.toString());

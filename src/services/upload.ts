@@ -34,14 +34,14 @@ class UploadService {
         // TODO: Check for configuration.
         this.http = axios.create({
             baseURL: `/images`,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
         });
     }
 
     /**
      * Upload the image denoted by the given descriptor to
      * the backend storage through API.
-     * 
+     *
      * @param image Descriptor of the image to be uploaded.
      */
     public async upload(image: ImageDescriptor): Promise<void> {

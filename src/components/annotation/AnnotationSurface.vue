@@ -16,7 +16,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { getModule } from 'vuex-module-decorators'
+import { getModule } from 'vuex-module-decorators';
 
 import AnnotationStore from '@/store/store.annotation';
 
@@ -31,7 +31,7 @@ import BoundingBox from './BoundingBox.vue';
   components: {
     BoundingBox,
     GridLoader,
-  }
+  },
 })
 export default class AnnotationSurface extends Vue {
 
@@ -39,7 +39,7 @@ export default class AnnotationSurface extends Vue {
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
   /** Current relative position into the surface. */
-  private readonly relativeCursor: Point = { x: 0, y: 0, };
+  private readonly relativeCursor: Point = { x: 0, y: 0 };
 
   /** Boolean flag indicating if a drawed is active. */
   private drawing: boolean = false;
@@ -70,12 +70,12 @@ export default class AnnotationSurface extends Vue {
     if (this.drawing && this.drawed) {
       this.drawed.width = relativeCursor.x - this.drawed.x;
       this.drawed.height = relativeCursor.y - this.drawed.y;
-    };
+    }
   }
 
   /** Desactivate surface when leaved. */
   private onMouseLeave(event: MouseEvent): void {
-    if (this.$el == event.target) {
+    if (this.$el === event.target) {
       this.drawing = false;
     }
   }
@@ -84,28 +84,28 @@ export default class AnnotationSurface extends Vue {
    *
    */
   private onMouseDown(event: MouseEvent): void {
-    if (this.$el == event.target) {
+    if (this.$el === event.target) {
       event.preventDefault();
       this.drawing = true;
       this.drawed = {
         width: 0,
         height: 0,
         x: this.state.relativeCursor.x,
-        y: this.state.relativeCursor.y, }
+        y: this.state.relativeCursor.y };
     }
   }
 
   /**
-   * 
+   *
    */
   private onMouseUp(event: MouseEvent): void {
-    if (this.$el == event.target && this.drawing && this.drawed) {
+    if (this.$el === event.target && this.drawing && this.drawed) {
       const box = {
         width: this.drawed.width,
         height:  this.drawed.height,
         x: this.drawed.x,
         y: this.drawed.y,
-      }
+      };
       if (box.width < 0) {
         box.x += box.width;
       }

@@ -1,6 +1,6 @@
 /**
  * Enumeration of supported file extension.
- * 
+ *
  * @author Felix Voituret <oss@voituret.fr>
  */
 

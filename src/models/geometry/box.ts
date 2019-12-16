@@ -7,4 +7,4 @@
 import Point from './point';
 import Size from './size';
 
-export default interface Box extends Point, Size {};
+export default interface Box extends Point, Size {}

@@ -56,7 +56,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { getModule } from 'vuex-module-decorators'
+import { getModule } from 'vuex-module-decorators';
 
 
 import { AnnotationClass } from '@/models/annotation';
@@ -67,7 +67,7 @@ import {
   CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  Trash2Icon
+  Trash2Icon,
 } from 'vue-feather-icons';
 
 import AnnotationSurface from '@/components/annotation/AnnotationSurface.vue';
@@ -80,8 +80,8 @@ import ZoomPanel from '@/components/annotation/ZoomPanel.vue';
     CheckIcon,
     ChevronLeftIcon,
     ChevronRightIcon,
-    Trash2Icon
-  }
+    Trash2Icon,
+  },
 })
 export default class Annotate extends Vue {
 
@@ -105,7 +105,7 @@ export default class Annotate extends Vue {
   }
 
   private onMouseMove(event: MouseEvent): void {
-    if (event.target == this.$refs.sizer && this.isResizing) {
+    if (event.target === this.$refs.sizer && this.isResizing) {
       // Width threshold normalization.
       if (this.surfaceWidth <= 50) {
           this.surfaceWidth = 50;
@@ -117,14 +117,14 @@ export default class Annotate extends Vue {
   }
 
   private onMouseDown(event: MouseEvent): void {
-    if (event.target == this.$refs.sizer) {
+    if (event.target === this.$refs.sizer) {
       event.preventDefault();
       this.isResizing = true;
     }
   }
 
   private onMouseUp(event: MouseEvent): void {
-    if (event.target == this.$refs.sizer) {
+    if (event.target === this.$refs.sizer) {
       this.isResizing = false;
     }
   }

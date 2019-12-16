@@ -18,8 +18,8 @@ export default class FileInput extends Vue {
     protected render(createElement: any): VNode {
         return createElement('script', {
             attrs: {
-                id: 'dropboxjs',
-                src: 'https://www.dropbox.com/static/api/2/dropins.js',
+                'id': 'dropboxjs',
+                'src': 'https://www.dropbox.com/static/api/2/dropins.js',
                 'data-app-key': this.apiKey,
             },
         });

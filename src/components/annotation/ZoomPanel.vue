@@ -21,7 +21,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { getModule } from 'vuex-module-decorators'
+import { getModule } from 'vuex-module-decorators';
 
 import AnnotationStore from '@/store/store.annotation';
 import Point from '@/models/geometry/point';

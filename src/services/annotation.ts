@@ -35,7 +35,7 @@ class AnnotationService {
         // TODO: Check for configuration.
         this.http = axios.create({
             baseURL: `/images`,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
         });
     }
 
@@ -48,13 +48,13 @@ class AnnotationService {
     }
 
     /**
-     * 
+     *
      */
     public getAnnotationClasses(): AnnotationClass[] {
         return [
-            { label: 'Bottle', id: 0, },
-            { label: 'Fragment', id: 1, },
-            { label: 'Other', id: 2, },
+            { label: 'Bottle', id: 0 },
+            { label: 'Fragment', id: 1 },
+            { label: 'Other', id: 2 },
         ];
     }
 

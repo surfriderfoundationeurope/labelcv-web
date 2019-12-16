@@ -14,7 +14,16 @@ import SUPPORTED_EXTENSIONS from '../../models/image/image.supported';
 export default class FileInput extends Vue {
 
     /** Promise issued resolve function. */
-    public resolve?: (value?: Blob[] | PromiseLike<Blob[]> | undefined) => void;
+    private resolve?: (value?: Blob[] | PromiseLike<Blob[]> | undefined) => void;
+
+    /** Mount point, trigger file dialog. */
+    public getFiles(resolve: (value?: Blob[] | PromiseLike<Blob[]> | undefined) => void) {
+        this.resolve = resolve;
+        const input = this.$refs.input;
+        if (input instanceof HTMLElement) {
+            input.click();
+        }
+    }
 
     /** Rendering method. */
     protected render(createElement: any): VNode {
@@ -28,15 +37,6 @@ export default class FileInput extends Vue {
             },
             style: {display: 'none'},
         });
-    }
-
-    /** Mount point, trigger file dialog. */
-    public getFiles(resolve: (value?: Blob[] | PromiseLike<Blob[]> | undefined) => void) {
-        this.resolve = resolve;
-        const input = this.$refs.input;
-        if (input instanceof HTMLElement) {
-            input.click();
-        }
     }
 
     /** File input listener. */

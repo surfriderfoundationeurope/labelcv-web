@@ -1,4 +1,7 @@
-
+/**
+ *
+ * @author Felix Voituret <oss@voituret.fr>
+ */
 
 import { Module, VuexModule, Mutation } from 'vuex-module-decorators';
 
@@ -9,8 +12,8 @@ import Point from '@/models/geometry/point';
 import store from './store';
 
 @Module({
-    name:'annotation',
-    store: store, 
+    name: 'annotation',
+    store,
     dynamic: true,
     namespaced: true})
 export default class AnnotationStore extends VuexModule {
@@ -26,10 +29,10 @@ export default class AnnotationStore extends VuexModule {
     public imageLoaded: boolean = false;
 
     /** */
-    public readonly imageSize: Size = { width: 0, height: 0, };
+    public readonly imageSize: Size = { width: 0, height: 0 };
 
     /** */
-    public readonly imageRatio: Size = { width: 1, height: 1, };
+    public readonly imageRatio: Size = { width: 1, height: 1 };
 
     /** */
     public boxes: Box[] = [];
@@ -38,7 +41,7 @@ export default class AnnotationStore extends VuexModule {
     public selectedBox: number = NaN;
 
     /** */
-    public readonly relativeCursor: Point = { x: 0, y: 0};
+    public readonly relativeCursor: Point = { x: 0, y: 0 };
 
     @Mutation
     public resetAnnotations(): void {
@@ -77,7 +80,7 @@ export default class AnnotationStore extends VuexModule {
     @Mutation
     public addAnnotation(box: Box): void {
         // TODO: Compare with size threshold (@see #12).
-        this.boxes.push(box);
+        this.selectedBox = this.boxes.push(box) - 1;
     }
 
     @Mutation
@@ -94,10 +97,9 @@ export default class AnnotationStore extends VuexModule {
     @Mutation
     public selectPrevious(): void {
         if (this.boxes.length > 0) {
-            if (isNaN(this.selectedBox) || this.selectedBox == 0) {
+            if (isNaN(this.selectedBox) || this.selectedBox === 0) {
                 this.selectedBox = this.boxes.length - 1;
-            }
-            else {
+            } else {
                 this.selectedBox = this.selectedBox - 1;
             }
         }
@@ -106,10 +108,9 @@ export default class AnnotationStore extends VuexModule {
     @Mutation
     public selectNext(): void {
         if (this.boxes.length > 0) {
-            if (isNaN(this.selectedBox) || this.selectedBox == this.boxes.length - 1) {
+            if (isNaN(this.selectedBox) || this.selectedBox === this.boxes.length - 1) {
                 this.selectedBox = 0;
-            }
-            else {
+            } else {
                 this.selectedBox = this.selectedBox + 1;
             }
         }
@@ -132,4 +133,4 @@ export default class AnnotationStore extends VuexModule {
         }
     }
 
-};
+}
