@@ -1,19 +1,22 @@
 <template>
-  <div
+  <div id="zoom-panel-container">
+    <div
       id="zoom-panel"
       ref="zoom"
       :style="{
         'background-image': state.imageLoaded ? 'url(' + state.image + ')' : 'none',
-        'background-position': `-${viewportX - offsetX}px -${viewportY - offsetY}px`,
+        'background-position': `${viewportX}px ${viewportY}px`,
+        'background-repeat': 'no-repeat',
       }">
-    <div class="axis x-axis" v-if="state.imageLoaded"></div>
-    <div class="axis y-axis" v-if="state.imageLoaded"></div>
-    <div id="zoom-panel-coordinates" v-if="state.imageLoaded">
-      {{ state.relativeCursor.x }},
-      {{ state.relativeCursor.y }}
-    </div>
-    <div id="zoom-panal-state" v-if="!state.imageLoaded">
+      <div class="axis x-axis" v-if="state.imageLoaded"></div>
+      <div class="axis y-axis" v-if="state.imageLoaded"></div>
+      <div id="zoom-panel-coordinates" v-if="state.imageLoaded">
+        {{ state.relativeCursor.x }},
+        {{ state.relativeCursor.y }}
+      </div>
+      <div id="zoom-panal-state" v-if="!state.imageLoaded">
         Loading image from server
+      </div>
     </div>
   </div>
 </template>
@@ -25,6 +28,7 @@ import { getModule } from 'vuex-module-decorators';
 
 import AnnotationStore from '@/store/store.annotation';
 import Point from '@/models/geometry/point';
+import Size from '@/models/geometry/size';
 
 @Component({})
 export default class ZoomPanel extends Vue {
@@ -32,26 +36,30 @@ export default class ZoomPanel extends Vue {
   /** */
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
-  get offsetX(): number {
-    return this.$el ? this.$el.clientWidth / 2 : 0;
-  }
-
-  get offsetY(): number {
-    return this.$el ? this.$el.clientHeight / 2 : 0;
-  }
+  /** */
+  private readonly size: Size = { width: 0, height: 0 };
 
   get viewportX(): number {
-    return this.state.relativeCursor.x;
+    return this.state.relativeCursor.x + (this.size.width / 2);
   }
 
   get viewportY(): number {
-    return this.state.relativeCursor.y;
+    return this.state.relativeCursor.y + (this.size.height / 2);
   }
 
+  private mounted() {
+    this.size.width = this.$el.clientWidth;
+    this.size.height = this.$el.clientHeight;
+  }
 }
 </script>
 
 <style scoped>
+#zoom-panel-container {
+  width: 100%;
+  height: 100%;
+}
+
 #zoom-panel {
   width: 100%;
   height: 100%;

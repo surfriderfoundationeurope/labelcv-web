@@ -88,6 +88,11 @@ export default class AnnotationStore extends VuexModule {
     }
 
     @Mutation
+    public addAnnotationClass(annotationClass: AnnotationClass): void {
+        this.annotationClasses.push(annotationClass);
+    }
+
+    @Mutation
     public updateAnnotationClass(annotationClass: AnnotationClass): void {
         if (isNaN(this.selectedAnnotation)
             || this.selectedAnnotation >= this.annotations.length) {
@@ -165,21 +170,13 @@ export default class AnnotationStore extends VuexModule {
     @Action
     public async fetchState(): Promise<void> {
         // TODO: Fetch annotation classes by API.
-        this.annotationClasses = [
-            {id: 0, label: 'Bottle',},
-            {id: 0, label: 'Fragments',},
-            {id: 0, label: 'Other',},
-        ]
+        this.context.commit('addAnnotationClass', {id: 0, label: 'Bottle'});
+        this.context.commit('addAnnotationClass', {id: 1, label: 'Fragments'});
+        this.context.commit('addAnnotationClass', {id: 2, label: 'Other'});
         // TODO: Fetch next image by API.
-        const url = 'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg';
-        const tokens: string[] = url.split('?');
-        const seed: number = Date.now();
-        const cacheless: string = `${tokens[0]}?${seed}`;
-        this.imageLoaded = false;
-        this.image = cacheless;
-        if (this.imageLoader) {
-            this.imageLoader.src = cacheless;
-        }
+        this.context.commit(
+            'loadImage',
+            'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg');
     }
 
     @Action
