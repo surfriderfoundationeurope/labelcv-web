@@ -1,22 +1,31 @@
 <template>
   <div id="zoom-panel-container">
     <div
-      id="zoom-panel"
-      ref="zoom"
+      class="zoom-panel"
       :style="{
         'background-image': state.imageLoaded ? 'url(' + state.image + ')' : 'none',
         'background-position': `${viewportX}px ${viewportY}px`,
         'background-repeat': 'no-repeat',
-      }">
+      }"
+      v-if="state.imageLoaded && isNaN(state.selectedAnnotation)">
       <div class="axis x-axis" v-if="state.imageLoaded"></div>
       <div class="axis y-axis" v-if="state.imageLoaded"></div>
       <div id="zoom-panel-coordinates" v-if="state.imageLoaded">
         {{ state.relativeCursor.x }},
         {{ state.relativeCursor.y }}
       </div>
-      <div id="zoom-panal-state" v-if="!state.imageLoaded">
-        Loading image from server
-      </div>
+    </div>
+    <div
+      class="zoom-panel"
+      :style="{
+        'background-image': state.imageLoaded ? 'url(' + state.image + ')' : 'none',
+        'background-position': `-${state.annotations[state.selectedAnnotation].box.x}px -${state.annotations[state.selectedAnnotation].box.y}px`,
+        'background-repeat': 'no-repeat',
+      }"
+      v-if="state.imageLoaded && !isNaN(state.selectedAnnotation)">
+    </div>
+    <div id="zoom-panal-state" v-if="!state.imageLoaded">
+      Loading image from server
     </div>
   </div>
 </template>
@@ -60,7 +69,7 @@ export default class ZoomPanel extends Vue {
   height: 100%;
 }
 
-#zoom-panel {
+.zoom-panel {
   width: 100%;
   height: 100%;
 }

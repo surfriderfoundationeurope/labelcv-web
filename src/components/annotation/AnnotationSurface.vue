@@ -5,7 +5,10 @@
     @mousedown="onMouseDown"
     @mouseleave="onMouseLeave"
     id="annotator-surface"
-    :style="{'background-image': state.imageLoaded ? `url(${state.image})` : 'none',}">
+    :style="{
+      'background-image': state.imageLoaded ? `url(${state.image})` : 'none',
+      'cursor': isNaN(state.selectedAnnotation) ? 'crosshair' : 'not-allowed',
+    }">
     <div id="loader-animation" v-if="!state.imageLoaded">
       <GridLoader color="white" />
     </div>
@@ -82,8 +85,11 @@ export default class AnnotationSurface extends Vue {
    *
    */
   private onMouseDown(event: MouseEvent): void {
-    if (this.$el === event.target) {
+    if (this.$el === event.target && !this.drawing) {
       event.preventDefault();
+      if (!isNaN(this.state.selectedAnnotation)) {
+
+      }
       this.drawing = true;
       this.drawed = {
         width: 0,
@@ -144,17 +150,5 @@ export default class AnnotationSurface extends Vue {
 
 .image-loader {
   display: none;
-}
-
-#annotator-surface,
-#annotator-surface:hover {
-  cursor: crosshair;
-}
-
-#annotator-surface:focus {
-  cursor: crosshair;
-}
-#annotator-surface:active {
-  cursor: crosshair;
 }
 </style>

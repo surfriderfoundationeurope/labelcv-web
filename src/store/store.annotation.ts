@@ -93,12 +93,15 @@ export default class AnnotationStore extends VuexModule {
     }
 
     @Mutation
-    public updateAnnotationClass(annotationClass: AnnotationClass): void {
+    public saveSelectedAnnotation(annotationClassId: number): void {
         if (isNaN(this.selectedAnnotation)
             || this.selectedAnnotation >= this.annotations.length) {
             return;
         }
-        this.annotations[this.selectedAnnotation].class = annotationClass;
+        // TODO: check annotation class index.
+        this.annotations[this.selectedAnnotation].class =
+            this.annotationClasses[annotationClassId];
+        this.selectedAnnotation = NaN;
     }
 
     @Mutation
@@ -110,6 +113,9 @@ export default class AnnotationStore extends VuexModule {
         this.annotations.splice(this.selectedAnnotation, 1);
         if (this.selectedAnnotation >= this.annotations.length) {
             this.selectedAnnotation = 0;
+        }
+        if (this.annotations.length === 0) {
+            this.selectedAnnotation = NaN;
         }
     }
 

@@ -30,18 +30,24 @@
               <input
                 type="radio"
                 name="class"
-                :value="annotationClass.id"
-                @change="onAnnotationClassChange"/>
+                :value="annotationClass.id" />
               {{ annotationClass.label }}
             </div>
           </div>
-          <button
-            class="action-button action-button-danger boundingbox-delete-button"
-            @click="onDeleteAnnotationClick"
-            v-if="!boxSelected">
-            <trash-2-icon />
-            <span>Delete selection</span>
-          </button>
+          <div class="action-button-container">
+            <button
+              class="action-button action-button-success boundingbox-action-button"
+              @click="onSaveAnnotationClick">
+              <check-icon />
+              <span>Save</span>
+            </button>
+            <button
+              class="action-button action-button-danger boundingbox-action-button"
+              @click="onDeleteAnnotationClick">
+              <trash-2-icon />
+              <span>Delete</span>
+            </button>
+          </div>
         </div>
         <button class="boundingbox-select-button" @click="onSelectNext">
           <chevron-right-icon />
@@ -103,9 +109,6 @@ export default class Annotate extends Vue {
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
   /** */
-  private boxSelected: boolean = false;
-
-  /** */
   private surfaceWidth: number = 70;
 
   /** */
@@ -118,6 +121,12 @@ export default class Annotate extends Vue {
 
   private onDeleteAnnotationClick() {
     this.state.deleteSelectedAnnotation();
+  }
+
+  private onSaveAnnotationClick() {
+    // TODO: Ensure value is selected.
+    // TODO: retrieve input value.
+    this.state.saveSelectedAnnotation(0);
   }
 
   private onResetAnnotationsClick() {
@@ -138,12 +147,20 @@ export default class Annotate extends Vue {
   }
 
   private onValidateAnnotationsClick() {
-    this.state.postAnnotations();
-  }
-
-  private onAnnotationClassChange(event: UIEvent) {
-    // TODO: Retrieve annotation class.
-    this.state.updateAnnotationClass();
+    this.$modal.show('dialog', {
+      title: 'Annotation(s) confirmation',
+      text: 'Would you like to validate annotation(s) ?',
+      buttons: [
+        {
+          title: 'Validate',
+          default: true,
+          handler: () => {
+            this.state.postAnnotations();
+            this.$modal.hide('dialog');
+          },
+        },
+        { title: 'Cancel' },
+    ]});
   }
 
   private onMouseMove(event: MouseEvent): void {
@@ -250,6 +267,12 @@ export default class Annotate extends Vue {
   margin: 3%;
 }
 
+.action-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .action-button {
   display: flex;
   flex-direction: row;
@@ -307,8 +330,8 @@ export default class Annotate extends Vue {
   cursor: pointer;
 }
 
-.boundingbox-delete-button {
-  width: 100%;
+.boundingbox-action-button {
+  width: 45%;
 }
 
 .annotation-action-button {
