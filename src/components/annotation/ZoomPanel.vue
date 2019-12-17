@@ -40,11 +40,11 @@ export default class ZoomPanel extends Vue {
   private readonly size: Size = { width: 0, height: 0 };
 
   get viewportX(): number {
-    return this.state.relativeCursor.x + (this.size.width / 2);
+    return (this.size.width / 2) - this.state.relativeCursor.x;
   }
 
   get viewportY(): number {
-    return this.state.relativeCursor.y + (this.size.height / 2);
+    return (this.size.height / 2) - this.state.relativeCursor.y;
   }
 
   private mounted() {
