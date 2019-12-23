@@ -35,6 +35,9 @@ export default class AnnotationStore extends VuexModule {
     /** Applied image ratio to the annotation surface. */
     public readonly imageRatio: Size = { width: 1, height: 1 };
 
+    /** Reverse applied image ratio. */
+    public readonly imageReverseRatio: Size = { width: 1, height: 1 };
+
     /** List of user's drawn annotations. */
     public annotations: Annotation[] = [];
 
@@ -49,6 +52,7 @@ export default class AnnotationStore extends VuexModule {
 
     @Mutation
     public resetAnnotations(): void {
+        this.selectedAnnotation = NaN;
         this.annotations = [];
     }
 
@@ -160,6 +164,8 @@ export default class AnnotationStore extends VuexModule {
             imageHolder.clientWidth;
         this.imageRatio.height = this.imageSize.height /
             imageHolder.clientHeight;
+        this.imageReverseRatio.width = 1 / this.imageRatio.width;
+        this.imageReverseRatio.height = 1 / this.imageRatio.height;
     }
 
     @Mutation

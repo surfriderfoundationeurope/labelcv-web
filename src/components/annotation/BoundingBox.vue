@@ -30,7 +30,7 @@ import Box from '@/models/geometry/box';
 import Size from '@/models/geometry/size';
 
 @Component({
-  props: ['id'],
+  props: ['id', 'raw'],
 })
 export default class BoundingBox extends Vue {
 
@@ -42,15 +42,11 @@ export default class BoundingBox extends Vue {
 
   get box(): Box {
     const id = this.$props.id;
+    if (id === 'raw') {
+      return this.$props.raw;
+    }
     // TODO: boundaries control.
     return this.state.annotations[id].box;
-  }
-
-  get reverseRatio(): Size {
-    return {
-      width: 1 / this.state.imageRatio.width,
-      height: 1 / this.state.imageRatio.height,
-    };
   }
 
   get selected(): boolean {
@@ -58,19 +54,23 @@ export default class BoundingBox extends Vue {
   }
 
   get x(): number {
-    return Math.round(this.reverseRatio.width * this.box.x);
+    return Math.round(
+      this.state.imageReverseRatio.width * this.box.x);
   }
 
   get y(): number {
-    return Math.round(this.reverseRatio.height * this.box.y);
+    return Math.round(
+      this.state.imageReverseRatio.height * this.box.y);
   }
 
   get width(): number {
-    return Math.round(this.reverseRatio.width * this.box.width);
+    return Math.round(
+      this.state.imageReverseRatio.width * this.box.width);
   }
 
   get height(): number {
-    return Math.round(this.reverseRatio.height * this.box.height);
+    return Math.round(
+      this.state.imageReverseRatio.height * this.box.height);
   }
 
   private onMouseEnter(event: MouseEvent): void {

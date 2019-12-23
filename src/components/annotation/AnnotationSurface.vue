@@ -13,6 +13,11 @@
       <GridLoader color="white" />
     </div>
     <BoundingBox :id="id - 1" :key="id" v-for="id in state.annotations.length" />
+    <BoundingBox
+      id="raw"
+      ref="raw"
+      :raw="drawed"
+      v-if="drawing" />
   </div>
 </template>
 
@@ -48,7 +53,7 @@ export default class AnnotationSurface extends Vue {
   private drawing: boolean = false;
 
   /** Current drawed. */
-  private drawed?: Box;
+  private readonly drawed: Box = { x: NaN, y: NaN, width: NaN, height: NaN };
 
   public mounted(): void {
     window.addEventListener('resize', () => {
@@ -63,12 +68,22 @@ export default class AnnotationSurface extends Vue {
    * @param offset Cursor offset relative to this component origin.
    */
   private onMouseMove(event: MouseEvent): void {
+    const cursor = {
+      x: event.offsetX,
+      y: event.offsetY,
+    };
+    if (event.target instanceof BoundingBox) {
+      console.log('Happend');
+      const box = event.target as BoundingBox;
+      cursor.x += box.x * this.state.imageReverseRatio.width;
+      cursor.y += box.y * this.state.imageReverseRatio.height;
+    }
     const relativeCursor = {
-      x: event.offsetX * this.state.imageRatio.width,
-      y: event.offsetY * this.state.imageRatio.height,
+      x: cursor.x * this.state.imageRatio.width,
+      y: cursor.y * this.state.imageRatio.height,
     };
     this.state.updateRelativeCursor(relativeCursor);
-    if (this.drawing && this.drawed) {
+    if (this.drawing) {
       this.drawed.width = relativeCursor.x - this.drawed.x;
       this.drawed.height = relativeCursor.y - this.drawed.y;
     }
@@ -85,17 +100,15 @@ export default class AnnotationSurface extends Vue {
    *
    */
   private onMouseDown(event: MouseEvent): void {
-    if (this.$el === event.target && !this.drawing) {
+    if (this.$el === event.target
+        && !this.drawing
+        && isNaN(this.state.selectedAnnotation)) {
       event.preventDefault();
-      if (!isNaN(this.state.selectedAnnotation)) {
-
-      }
+      this.drawed.width = 0;
+      this.drawed.height = 0;
+      this.drawed.x = this.state.relativeCursor.x;
+      this.drawed.y = this.state.relativeCursor.y;
       this.drawing = true;
-      this.drawed = {
-        width: 0,
-        height: 0,
-        x: this.state.relativeCursor.x,
-        y: this.state.relativeCursor.y };
     }
   }
 
@@ -103,24 +116,21 @@ export default class AnnotationSurface extends Vue {
    *
    */
   private onMouseUp(event: MouseEvent): void {
-    if (this.$el === event.target && this.drawing && this.drawed) {
+    if (this.drawing) {
+      this.drawing = false;
       const box = {
         width: this.drawed.width,
         height:  this.drawed.height,
         x: this.drawed.x,
         y: this.drawed.y,
       };
-      if (box.width < 0) {
-        box.x += box.width;
+      if (box.width > 3 && box.height > 3) {
+        this.state.addAnnotation(box);
       }
-      if (box.height < 0) {
-        box.y += box.height;
-      }
-      box.width = Math.abs(box.width);
-      box.height = Math.abs(box.height);
-      this.state.addAnnotation(box);
-      this.drawed = undefined;
-      this.drawing = false;
+      this.drawed.width = NaN;
+      this.drawed.height = NaN;
+      this.drawed.x = NaN;
+      this.drawed.y = NaN;
     }
   }
 
