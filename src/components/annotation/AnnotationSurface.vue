@@ -68,10 +68,11 @@ export default class AnnotationSurface extends Vue {
    * @param offset Cursor offset relative to this component origin.
    */
   private onMouseMove(event: MouseEvent): void {
-    const offset = {
-      left: this.$el.offsetLeft,
-      top: this.$el.offsetTop,
-    };
+      let elem = this.$el;
+      const offset = {
+          left: elem instanceof HTMLElement ? elem.offsetLeft : 0,
+          top: elem instanceof HTMLElement ? elem.offsetTop : 0,
+      };
 
     const cursor = {
       x: event.clientX,
