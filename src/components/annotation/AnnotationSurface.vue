@@ -68,9 +68,14 @@ export default class AnnotationSurface extends Vue {
    * @param offset Cursor offset relative to this component origin.
    */
   private onMouseMove(event: MouseEvent): void {
+    const offset = {
+      left: this.$el.offsetLeft,
+      top: this.$el.offsetTop,
+    };
+
     const cursor = {
-      x: event.offsetX,
-      y: event.offsetY,
+      x: event.clientX,
+      y: event.clientY,
     };
     if (event.target instanceof BoundingBox) {
       console.log('Happend');
@@ -79,8 +84,8 @@ export default class AnnotationSurface extends Vue {
       cursor.y += box.y * this.state.imageReverseRatio.height;
     }
     const relativeCursor = {
-      x: cursor.x * this.state.imageRatio.width,
-      y: cursor.y * this.state.imageRatio.height,
+      x: (cursor.x - offset.left) * this.state.imageRatio.width,
+      y: (cursor.y - offset.top) * this.state.imageRatio.height,
     };
     this.state.updateRelativeCursor(relativeCursor);
     if (this.drawing) {
