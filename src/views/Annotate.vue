@@ -13,8 +13,8 @@
     <div 
       id="annotator-sizer"
       ref="sizer"
-      @mousedown="onMouseDown"
-      @mouseup="onMouseUp">
+      @mousedown="onMouseDown()"
+      @mouseup="onMouseUp()">
     </div>
     <div id="annotator-control-panel">
       <div id="annotator-zoom-panel-container">
@@ -43,15 +43,24 @@
           </div>
           <div class="action-button-container">
             <button
+                    v-show="!isNaN(state.selectedAnnotationClass)"
+              class="action-button action-button-warning boundingbox-action-button"
+              @click="onEditAnnotationClick">
+                <edit-2-icon class="svg-icon" />
+              <span>Edit</span>
+            </button>
+
+            <button
+                    v-show="isNaN(state.selectedAnnotationClass)"
               class="action-button action-button-success boundingbox-action-button"
               @click="onSaveAnnotationClick">
-              <check-icon />
+              <check-icon class="svg-icon" />
               <span>Save</span>
             </button>
             <button
               class="action-button action-button-danger boundingbox-action-button"
               @click="onDeleteAnnotationClick">
-              <trash-2-icon />
+              <trash-2-icon class="svg-icon" />
               <span>Delete</span>
             </button>
           </div>
@@ -65,13 +74,13 @@
           class="action-button action-button-danger annotation-action-button"
           @click="onResetAnnotationsClick">
           <trash-2-icon />
-          <span>Reset annotation</span>
+          <span>Reset annotations</span>
         </button>
         <button
           class="action-button action-button-success annotation-action-button"
           @click="onValidateAnnotationsClick">
           <check-icon />
-          <span>Validate annotation</span>
+          <span>Validate annotations</span>
         </button>
       </div>
     </div>
@@ -88,6 +97,7 @@ import { AnnotationClass } from '@/models/annotation';
 import AnnotationStore from '@/store/store.annotation';
 
 import {
+  Edit2Icon,
   CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -105,6 +115,7 @@ import store from '../store/store';
     AnnotationSurface,
     ZoomPanel,
     CheckIcon,
+    Edit2Icon,
     ChevronLeftIcon,
     ChevronRightIcon,
     Trash2Icon,
@@ -147,6 +158,13 @@ export default class Annotate extends Vue {
     //   this.selectedAnnotationClassInput = null ;
     }
 
+  }
+ private onEditAnnotationClick(){
+
+   this.currentAnnotationClassInputId = this.state.selectedAnnotationClass;
+   this.state.resetSelectedAnnotation()
+
+ }
   private onResetAnnotationsClick() {
     this.$modal.show('dialog', {
       title: 'Reset confirmation',
@@ -320,7 +338,7 @@ export default class Annotate extends Vue {
   background-size: 200% 100%;
   background-position: right bottom;
   transition: all 0.2s ease-out;
-  border: 1px solid rgb(101, 24, 24);
+  border: 1px solid darkred;
 }
 
 .action-button-success {
@@ -333,8 +351,22 @@ export default class Annotate extends Vue {
   background-position: right bottom;
   transition: all 0.2s ease-out;
   background-size: 200% 100%;
-  border: 1px solid rgb(26, 64, 26);
+  border: 1px solid darkgreen;
 }
+
+.action-button-warning {
+  background: linear-gradient(
+    to right,
+    #ffbc1e 50%,
+     #e68a00 50%
+  );
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all 0.2s ease-out;
+  background-size: 200% 100%;
+  border: 1px solid #e68301;
+}
+
 
 .boundingbox-select-button {
   display: flex;
@@ -356,5 +388,13 @@ export default class Annotate extends Vue {
   width: 100%;
   margin-top: 10px;
   margin-bottom: 0;
+}
+
+.svg-icon {
+    height: 1em;
+    margin-top: -4px;
+    pointer-events: none;
+    vertical-align: middle;
+    width: 1em;
 }
 </style>
