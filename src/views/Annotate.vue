@@ -26,13 +26,20 @@
         </button>
         <div id="annotation-action-panel" v-if="!isNaN(state.selectedAnnotation)">
           <div id="annotation-class-selectors">
-            <div v-for="annotationClass in state.annotationClasses" :key="annotationClass.id">
-              <input
-                type="radio"
-                name="class"
-                :value="annotationClass.id" />
-              {{ annotationClass.label }}
-            </div>
+        <div v-if="!isNaN(state.selectedAnnotationClass)">
+            <span> <strong> {{currentAnnotationLabel}} </strong> </span> </div>
+
+            <div v-else>
+<!--            {{currentAnnotationClassInputId = selectedAnnotationClass}}-->
+              <div v-for="annotationClass in state.annotationClasses" :key="annotationClass.id">
+                <input
+                        v-model="currentAnnotationClassInputId"
+                        type="radio"
+                        name="class"
+                        :value="annotationClass.id"/>
+                {{ annotationClass.label }}
+              </div>
+              </div>
           </div>
           <div class="action-button-container">
             <button
@@ -114,6 +121,12 @@ export default class Annotate extends Vue {
   /** */
   private isResizing: boolean = false;
 
+  /** */
+  private currentAnnotationClassInputId: number | null = null;
+
+  private created(): void {
+    this.state.fetchState();
+  }
   private mounted(): void {
     this.state.registerImageLoader(this.$refs.imageLoader as HTMLImageElement);
     this.state.fetchState();
@@ -124,10 +137,15 @@ export default class Annotate extends Vue {
   }
 
   private onSaveAnnotationClick() {
-    // TODO: Ensure value is selected.
-    // TODO: retrieve input value.
-    this.state.saveSelectedAnnotation(0);
-  }
+    // TODO: Ensure value is selectedt
+    if (this.currentAnnotationClassInputId != null )
+    {
+       // TODO: retrieve input value.
+
+    this.state.saveSelectedAnnotation(this.currentAnnotationClassInputId);
+    // reset v-model for input
+    //   this.selectedAnnotationClassInput = null ;
+    }
 
   private onResetAnnotationsClick() {
     this.$modal.show('dialog', {

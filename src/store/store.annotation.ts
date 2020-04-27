@@ -47,6 +47,9 @@ export default class AnnotationStore extends VuexModule {
     /** Index of the currently selected annotation if any, NaN otherwise. */
     public selectedAnnotation: number = NaN;
 
+    /** Index of class of the currently selected annotation class if any, NaN otherwise. */
+    public  selectedAnnotationClass: number = NaN;
+
     /** Current user cursor position (relative to real image size). */
     public readonly relativeCursor: Point = { x: 0, y: 0 };
 
@@ -109,6 +112,10 @@ export default class AnnotationStore extends VuexModule {
     }
 
     @Mutation
+    public resetAnnotationClasses(): void {
+        this.annotationClasses = [];
+    }
+    @Mutation
     public saveSelectedAnnotation(annotationClassId: number): void {
         if (isNaN(this.selectedAnnotation)
             || this.selectedAnnotation >= this.annotations.length) {
@@ -118,6 +125,18 @@ export default class AnnotationStore extends VuexModule {
         this.annotations[this.selectedAnnotation].class =
             this.annotationClasses[annotationClassId];
         this.selectedAnnotation = NaN;
+        this.selectedAnnotationClass = NaN ;
+    }
+
+    @Mutation
+    public resetSelectedAnnotation(): void {
+        if (isNaN(this.selectedAnnotation)
+            || this.selectedAnnotation >= this.annotations.length) {
+            return;
+        }
+        // TODO: check annotation class index.
+        this.annotations[this.selectedAnnotation].class = undefined;
+        this.selectedAnnotationClass = NaN ;
     }
 
     @Mutation
@@ -143,6 +162,8 @@ export default class AnnotationStore extends VuexModule {
             && id >= 0
             && id < this.annotations.length) {
             this.selectedAnnotation = id;
+            let annotationClass = this.annotations[id].class;
+            this.selectedAnnotationClass = annotationClass !==  undefined ? annotationClass.id : NaN;
         }
     }
 
@@ -155,6 +176,9 @@ export default class AnnotationStore extends VuexModule {
             } else {
                 this.selectedAnnotation = this.selectedAnnotation - 1;
             }
+            let annotationClass = this.annotations[this.selectedAnnotation].class;
+            this.selectedAnnotationClass = annotationClass !==  undefined ? annotationClass.id : NaN;
+
         }
     }
 
@@ -167,6 +191,8 @@ export default class AnnotationStore extends VuexModule {
             } else {
                 this.selectedAnnotation = this.selectedAnnotation + 1;
             }
+        let annotationClass = this.annotations[this.selectedAnnotation].class;
+            this.selectedAnnotationClass = annotationClass !==  undefined ? annotationClass.id : NaN;
         }
     }
 
