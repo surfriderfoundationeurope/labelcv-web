@@ -24,7 +24,14 @@
         <button class="boundingbox-select-button" @click="onSelectPrevious">
           <chevron-left-icon />
         </button>
-        <div id="annotation-action-panel" v-if="!isNaN(state.selectedAnnotation)">
+       <div id="annotation-message-panel" v-if="isNaN(state.selectedAnnotation) && state.message">
+              <alert-triangle-icon />
+              {{state.message}}
+               <alert-triangle-icon />
+
+        </div>
+        <div v-if="!isNaN(state.selectedAnnotation)" id="annotation-action-panel">
+            <h3> Select a label: </h3>
           <div id="annotation-class-selectors">
         <div v-if="!isNaN(state.selectedAnnotationClass)">
             <span> <strong> {{currentAnnotationLabel}} </strong> </span> </div>
@@ -102,6 +109,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   Trash2Icon,
+  AlertTriangleIcon
 } from 'vue-feather-icons';
 
 import VModal from 'vue-js-modal';
@@ -119,6 +127,7 @@ import store from '../store/store';
     ChevronLeftIcon,
     ChevronRightIcon,
     Trash2Icon,
+    AlertTriangleIcon
   },
 })
 export default class Annotate extends Vue {
@@ -291,6 +300,14 @@ export default class Annotate extends Vue {
   color: white;
 }
 
+#annotation-message-panel {
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 50%;
+    margin-top: 25%;
+}
 #annotation-action-buttons {
   width: 100%;
 }
