@@ -50,6 +50,12 @@ export default class AnnotationStore extends VuexModule {
     /** Current user cursor position (relative to real image size). */
     public readonly relativeCursor: Point = { x: 0, y: 0 };
 
+    /** Message to display in control panel while user is drawing bounding box */
+    public message: string = '';
+
+    /** Limit size for trash (in pixels) */
+    public minTrashSize: number = 50; // todo : un-hardcode this.
+
     @Mutation
     public resetAnnotations(): void {
         this.selectedAnnotation = NaN;
@@ -84,6 +90,12 @@ export default class AnnotationStore extends VuexModule {
             this.imageLoader.src = this.image;
         }
     }
+
+    @Mutation
+    public editMessage(message: string): void {
+        this.message = message;
+    }
+
 
     @Mutation
     public addAnnotation(box: Box): void {
@@ -181,6 +193,8 @@ export default class AnnotationStore extends VuexModule {
 
     @Action
     public async fetchState(): Promise<void> {
+        // flush current annotation classes
+        this.context.commit('resetAnnotationClasses');
         // TODO: Fetch annotation classes by API.
         this.context.commit('addAnnotationClass', {id: 0, label: 'Bottle'});
         this.context.commit('addAnnotationClass', {id: 1, label: 'Fragments'});
@@ -188,7 +202,8 @@ export default class AnnotationStore extends VuexModule {
         // TODO: Fetch next image by API.
         this.context.commit(
             'loadImage',
-            'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg');
+            'https://i.redd.it/b3hp5m5n50j31.jpg'
+            );
     }
 
     @Action

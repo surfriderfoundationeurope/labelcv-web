@@ -106,6 +106,8 @@ export default class AnnotationSurface extends Vue {
    *
    */
   private onMouseDown(event: MouseEvent): void {
+
+    this.state.editMessage(''); // flush
     if (this.$el === event.target
         && !this.drawing
         && isNaN(this.state.selectedAnnotation)) {
@@ -130,8 +132,12 @@ export default class AnnotationSurface extends Vue {
         x: this.drawed.x,
         y: this.drawed.y,
       };
-      if (box.width > 3 && box.height > 3) {
+      const limitSize = this.state.minTrashSize;
+      if (box.width > limitSize && box.height > limitSize) {
         this.state.addAnnotation(box);
+      }
+      else {
+        this.state.editMessage('Trash is too small')
       }
       this.drawed.width = NaN;
       this.drawed.height = NaN;

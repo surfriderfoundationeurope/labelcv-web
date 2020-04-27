@@ -3,7 +3,9 @@
       :id="`bounding-box-${id}`"
       :class="{
         'bounding-box': true,
-        'bounding-box-selected': selected,}"
+        'bounding-box-labelled': labelled,
+        'bounding-box-disabled': disabled,
+        'bounding-box-selected': selected}"
       :style="{
         left: `${x - 2}px`, top: `${y - 5}px`,
         width: `${width + 4}px`, height: `${height + 9}px`, }"
@@ -48,7 +50,12 @@ export default class BoundingBox extends Vue {
     // TODO: boundaries control.
     return this.state.annotations[id].box;
   }
-
+  get labelled(): boolean {
+    return this.state.annotations[this.$props.id] != undefined
+  }
+  public get disabled(): boolean {
+    return !this.sizeOK()
+  }
   get selected(): boolean {
     return this.state.selectedAnnotation === this.$props.id;
   }
@@ -90,6 +97,10 @@ export default class BoundingBox extends Vue {
       this.state.select(this.$props.id);
     }
   }
+  private sizeOK(): boolean {
+    const limitSize = this.state.minTrashSize;
+    return this.box.width >= limitSize && this.box.height >= limitSize
+  }
 
 }
 </script>
@@ -110,11 +121,31 @@ export default class BoundingBox extends Vue {
   border: 2px solid greenyellow;
 }
 
+.bounding-box-labelled  .bounding-box-header {
+  background: darkgreen;
+}
+
+.bounding-box-labelled  .bounding-box-content {
+  border: 2px solid darkgreen;
+}
+
+.bounding-box-disabled .bounding-box-header {
+   background:  darkred;
+}
+
+.bounding-box-disabled .bounding-box-content {
+   border: 2px solid darkred;
+}
+
 .bounding-box-selected .bounding-box-header {
-  background: rgb(105, 40, 13);
+  background: greenyellow;
 }
 
 .bounding-box-selected .bounding-box-content {
-  border: 2px solid rgb(105, 40, 13);
+  border: 2px solid greenyellow;
 }
+
+
+
+
 </style>
