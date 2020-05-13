@@ -11,6 +11,17 @@ interface AnnotationClass {
     label: string;
 }
 
+interface ContextClass {
+    value: string;
+    label: string;
+}
+
+interface PictureContext {
+    environment: Array<string>;
+    quality: string;
+    pointOfView: string;
+}
+
 interface Annotation {
     box: Box;
     class?: AnnotationClass;
@@ -19,4 +30,6 @@ interface Annotation {
 export {
     AnnotationClass,
     Annotation,
+    ContextClass,
+    PictureContext
 };
