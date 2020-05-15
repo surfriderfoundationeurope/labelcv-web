@@ -5,6 +5,7 @@
 
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators';
 
+import axios from 'axios';
 import Box from '@/models/geometry/box';
 import Size from '@/models/geometry/size';
 import Point from '@/models/geometry/point';
@@ -50,6 +51,11 @@ export default class AnnotationStore extends VuexModule {
     /** Current user cursor position (relative to real image size). */
     public readonly relativeCursor: Point = { x: 0, y: 0 };
 
+    /** Const to define http request base url. Possible to moove this part in a external file or class. */
+    private HTTP = axios.create({
+        url: 'http://localhost:443/',
+    });
+
     @Mutation
     public resetAnnotations(): void {
         this.selectedAnnotation = NaN;
@@ -62,10 +68,31 @@ export default class AnnotationStore extends VuexModule {
             const tokens: string[] = url.split('?');
             const seed: number = Date.now();
             const cacheless: string = `${tokens[0]}?${seed}`;
-            this.imageLoaded = false;
+            this.imageLoaded = true;
             this.image = cacheless;
             if (this.imageLoader) {
                 this.imageLoader.src = cacheless;
+            }
+        } else {
+            console.log("ELSE");
+            axios.defaults.baseURL = 'http://localhost:443';
+            axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+            axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+            axios.defaults.headers.post['Accept'] = '*/*';
+            let myUrl = '';
+            axios.get('/images').then(function(response) {
+                myUrl = response.data;
+                console.log(response.data);
+            });
+            if (myUrl) {
+                const src: string = myUrl;
+                this.imageLoaded = false;
+                this.image = src;
+                console.log("myURl");
+                if (this.imageLoader) {
+                    console.log("imageLODER = true");
+                    this.imageLoader.src = src;
+                }
             }
         }
     }
@@ -185,10 +212,12 @@ export default class AnnotationStore extends VuexModule {
         this.context.commit('addAnnotationClass', {id: 0, label: 'Bottle'});
         this.context.commit('addAnnotationClass', {id: 1, label: 'Fragments'});
         this.context.commit('addAnnotationClass', {id: 2, label: 'Other'});
+
+        this.context.commit('loadImage');
         // TODO: Fetch next image by API.
-        this.context.commit(
+         /*this.context.commit(
             'loadImage',
-            'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg');
+            'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg'); */
     }
 
     @Action
