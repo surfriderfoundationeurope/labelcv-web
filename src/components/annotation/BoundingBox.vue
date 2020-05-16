@@ -23,7 +23,7 @@
                       height: `${height}px`, }">
 
                 <div v-show="this.$props.id !== 'raw'" class="bounding-box-index">{{this.$props.id}}</div>
-                <pre v-if="annotationClassSelection">{{ annotationClassSelection.label  }}</pre>
+                <pre v-if="annotationClassSelection">{{ annotationClassSelection.type  }}</pre>
 
             </div>
 
@@ -34,7 +34,7 @@
                                 class="custom-multi"
                                 v-model="annotationClassSelection"
                                 :options="state.annotationClasses"
-                                label="label"
+                                label="type"
                                 placeholder="Select one"
                                 @input="onSelectAnnotation"
                                 onchange="editAnnotation"

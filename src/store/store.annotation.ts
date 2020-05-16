@@ -5,7 +5,7 @@
 
 import {Module, VuexModule, Mutation, Action} from 'vuex-module-decorators';
 
-import axios from 'axios';
+import axios, {AxiosRequestConfig} from 'axios';
 import Box from '@/models/geometry/box';
 import Size from '@/models/geometry/size';
 import Point from '@/models/geometry/point';
@@ -57,15 +57,15 @@ export default class AnnotationStore extends VuexModule {
 
     /** List of context classes  */
     public contextPovClasses: Array<ContextClass> = [
-        {value: 'above', label: 'above'},
-        {value: 'frontal', label: 'frontal'},
-        {value: 'under', label: 'under'}];
+        {value: 'side', label: 'side'},
+        {value: 'above', label: 'above'}];
 
     /** List of quality classes */
     public contextQualityClasses: Array<ContextClass> = [
-        {value: 'pixelised', label: 'pixelised'},
-        {value: 'ok', label: 'ok'},
+        {value: 'good', label: 'good'},
+        {value: 'medium', label: 'medium'},
         {value: 'bad', label: 'bad'}];
+
 
     /** Index of the currently selected annotation if any, NaN otherwise. */
     public selectedAnnotation: number = NaN;
@@ -76,10 +76,14 @@ export default class AnnotationStore extends VuexModule {
     /** Current user cursor position (relative to real image size). */
     public readonly relativeCursor: Point = {x: 0, y: 0};
 
-    /** Const to define http request base url. Possible to moove this part in a external file or class. */
-    private HTTP = axios.create({
-        url: 'http://localhost:443/',
-    });
+    public axiosRequestConfig: AxiosRequestConfig = {
+        baseURL: 'http://localhost:443/',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Access-Control-Allow-Origin': '*',
+            'Accept': '*/*'
+        }
+    };
 
     /** Limit size for trash (in pixels) */
     public minTrashSize: number = 20; // todo : un-hardcode this.
@@ -110,32 +114,46 @@ export default class AnnotationStore extends VuexModule {
                 this.imageLoader.src = cacheless;
             }
         } else {
-            console.log("ELSE");
-            axios.defaults.baseURL = 'http://localhost:443';
-            axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
-            axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-            axios.defaults.headers.post['Accept'] = '*/*';
-            let myUrl = '';
-            axios.get('/images').then(function(response) {
-                myUrl = response.data;
-                console.log(response.data);
+            let self = this;
+            axios
+                .get('/images/random', this.axiosRequestConfig)
+                .then(function (response) {
+                        console.log(response.data);
+                        const src = response.data.url;
+                        self.image = src;
+                        self.imageLoaded = false;
+                        if (self.imageLoader) {
+                            self.imageLoader.src = src;
+                        }
+                    }
+                ).catch(error => {
+                console.log(error)
             });
-            if (myUrl) {
-                const src: string = myUrl;
-                this.imageLoaded = false;
-                this.image = src;
-                console.log("myURl");
-                if (this.imageLoader) {
-                    console.log("imageLODER = true");
-                    this.imageLoader.src = src;
-                }
-            }
         }
     }
 
     @Mutation
+    public loadAnnotationClasses(): void {
+        let self = this;
+        axios.get('/images/trashtypes', this.axiosRequestConfig).then(function (response) {
+            self.annotationClasses = response.data;
+        }).catch(error => {
+            console.log(error)
+        });
+
+    }
+
+    @Mutation loadContextEnvClasses(): void {
+        this.contextEnvClasses = [{value: 'urban', label: 'Urban'},
+            {value: 'nature', label: 'Nature'},
+            {value: 'river', label: 'River'},
+            {value: 'beach', label: 'Beach'},
+            {value: 'underwater', label: 'Underwater'}
+        ];
+    }
+
+    @Mutation
     public registerImageLoader(imageLoader: HTMLImageElement): void {
-        console.log(imageLoader)
         imageLoader.onload = () => {
             this.imageLoaded = true;
             this.imageSize.width = imageLoader.naturalWidth;
@@ -170,10 +188,6 @@ export default class AnnotationStore extends VuexModule {
         this.pictureContext.quality = value
     }
 
-    @Mutation
-    public addAnnotationClass(annotationClass: AnnotationClass): void {
-        this.annotationClasses.push(annotationClass);
-    }
 
     @Mutation
     public resetAnnotationClasses(): void {
@@ -181,10 +195,6 @@ export default class AnnotationStore extends VuexModule {
         this.annotationClasses = [];
     }
 
-    @Mutation
-    public addContextEnvClass(contextClass: ContextClass): void {
-        this.contextEnvClasses.push(contextClass);
-    }
 
     @Mutation
     public resetContextEnvClasses(): void {
@@ -283,41 +293,49 @@ export default class AnnotationStore extends VuexModule {
         }
     }
 
+
     @Action
     public async fetchState(): Promise<void> {
+
         // flush current annotation and env classes
-        this.context.commit('resetAnnotationClasses');
         this.context.commit('resetContextEnvClasses');
-        // TODO: Fetch annotation classes by API.
-        this.context.commit('addAnnotationClass', {id: 0, label: 'Bottle'});
-        this.context.commit('addAnnotationClass', {id: 1, label: 'Fragments'});
-        this.context.commit('addAnnotationClass', {id: 2, label: 'Other'});
 
-        // TODO: Fetch context classes by API.
-        this.context.commit('addContextEnvClass', {value: 'nature', label: 'Nature'});
-        this.context.commit('addContextEnvClass', {value: 'river', label: 'River'});
-        this.context.commit('addContextEnvClass', {value: 'city', label: 'City'});
-        this.context.commit('addContextEnvClass', {value: 'mountain', label: 'Mountain'});
-        this.context.commit('addContextEnvClass', {value: 'forest', label: 'Forest'});
-        this.context.commit('addContextEnvClass', {value: 'indoor', label: 'Indoor'});
+        this.context.commit('loadContextEnvClasses');
 
-        // TODO: Fetch next image by API.
+        // Fetch next image by API.
         this.context.commit('loadImage');
-         /*this.context.commit(
-            'loadImage',
-            'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg'); */
+        // Fetch annotation classes by API.
+        this.context.commit('loadAnnotationClasses');
+        /*this.context.commit(
+           'loadImage',
+           'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg'); */
     }
 
 // 'https://www.fccnn.com/news/article885023.ece/alternates/BASE_LANDSCAPE/Michael%20Anderson%27s%20canoe%20near%20Red%20Wing%20during%20the%20Three%20Rivers%20Expedition%20in%20September%202017.%20A%20year%20later%2C%20the%20adventure%20continues.%20Photo%20by%20Michael%20Anderson'
     @Action
     public async postAnnotations(): Promise<void> {
         const post = {
-            annotations: this.annotations, context:
+            annotations: this.annotations,
+            context:
             this.pictureContext
         };
+        this.annotations.forEach(annotation => {
+                const post = {
+                    id: "",
+                    creatorId: "",
+                    createdOn: "",
+                    idTrash: "",
+                    idImg: "",
+                    location_x: annotation.box.x,
+                    location_y: annotation.box.y,
+                    width: annotation.box.width,
+                    height: annotation.box.height,
+                };
+                console.log(post);
+                axios.post('/images/annotate', post, this.axiosRequestConfig)
+            }
+        );
         console.log(post)
-        // TODO: Format annotations
-        // TODO: post serialized annotations.
     }
 
 }

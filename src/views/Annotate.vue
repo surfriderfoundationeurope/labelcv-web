@@ -41,19 +41,6 @@
 
                         <span> <strong> {{currentAnnotationLabel}}  </strong> </span></div>
 
-                    <!--            <div v-else>-->
-                    <!--                <h3> Select a label: </h3>-->
-                    <!--&lt;!&ndash;            {{currentAnnotationClassInputId = selectedAnnotationClass}}&ndash;&gt;-->
-                    <!--              <div v-for="annotationClass in state.annotationClasses" :key="annotationClass.id">-->
-                    <!--                <input-->
-                    <!--                        v-model="currentAnnotationClassInputId"-->
-                    <!--                        type="radio"-->
-                    <!--                        name="class"-->
-                    <!--                        :value="annotationClass.id"/>-->
-                    <!--                {{ annotationClass.label }}-->
-                    <!--              </div>-->
-                    <!--              </div>-->
-                    <!--          </div>-->
                     <h3>Environment</h3>
 
                     <segmented-control
@@ -82,7 +69,7 @@
                     >
                     </segmented-control>
                     <h3>Picture quality</h3>
-                    {{qualityValue}}
+                    {{state.pictureContext.quality}}
 
                     <segmented-control
                             ref="quality-control"
@@ -97,34 +84,8 @@
                     >
                     </segmented-control>
                     <h3>Annotations : {{state.annotations.length}}</h3>
-                    <div class="action-button-container">
-                        <!--                        {{ this.state.annotations}}-->
-                        <!--            <button-->
-                        <!--                    v-show="!isNaN(state.selectedAnnotationClass)"-->
-                        <!--              class="action-button action-button-warning boundingbox-action-button"-->
-                        <!--              @click="onEditAnnotationClick">-->
-                        <!--                <edit-2-icon class="svg-icon" />-->
-                        <!--              <span>Edit</span>-->
-                        <!--            </button>-->
-
-                        <!--            <button-->
-                        <!--                    v-show="isNaN(state.selectedAnnotationClass)"-->
-                        <!--              class="action-button action-button-success boundingbox-action-button"-->
-                        <!--              @click="onSaveAnnotationClick">-->
-                        <!--              <check-icon class="svg-icon" />-->
-                        <!--              <span>Save</span>-->
-                        <!--            </button>-->
-                        <!--            <button-->
-                        <!--              class="action-button action-button-danger boundingbox-action-button"-->
-                        <!--              @click="onDeleteAnnotationClick">-->
-                        <!--              <trash-2-icon class="svg-icon" />-->
-                        <!--              <span>Delete</span>-->
-                        <!--            </button>-->
-                    </div>
                 </div>
-                <!--        <button class="boundingbox-select-button" @click="onSelectNext">-->
-                <!--          <chevron-right-icon />-->
-                <!--        </button>-->
+
             </div>
             <div id="annotation-action-buttons">
                 <button

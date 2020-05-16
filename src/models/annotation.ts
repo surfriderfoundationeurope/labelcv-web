@@ -8,7 +8,7 @@ import Box from './geometry/box';
 
 interface AnnotationClass {
     id: number;
-    label: string;
+    type: string;
 }
 
 interface ContextClass {

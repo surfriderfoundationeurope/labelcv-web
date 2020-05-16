@@ -73,6 +73,7 @@ export default class Upload extends Vue {
    */
   private async onClick(provider: string) {
     const imageProvider = imageProviderService.getImageProvider(provider);
+    console.log(imageProvider);
     if (imageProvider) {
       const descriptors = await imageProvider.getImages();
       const unit = 100 / descriptors.length;
