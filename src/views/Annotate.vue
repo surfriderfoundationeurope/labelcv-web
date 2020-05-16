@@ -22,22 +22,10 @@
                 <ZoomPanel/>
             </div>
             <div id="annotator-action-panel-container">
-                <!--        <button class="boundingbox-select-button" @click="onSelectPrevious">-->
-                <!--          <chevron-left-icon />-->
-                <!--        </button>-->
-                <!--       <div id="annotation-message-panel" v-if="isNaN(state.selectedAnnotation) && state.message">-->
-                <!--              <alert-triangle-icon />-->
-                <!--              {{state.message}}-->
-                <!--               <alert-triangle-icon />-->
 
-                <!--        </div>-->
-                <!--        <div v-if="!isNaN(state.selectedAnnotation)" id="annotation-action-panel">-->
                 <div id="annotation-action-panel">
 
                     <div id="annotation-class-selectors">
-                        <!--        <div v-if="!isNaN(state.selectedAnnotationClass)">-->
-                        <!--            <h3> Selected label: </h3>-->
-
 
                         <span> <strong> {{currentAnnotationLabel}}  </strong> </span></div>
 
@@ -173,7 +161,7 @@
 
 
         get currentAnnotationLabel() {
-            return !isNaN(this.state.selectedAnnotationClass) ? this.state.annotationClasses[this.state.selectedAnnotationClass].label : ''
+            return !isNaN(this.state.selectedAnnotationClass) ? this.state.annotationClasses[this.state.selectedAnnotationClass].type : ''
         }
 
         get annotation() {
