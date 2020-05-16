@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Navbar from "./components/general/Navbar.vue";
+import Navbar from "./components/global/Navbar.vue";
 
 @Component({
   components: {
@@ -41,6 +41,27 @@ export default class App extends Vue {
   color: white;
   background: black;
 }
+
+a,
+li a {
+  text-decoration: none !important;
+  color: #7f7f7f !important;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+a:hover {
+  cursor: pointer !important;
+}
+
+li a.router-link-exact-active,
+a.router-link-exact-active:hover {
+  cursor: pointer !important;
+  color: white !important;
+  text-decoration: none !important;
+  padding-bottom: 2%;
+  border-bottom: 1px solid white !important;
+}
+
 .header-link {
   text-decoration: none;
 }
@@ -80,5 +101,11 @@ export default class App extends Vue {
 .slide-right-enter {
   opacity: 0;
   transform: translate(-2em, 0);
+}
+
+.btn-blue {
+  background-color: #0073be !important;
+  border-color: #0073be !important;
+  font-weight: bold !important;
 }
 </style>
