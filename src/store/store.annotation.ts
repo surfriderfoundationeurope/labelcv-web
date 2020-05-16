@@ -5,6 +5,7 @@
 
 import {Module, VuexModule, Mutation, Action} from 'vuex-module-decorators';
 
+import axios from 'axios';
 import Box from '@/models/geometry/box';
 import Size from '@/models/geometry/size';
 import Point from '@/models/geometry/point';
@@ -75,6 +76,11 @@ export default class AnnotationStore extends VuexModule {
     /** Current user cursor position (relative to real image size). */
     public readonly relativeCursor: Point = {x: 0, y: 0};
 
+    /** Const to define http request base url. Possible to moove this part in a external file or class. */
+    private HTTP = axios.create({
+        url: 'http://localhost:443/',
+    });
+
     /** Limit size for trash (in pixels) */
     public minTrashSize: number = 20; // todo : un-hardcode this.
 
@@ -98,10 +104,31 @@ export default class AnnotationStore extends VuexModule {
             const tokens: string[] = url.split('?');
             const seed: number = Date.now();
             const cacheless: string = `${tokens[0]}?${seed}`;
-            this.imageLoaded = false;
+            this.imageLoaded = true;
             this.image = cacheless;
             if (this.imageLoader) {
                 this.imageLoader.src = cacheless;
+            }
+        } else {
+            console.log("ELSE");
+            axios.defaults.baseURL = 'http://localhost:443';
+            axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+            axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+            axios.defaults.headers.post['Accept'] = '*/*';
+            let myUrl = '';
+            axios.get('/images').then(function(response) {
+                myUrl = response.data;
+                console.log(response.data);
+            });
+            if (myUrl) {
+                const src: string = myUrl;
+                this.imageLoaded = false;
+                this.image = src;
+                console.log("myURl");
+                if (this.imageLoader) {
+                    console.log("imageLODER = true");
+                    this.imageLoader.src = src;
+                }
             }
         }
     }
@@ -121,7 +148,6 @@ export default class AnnotationStore extends VuexModule {
             this.imageLoader.src = this.image;
         }
     }
-
 
     @Mutation
     public addAnnotation(box: Box): void {
@@ -255,7 +281,6 @@ export default class AnnotationStore extends VuexModule {
             this.relativeCursor.x = Math.round(offset.x);
             this.relativeCursor.y = Math.round(offset.y);
         }
-
     }
 
     @Action
@@ -267,6 +292,7 @@ export default class AnnotationStore extends VuexModule {
         this.context.commit('addAnnotationClass', {id: 0, label: 'Bottle'});
         this.context.commit('addAnnotationClass', {id: 1, label: 'Fragments'});
         this.context.commit('addAnnotationClass', {id: 2, label: 'Other'});
+
         // TODO: Fetch context classes by API.
         this.context.commit('addContextEnvClass', {value: 'nature', label: 'Nature'});
         this.context.commit('addContextEnvClass', {value: 'river', label: 'River'});
@@ -276,20 +302,10 @@ export default class AnnotationStore extends VuexModule {
         this.context.commit('addContextEnvClass', {value: 'indoor', label: 'Indoor'});
 
         // TODO: Fetch next image by API.
-        const urls =
-            [   'https://i.ibb.co/Db6NM2d/sample5-2.jpg',
-                'https://i.ibb.co/CWpd28x/sample5-3.jpg',
-                'https://i.ibb.co/LvSPVYk/sample5-4.jpg',
-                "https://i.ibb.co/7Q4dhSd/sample5-5.jpg",
-                "https://i.ibb.co/SRLdWzQ/sample5-6.jpg",
-                "https://i.ibb.co/kDHYrpM/sample5-7.jpg",
-                'https://i.ibb.co/F4tsWfv/sample5-8.jpg',
-                "https://i.ibb.co/PTszvPJ/sample5-9.jpg"
-            ];
-        this.context.commit(
+        this.context.commit('loadImage');
+         /*this.context.commit(
             'loadImage',
-            urls[Math.floor(Math.random() * Math.floor(urls.length))]
-        );
+            'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg'); */
     }
 
 // 'https://www.fccnn.com/news/article885023.ece/alternates/BASE_LANDSCAPE/Michael%20Anderson%27s%20canoe%20near%20Red%20Wing%20during%20the%20Three%20Rivers%20Expedition%20in%20September%202017.%20A%20year%20later%2C%20the%20adventure%20continues.%20Photo%20by%20Michael%20Anderson'
@@ -303,6 +319,5 @@ export default class AnnotationStore extends VuexModule {
         // TODO: Format annotations
         // TODO: post serialized annotations.
     }
-
 
 }
