@@ -29,74 +29,109 @@
 
                         <span> <strong> {{currentAnnotationLabel}}  </strong> </span></div>
 
-                    <h3>Environment</h3>
+                    <!--            <div v-else>-->
+                    <!--                <h3> Select a label: </h3>-->
+                    <!--&lt;!&ndash;            {{currentAnnotationClassInputId = selectedAnnotationClass}}&ndash;&gt;-->
+                    <!--              <div v-for="annotationClass in state.annotationClasses" :key="annotationClass.id">-->
+                    <!--                <input-->
+                    <!--                        v-model="currentAnnotationClassInputId"-->
+                    <!--                        type="radio"-->
+                    <!--                        name="class"-->
+                    <!--                        :value="annotationClass.id"/>-->
+                    <!--                {{ annotationClass.label }}-->
+                    <!--              </div>-->
+                    <!--              </div>-->
+                    <!--          </div>-->
+                    <div class="annotation-group">
+                        <h3>Context</h3>
+                        <segmented-control
+                                ref="env-control"
+                                class="flex-segmented-control"
+                                :options="state.contextEnvClasses"
+                                label="label"
+                                value="value"
+                                color="#fff"
+                                active-color="#0073be"
+                                :multiple="true"
+                                @select="onSelectEnv"
+                        />
+                    </div>
 
-                    <segmented-control
-                            ref="env-control"
-                            class="flex-segmented-control"
-                            :options="state.contextEnvClasses"
-                            label="label"
-                            value="value"
-                            color="#fff"
-                            active-color="#0073be"
-                            :multiple="true"
-                            @select="onSelectEnv"
-                    />
+                    <div class="annotation-group">
+                        <h3>Environment</h3>
 
-                    <h3>View Point</h3>
-                    <segmented-control
-                            ref="pov-control"
-                            class="flex-segmented-control"
-                            :options="state.contextPovClasses"
-                            label="label"
-                            value="value"
-                            color="#fff"
-                            active-color="#0073be"
-                            :multiple="false"
-                            @select="onSelectPov"
-                    >
-                    </segmented-control>
-                    <h3>Picture quality</h3>
-                    {{state.pictureContext.quality}}
+                        <segmented-control
+                                ref="env-control"
+                                class="flex-segmented-control"
+                                :options="state.contextEnvClasses"
+                                label="label"
+                                value="value"
+                                color="#fff"
+                                active-color="#0073be"
+                                :multiple="true"
+                                @select="onSelectEnv"
+                        />
+                    </div>
+                    <div class="annotation-group">
+                        <h3>View Point</h3>
+                        <segmented-control
+                                ref="pov-control"
+                                class="flex-segmented-control"
+                                :options="state.contextPovClasses"
+                                label="label"
+                                value="value"
+                                color="#fff"
+                                active-color="#0073be"
+                                :multiple="false"
+                                @select="onSelectPov"
+                        >
+                        </segmented-control>
+                    </div>
 
-                    <segmented-control
-                            ref="quality-control"
-                            class="flex-segmented-control"
-                            :options="state.contextQualityClasses"
-                            label="label"
-                            value="value"
-                            color="#fff"
-                            active-color="#0073be"
-                            :multiple="false"
-                            @select="onSelectQuality"
-                    >
-                    </segmented-control>
-                    <h3>Annotations : {{state.annotations.length}}</h3>
+                    <div class="annotation-group">
+
+                        <h3>Photo quality</h3>
+                        {{state.pictureContext.quality}}
+
+                        <segmented-control
+                                ref="quality-control"
+                                class="flex-segmented-control"
+                                :options="state.contextQualityClasses"
+                                label="label"
+                                value="value"
+                                color="#fff"
+                                active-color="#0073be"
+                                :multiple="false"
+                                @select="onSelectQuality"
+                        >
+                        </segmented-control>
+                    </div>
+                        <h3>Annotations : {{state.annotations.length}}</h3>
+                    </div>
+
                 </div>
-
-            </div>
-            <div id="annotation-action-buttons">
-                <button
-                        id="reset-action-button"
-                        class="action-button"
-                        @click="onResetAnnotationsClick">
-                    Reset
-                </button>
-                <button
-                        id="validate-action-button"
-                        class="action-button"
-                        @click="onValidateAnnotationsClick">
-                    Validate
-                </button>
-                <button
-                        id="skip-action-button"
-                        class="action-button"
-                        @click="onSkipPictureClick">
-                    Skip
-                </button>
+                <div id="annotation-action-buttons">
+                    <button
+                            id="reset-action-button"
+                            class="action-button"
+                            @click="onResetAnnotationsClick">
+                        Reset
+                    </button>
+                    <button
+                            id="validate-action-button"
+                            class="action-button"
+                            @click="onValidateAnnotationsClick">
+                        Validate
+                    </button>
+                    <button
+                            id="skip-action-button"
+                            class="action-button"
+                            @click="onSkipPictureClick">
+                        Skip
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script lang="ts">
@@ -308,10 +343,9 @@
     }
 
     #annotator-sizer {
-        width: 1px;
+        width: 15px;
         height: 100%;
-        margin: 0 10px 0 12px;
-        border-left: 1px solid rgb(150, 150, 150);
+        margin: 0 ;
         cursor: ew-resize;
     }
 
@@ -346,7 +380,6 @@
         width: 100%;
         padding: 0;
         background-color: black;
-        border: 1px solid rgb(25, 25, 25);
         color: white;
     }
 
@@ -363,6 +396,14 @@
         justify-content: space-between;
         width: 94%;
         margin: 3%;
+    }
+
+    .annotation-group{
+        margin-bottom: 2em;
+    }
+
+    .annotation-group h3{
+        font-size: 1.1rem;
     }
 
     .action-button-container {
@@ -421,15 +462,31 @@
     }
 
     .flex-segmented-control >>> .segmented-item {
-        border: 1px solid rgb(0, 115, 190) !important;
-        border-radius: 15px !important;
-        /*display: flex !important;*/
-        margin: 3px !important;
-        padding: 5px !important;
-        width: 80px !important;
-        font-size: 10px !important;
-        font-weight: 900;
-        flex: none !important;
+        background-color: rgb(50, 50, 50);
+        color: white;
+        height: 1.4em;
+        border-radius: 1.5em;
+        border: none !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 5px 3px;
+        padding: 0.2em 0.9em;
+        font-size: 0.7em;
+        flex: none;
+        cursor: pointer;
+    }
+
+    .flex-segmented-control >>> .segmented-item:hover {
+        background-color: rgb(70,70,70);
+    }
+
+    .flex-segmented-control >>> .segmented-item.is-selected {
+        background-color: rgb(0, 115, 190) !important;
+    }
+
+    .flex-segmented-control >>> .segmented-item.is-selected:hover {
+        background-color: rgb(1, 75, 122) !important;
     }
 
     .flex-segmented-control.segmented-control {
