@@ -27,7 +27,7 @@
             </span>
           </div>
 
-          <h3>Environment</h3>
+          <h5 class="font-weight-bold">Environment</h5>
 
           <segmented-control
             ref="env-control"
@@ -41,7 +41,7 @@
             @select="onSelectEnv"
           />
 
-          <h3>View Point</h3>
+          <h5 class="font-weight-bold">View Point</h5>
           <segmented-control
             ref="pov-control"
             class="flex-segmented-control"
@@ -54,7 +54,7 @@
             @select="onSelectPov"
           >
           </segmented-control>
-          <h3>Picture quality</h3>
+          <h5 class="font-weight-bold">Picture quality</h5>
           {{ state.pictureContext.quality }}
 
           <segmented-control
@@ -69,7 +69,9 @@
             @select="onSelectQuality"
           >
           </segmented-control>
-          <h3>Annotations : {{ state.annotations.length }}</h3>
+          <h5 class="font-weight-bold">
+            Annotations : {{ state.annotations.length }}
+          </h5>
         </div>
       </div>
       <div class="d-flex align-items-center flex-column">
@@ -297,7 +299,6 @@ export default class Annotate extends Vue {
   width: 1px;
   height: 100%;
   margin: 0 10px 0 12px;
-  border-left: 1px solid rgb(150, 150, 150);
   cursor: ew-resize;
 }
 
@@ -332,7 +333,6 @@ export default class Annotate extends Vue {
   width: 100%;
   padding: 0;
   background-color: black;
-  border: 1px solid rgb(25, 25, 25);
   color: white;
 }
 
@@ -341,7 +341,7 @@ export default class Annotate extends Vue {
   flex-direction: column;
   justify-content: space-between;
   width: 94%;
-  margin: 3%;
+  margin: 3% 0;
 }
 
 .action-button-container {
