@@ -1,21 +1,20 @@
 <template>
-  <div
-    id="annotator"
-    @mousemove="onMouseMove">
-    <v-dialog/>
+  <div id="annotator" @mousemove="onMouseMove">
+    <v-dialog />
     <img class="image-loader" ref="imageLoader" />
     <div
       id="annotator-surface-container"
       ref="surface"
-      :style="{ width: `${surfaceWidth}%`}">
+      :style="{ width: `${surfaceWidth}%` }"
+    >
       <AnnotationSurface />
     </div>
-    <div 
+    <div
       id="annotator-sizer"
       ref="sizer"
       @mousedown="onMouseDown"
-      @mouseup="onMouseUp">
-    </div>
+      @mouseup="onMouseUp"
+    ></div>
     <div id="annotator-control-panel">
       <div id="annotator-zoom-panel-container">
         <ZoomPanel />
@@ -24,26 +23,31 @@
         <button class="boundingbox-select-button" @click="onSelectPrevious">
           <chevron-left-icon />
         </button>
-        <div id="annotation-action-panel" v-if="!isNaN(state.selectedAnnotation)">
+        <div
+          id="annotation-action-panel"
+          v-if="!isNaN(state.selectedAnnotation)"
+        >
           <div id="annotation-class-selectors">
-            <div v-for="annotationClass in state.annotationClasses" :key="annotationClass.id">
-              <input
-                type="radio"
-                name="class"
-                :value="annotationClass.id" />
+            <div
+              v-for="annotationClass in state.annotationClasses"
+              :key="annotationClass.id"
+            >
+              <input type="radio" name="class" :value="annotationClass.id" />
               {{ annotationClass.label }}
             </div>
           </div>
           <div class="action-button-container">
             <button
               class="action-button action-button-success boundingbox-action-button"
-              @click="onSaveAnnotationClick">
+              @click="onSaveAnnotationClick"
+            >
               <check-icon />
               <span>Save</span>
             </button>
             <button
               class="action-button action-button-danger boundingbox-action-button"
-              @click="onDeleteAnnotationClick">
+              @click="onDeleteAnnotationClick"
+            >
               <trash-2-icon />
               <span>Delete</span>
             </button>
@@ -56,13 +60,15 @@
       <div id="annotation-action-buttons">
         <button
           class="action-button action-button-danger annotation-action-button"
-          @click="onResetAnnotationsClick">
+          @click="onResetAnnotationsClick"
+        >
           <trash-2-icon />
           <span>Reset annotation</span>
         </button>
         <button
           class="action-button action-button-success annotation-action-button"
-          @click="onValidateAnnotationsClick">
+          @click="onValidateAnnotationsClick"
+        >
           <check-icon />
           <span>Validate annotation</span>
         </button>
@@ -72,26 +78,25 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { getModule } from 'vuex-module-decorators';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { getModule } from "vuex-module-decorators";
 
-
-import { AnnotationClass } from '@/models/annotation';
-import AnnotationStore from '@/store/store.annotation';
+import { AnnotationClass } from "@/models/annotation";
+import AnnotationStore from "@/store/store.annotation";
 
 import {
   CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Trash2Icon,
-} from 'vue-feather-icons';
+} from "vue-feather-icons";
 
-import VModal from 'vue-js-modal';
+import VModal from "vue-js-modal";
 
-import AnnotationSurface from '@/components/annotation/AnnotationSurface.vue';
-import ZoomPanel from '@/components/annotation/ZoomPanel.vue';
-import store from '../store/store';
+import AnnotationSurface from "@/components/annotation/AnnotationSurface.vue";
+import ZoomPanel from "@/components/annotation/ZoomPanel.vue";
+import store from "../store/store";
 
 @Component({
   components: {
@@ -104,7 +109,6 @@ import store from '../store/store';
   },
 })
 export default class Annotate extends Vue {
-
   /** */
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
@@ -130,47 +134,49 @@ export default class Annotate extends Vue {
   }
 
   private onResetAnnotationsClick() {
-    this.$modal.show('dialog', {
-      title: 'Reset confirmation',
-      text: 'Would you like to reset existing annotations ?',
+    this.$modal.show("dialog", {
+      title: "Reset confirmation",
+      text: "Would you like to reset existing annotations ?",
       buttons: [
         {
-          title: 'Reset',
+          title: "Reset",
           default: true,
           handler: () => {
             this.state.resetAnnotations();
-            this.$modal.hide('dialog');
+            this.$modal.hide("dialog");
           },
         },
-        { title: 'Cancel' },
-    ]});
+        { title: "Cancel" },
+      ],
+    });
   }
 
   private onValidateAnnotationsClick() {
-    this.$modal.show('dialog', {
-      title: 'Annotation(s) confirmation',
-      text: 'Would you like to validate annotation(s) ?',
+    this.$modal.show("dialog", {
+      title: "Annotation(s) confirmation",
+      text: "Would you like to validate annotation(s) ?",
       buttons: [
         {
-          title: 'Validate',
+          title: "Validate",
           default: true,
           handler: () => {
             this.state.postAnnotations();
-            this.$modal.hide('dialog');
+            this.$modal.hide("dialog");
           },
         },
-        { title: 'Cancel' },
-    ]});
+        { title: "Cancel" },
+      ],
+    });
   }
 
   private onMouseMove(event: MouseEvent): void {
     if (event.target === this.$refs.sizer && this.isResizing) {
       // Width threshold normalization.
       if (this.surfaceWidth <= 50) {
-          this.surfaceWidth = 50;
+        this.surfaceWidth = 50;
       }
       if (this.surfaceWidth >= 80) {
-          this.surfaceWidth = 80;
+        this.surfaceWidth = 80;
       }
     }
   }
@@ -195,7 +201,6 @@ export default class Annotate extends Vue {
   private onSelectNext(): void {
     this.state.selectNext();
   }
-
 }
 </script>
 
@@ -337,6 +342,6 @@ export default class Annotate extends Vue {
 .annotation-action-button {
   width: 100%;
   margin-top: 10px;
-  margin-bottom: 0;
+  margin-bottom: 1;
 }
 </style>
