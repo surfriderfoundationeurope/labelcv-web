@@ -106,29 +106,22 @@
                         >
                         </segmented-control>
                     </div>
-                        <h3>Annotations : {{state.annotations.length}}</h3>
+                        <h3>Annotations : {{state.annotations.length}}  <small class="reset-annotations" @click="onResetAnnotationsClick">Reset</small></h3>
                     </div>
 
                 </div>
                 <div id="annotation-action-buttons">
-                    <button
-                            id="reset-action-button"
-                            class="action-button"
-                            @click="onResetAnnotationsClick">
-                        Reset
-                    </button>
-                    <button
-                            id="validate-action-button"
-                            class="action-button"
+
+                    <b-button
+                            variant="primary"
                             @click="onValidateAnnotationsClick">
                         Validate
-                    </button>
-                    <button
-                            id="skip-action-button"
-                            class="action-button"
+                    </b-button>
+                    <b-button
+                            variant="secondary"
                             @click="onSkipPictureClick">
                         Skip
-                    </button>
+                    </b-button>
                 </div>
             </div>
         </div>
@@ -157,6 +150,7 @@
     // import SegmentedControl from '@/components/annotation/SegmentedControl.vue';
 
     import store from '../store/store';
+    import {BButton} from "bootstrap-vue";
 
     @Component({
         components: {
@@ -168,7 +162,8 @@
             ChevronRightIcon,
             Trash2Icon,
             AlertTriangleIcon,
-            SegmentedControl
+            SegmentedControl,
+            BButton,
 
         },
     })
@@ -386,7 +381,12 @@
 
     #annotation-action-buttons {
         width: 100%;
-        display: inline-flex;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #annotation-action-buttons *:not(:last-child){
+        margin-bottom: 0.25em;
     }
 
 
@@ -448,9 +448,11 @@
         background: #33cf78;
     }
 
-    #reset-action-button {
-        width: 100%;
-        background: #FF6A6A;
+    .reset-annotations {
+        color: grey;
+        cursor: pointer;
+        font-size: 0.6em;
+        margin-left: 0.5em;
     }
 
     #skip-action-button {

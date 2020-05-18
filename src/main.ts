@@ -6,6 +6,10 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import VModal from "vue-js-modal";
 import { BootstrapVue } from "bootstrap-vue";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
+
+import "./shared-style.css";
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
