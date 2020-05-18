@@ -473,8 +473,8 @@
         align-items: center;
         justify-content: center;
         margin: 5px 3px;
-        padding: 0.2em 0.9em;
-        font-size: 0.7em;
+        padding: 0.75em 1em;
+        font-size: 0.8em;
         flex: none;
         cursor: pointer;
     }
