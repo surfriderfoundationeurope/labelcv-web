@@ -46,18 +46,6 @@ export default class Navbar extends Vue {}
   padding-top: 0;
   padding-bottom: 0;
 }
-li a {
-  text-decoration: none;
-  color: #7f7f7f;
-}
-
-li a.router-link-exact-active,
-a.router-link-exact-active:hover {
-  color: white;
-  text-decoration: none;
-  padding-bottom: 2%;
-  border-bottom: 1px solid white;
-}
 
 .logo-bg {
   background-color: #0073be;
