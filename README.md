@@ -37,8 +37,6 @@ git clone https://github.com/surfriderfoundationeurope/LabelCV
 git fetch 
 git checkout dev
 cd api/labelcv-api
-npm install 
-npm run start:dev
 ```
 Create a .env file in `api/labelcv-api` and copy-paste 
 (Fields with ***** are private and their content 
