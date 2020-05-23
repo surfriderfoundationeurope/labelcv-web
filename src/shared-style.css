@@ -1,0 +1,16 @@
+.btn{
+    border-radius: 0;
+}
+
+.btn.btn-primary{
+
+}
+
+.btn.btn-secondary{
+    background-color: black;
+    border: none;
+    color: white;
+}
+.btn.btn-secondary:hover{
+     background-color: #313131;
+ }
