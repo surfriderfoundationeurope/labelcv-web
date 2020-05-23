@@ -88,8 +88,6 @@
 
                     <div class="annotation-group">
                         <p>Photo quality</p>
-                        {{ state.pictureContext.quality }}
-
                         <segmented-control
                                 ref="quality-control"
                                 class="flex-segmented-control"
@@ -225,6 +223,7 @@
             this.$modal.show('dialog', {
                 title: 'Annotation(s) confirmation',
                 text: 'Would you like to validate annotation(s) ?',
+
                 buttons: [
                     {
                         title: 'Validate',
