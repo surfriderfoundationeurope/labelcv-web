@@ -137,6 +137,10 @@ export default class AnnotationStore extends VuexModule {
         let self = this;
         axios.get('/images/trashtypes', this.axiosRequestConfig).then(function (response) {
             self.annotationClasses = response.data;
+            // self.annotationClasses.forEach((annotationClass: any)  => {
+            //     annotationClass.id = annotationClass.id.toString()
+            // }); // todo: ask Vincent to change type in back
+            console.log(self.annotationClasses)
         }).catch(error => {
             console.log(error)
         });
@@ -174,7 +178,7 @@ export default class AnnotationStore extends VuexModule {
     }
 
     @Mutation
-    public addEnvPictureContext(value: Array<string>): void {
+    public addEnvPictureContext(value: string[]): void {
         this.pictureContext.environment = value
     }
 
@@ -221,9 +225,6 @@ export default class AnnotationStore extends VuexModule {
         // TODO: check annotation class index.
         this.annotations[this.selectedAnnotation].class =
             this.annotationClasses[annotationClassId];
-        // this.selectedAnnotation = NaN;
-        // this.selectedAnnotationClass = NaN ;
-
     }
 
     @Mutation
@@ -321,11 +322,11 @@ export default class AnnotationStore extends VuexModule {
         };
         this.annotations.forEach(annotation => {
                 const post = {
-                    id: "",
-                    creatorId: "",
-                    createdOn: "",
-                    idTrash: "",
-                    idImg: "",
+                    id: '',
+                    creatorId: '',
+                    createdOn: '',
+                    idTrash: '',
+                    idImg:'',
                     location_x: annotation.box.x,
                     location_y: annotation.box.y,
                     width: annotation.box.width,

@@ -87,7 +87,7 @@ export default class BoundingBox extends Vue {
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
   /** */
-  private annotationClassSelection = null;
+  private annotationClassSelection = {id: NaN, type: null };
   private hovered: boolean = false;
 
   get box(): Box {
@@ -104,7 +104,7 @@ export default class BoundingBox extends Vue {
   }
 
   get annotationClassId(): number {
-    if (this.annotationClassSelection) {
+    if (this.annotationClassSelection !== undefined) {
       return this.annotationClassSelection.id;
     } else return NaN;
   }
