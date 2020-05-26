@@ -163,7 +163,7 @@
 
         get currentAnnotationLabel() {
             return !isNaN(this.state.selectedAnnotationClass)
-                ? this.state.annotationClasses[this.state.selectedAnnotationClass].type
+                ? this.state.annotationClasses[this.state.selectedAnnotationClass].name
                 : '';
         }
 

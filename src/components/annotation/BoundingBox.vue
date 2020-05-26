@@ -30,7 +30,7 @@
           <p>{{ this.$props.id }}</p>
         </div>
         <pre v-if="annotationClassSelection">{{
-          annotationClassSelection.type
+          annotationClassSelection.name
         }}</pre>
       </div>
 
@@ -41,7 +41,7 @@
               class="custom-multi"
               v-model="annotationClassSelection"
               :options="state.annotationClasses"
-              label="type"
+              label="name"
               placeholder="Select one"
               @input="onSelectAnnotation"
               onchange="editAnnotation"
@@ -87,7 +87,7 @@ export default class BoundingBox extends Vue {
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
   /** */
-  private annotationClassSelection = {id: NaN, type: null };
+  private annotationClassSelection = {id: NaN, name: null };
   private hovered: boolean = false;
 
   get box(): Box {
