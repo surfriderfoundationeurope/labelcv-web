@@ -56,21 +56,6 @@
                     </div>
 
                     <div class="annotation-group">
-                        <p>Environment</p>
-
-                        <segmented-control
-                                ref="env-control"
-                                class="flex-segmented-control"
-                                :options="state.contextEnvClasses"
-                                label="label"
-                                value="value"
-                                color="#fff"
-                                active-color="#0073be"
-                                :multiple="true"
-                                @select="onSelectEnv"
-                        />
-                    </div>
-                    <div class="annotation-group">
                         <p>View Point</p>
                         <segmented-control
                                 ref="pov-control"
