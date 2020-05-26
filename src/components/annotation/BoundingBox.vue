@@ -134,8 +134,6 @@ export default class BoundingBox extends Vue {
   }
 
   private onMouseEnter(event: MouseEvent): void {
-    console.log("onMouseEnter");
-    console.log(this.$props.id);
 
     if (this.$el === event.target) {
       this.hovered = true;
@@ -155,7 +153,6 @@ export default class BoundingBox extends Vue {
   }
 
   private onSelectAnnotation(): void {
-    console.log("onSelectAnnotation");
     let annotationClassId = this.annotationClassId; // this.annotationClassSelection;
     let id = this.$props.id;
     console.log(annotationClassId);
