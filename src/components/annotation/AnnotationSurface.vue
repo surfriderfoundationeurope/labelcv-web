@@ -6,7 +6,7 @@
             @mouseleave="onMouseLeave"
             id="annotator-surface"
             :style="{
-      'background-image': state.imageLoaded ? `url(${state.image})` : 'none',
+      'background-image': state.imageLoaded ? `url('${state.image}')` : 'none',
       'cursor': isNaN(state.selectedAnnotation) ? 'crosshair' : 'not-allowed',
     }">
         <div id="loader-animation" v-if="!state.imageLoaded">
