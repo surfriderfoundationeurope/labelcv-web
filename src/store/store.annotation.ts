@@ -321,10 +321,10 @@ export default class AnnotationStore extends VuexModule {
 
   // 'https://www.fccnn.com/news/article885023.ece/alternates/BASE_LANDSCAPE/Michael%20Anderson%27s%20canoe%20near%20Red%20Wing%20during%20the%20Three%20Rivers%20Expedition%20in%20September%202017.%20A%20year%20later%2C%20the%20adventure%20continues.%20Photo%20by%20Michael%20Anderson'
   @Action
-  public postAnnotations(pictureContext): Promise<void> {
+  public postAnnotations(): Promise<void> {
     const post = {
       annotations: this.annotations,
-      context: pictureContext,
+      context: this.pictureContext,
     };
     this.annotations.forEach((annotation) => {
       const post = {

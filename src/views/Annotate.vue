@@ -76,11 +76,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { getModule } from 'vuex-module-decorators';
 // import { AnnotationClass } from "@/models/annotation";
-import AnnotationStore from "@/store/store.annotation";
+import AnnotationStore from '@/store/store.annotation';
 import {
   Edit2Icon,
   CheckIcon,
@@ -88,12 +88,12 @@ import {
   ChevronRightIcon,
   Trash2Icon,
   AlertTriangleIcon
-} from "vue-feather-icons";
+} from 'vue-feather-icons';
 
-import AnnotationSurface from "@/components/annotation/AnnotationSurface.vue";
-import ZoomPanel from "@/components/annotation/ZoomPanel.vue";
+import AnnotationSurface from '@/components/annotation/AnnotationSurface.vue';
+import ZoomPanel from '@/components/annotation/ZoomPanel.vue';
 // import store from "../store/store";
-import { BButton } from "bootstrap-vue";
+import { BButton } from 'bootstrap-vue';
 
 @Component({
   components: {
@@ -132,7 +132,7 @@ export default class Annotate extends Vue {
   get currentAnnotationLabel() {
     return !isNaN(this.state.selectedAnnotationClass)
       ? this.state.annotationClasses[this.state.selectedAnnotationClass].name
-      : "";
+      : '';
   }
 
   get annotation() {
@@ -155,57 +155,57 @@ export default class Annotate extends Vue {
   }
 
   private onResetAnnotationsClick() {
-    this.$modal.show("dialog", {
-      title: "Reset confirmation",
-      text: "Would you like to reset existing annotations ?",
+    this.$modal.show('dialog', {
+      title: 'Reset confirmation',
+      text: 'Would you like to reset existing annotations ?',
       buttons: [
         {
-          title: "Reset",
+          title: 'Reset',
           default: true,
           handler: () => {
             this.state.resetAnnotations();
-            this.$modal.hide("dialog");
+            this.$modal.hide('dialog');
           }
         },
-        { title: "Cancel" }
+        { title: 'Cancel' }
       ]
     });
   }
 
   private onValidateAnnotationsClick() {
-    this.$modal.show("dialog", {
-      title: "Annotation(s) confirmation",
-      text: "Would you like to validate annotation(s) ?",
+    this.$modal.show('dialog', {
+      title: 'Annotation(s) confirmation',
+      text: 'Would you like to validate annotation(s) ?',
 
       buttons: [
         {
-          title: "Validate",
+          title: 'Validate',
           default: true,
           handler: () => {
-            this.state.postAnnotations(this.state.pictureContext);
+            this.state.postAnnotations();
             this.nextPicture();
-            this.$modal.hide("dialog");
+            this.$modal.hide('dialog');
           }
         },
-        { title: "Cancel" }
+        { title: 'Cancel' }
       ]
     });
   }
 
   private onSkipPictureClick() {
-    this.$modal.show("dialog", {
-      title: "Skip confirmation",
-      text: "Would you like to skip this picture ?",
+    this.$modal.show('dialog', {
+      title: 'Skip confirmation',
+      text: 'Would you like to skip this picture ?',
       buttons: [
         {
-          title: "Yes",
+          title: 'Yes',
           default: true,
           handler: () => {
             this.nextPicture();
-            this.$modal.hide("dialog");
+            this.$modal.hide('dialog');
           }
         },
-        { title: "Cancel" }
+        { title: 'Cancel' }
       ]
     });
   }
@@ -226,8 +226,8 @@ export default class Annotate extends Vue {
       contextQualityClasses
     } = this.state;
     contextEnvClasses.selected = [];
-    contextPovClasses.selected = "";
-    contextQualityClasses.selected = "";
+    contextPovClasses.selected = '';
+    contextQualityClasses.selected = '';
   }
 
   private onMouseMove(event: MouseEvent): void {
