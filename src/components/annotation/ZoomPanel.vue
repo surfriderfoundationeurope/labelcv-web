@@ -4,7 +4,7 @@
       class="zoom-panel"
       :style="{
         'background-image': state.imageLoaded
-          ? 'url(' + state.image + ')'
+          ? `url('${state.image}')`
           : 'none',
         'background-position': `${viewportX}px ${viewportY}px`,
         'background-repeat': 'no-repeat',
@@ -31,7 +31,9 @@
       }"
       v-if="state.imageLoaded && !isNaN(state.selectedAnnotation)"
     ></div>
-    <div id="zoom-panal-state" v-if="!state.imageLoaded">Loading image from server</div>
+    <div id="zoom-panal-state" v-if="!state.imageLoaded">
+      Loading image from server
+    </div>
   </div>
 </template>
 
