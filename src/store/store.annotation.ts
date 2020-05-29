@@ -137,7 +137,7 @@ export default class AnnotationStore extends VuexModule {
       const self = this;
       axios
         .get('/images/random', this.axiosRequestConfig)
-        .then(function(response) {
+        .then((response) => {
           // console.log(response.data);
           const src = response.data.url;
           self.image = src;
@@ -157,7 +157,7 @@ export default class AnnotationStore extends VuexModule {
     const self = this;
     axios
       .get('/images/trashtypes', this.axiosRequestConfig)
-      .then(function(response) {
+      .then((response) => {
         self.annotationClasses = response.data;
         // self.annotationClasses.forEach((annotationClass: any)  => {
         //     annotationClass.id = annotationClass.id.toString()
@@ -319,14 +319,16 @@ export default class AnnotationStore extends VuexModule {
            'http://stmarkclinton.org/wp-content/uploads/2017/08/summer-rocks-trees-river.jpg'); */
   }
 
+  // tslint:disable-next-line:max-line-length
   // 'https://www.fccnn.com/news/article885023.ece/alternates/BASE_LANDSCAPE/Michael%20Anderson%27s%20canoe%20near%20Red%20Wing%20during%20the%20Three%20Rivers%20Expedition%20in%20September%202017.%20A%20year%20later%2C%20the%20adventure%20continues.%20Photo%20by%20Michael%20Anderson'
   @Action
-  public postAnnotations(): Promise<void> {
+  public postAnnotations(): void {
     const post = {
       annotations: this.annotations,
       context: this.pictureContext,
     };
-    this.annotations.forEach((annotation) => {
+    this.annotations.forEach(async (annotation) => {
+      // tslint:disable-next-line:no-shadowed-variable
       const post = {
         id: '',
         creatorId: '',
@@ -338,7 +340,7 @@ export default class AnnotationStore extends VuexModule {
         width: annotation.box.width,
         height: annotation.box.height,
       };
-      axios.post('/images/annotate', post, this.axiosRequestConfig);
+      await axios.post('/images/annotate', post, this.axiosRequestConfig);
     });
     // console.log(post);
   }

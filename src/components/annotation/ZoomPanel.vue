@@ -31,20 +31,18 @@
       }"
       v-if="state.imageLoaded && !isNaN(state.selectedAnnotation)"
     ></div>
-    <div id="zoom-panal-state" v-if="!state.imageLoaded">
-      Loading image from server
-    </div>
+    <div id="zoom-panal-state" v-if="!state.imageLoaded">Loading image from server</div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { getModule } from 'vuex-module-decorators';
 
-import AnnotationStore from "@/store/store.annotation";
-import Point from "@/models/geometry/point";
-import Size from "@/models/geometry/size";
+import AnnotationStore from '@/store/store.annotation';
+import Point from '@/models/geometry/point';
+import Size from '@/models/geometry/size';
 
 @Component({})
 export default class ZoomPanel extends Vue {

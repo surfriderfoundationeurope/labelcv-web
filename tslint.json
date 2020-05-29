@@ -11,7 +11,9 @@
     "no-consecutive-blank-lines": false,
     "object-literal-sort-keys": false,
     "ordered-imports": false,
-    "quotemark": [true, "single", "jsx-single"]
+    "quotemark": [true, "single", "jsx-single"],
+    "trailing-comma": [true],
+    "no-console": [false, "log", "error"]
   },
   "rulesDirectory": []
 }
