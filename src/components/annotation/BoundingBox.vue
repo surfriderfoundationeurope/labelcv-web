@@ -30,7 +30,7 @@
           <p>{{ this.$props.id }}</p>
         </div>
         <pre v-if="annotationClassSelection">{{
-          annotationClassSelection.type
+          annotationClassSelection.name
         }}</pre>
       </div>
 
@@ -41,15 +41,14 @@
               class="custom-multi"
               v-model="annotationClassSelection"
               :options="state.annotationClasses"
-              label="type"
+              label="name"
               placeholder="Select one"
               @input="onSelectAnnotation"
               onchange="editAnnotation"
               :show-labels="false"
               :allow-empty="false"
               :searchable="false"
-            >
-            </multiselect>
+            ></multiselect>
           </div>
         </template>
       </div>
@@ -58,19 +57,19 @@
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <script lang="ts">
-import { XIcon } from "vue-feather-icons";
+import { XIcon } from 'vue-feather-icons';
 
-import Vue, { VNode } from "vue";
-import Component from "vue-class-component";
-import Multiselect from "vue-multiselect";
+import Vue, { VNode } from 'vue';
+import Component from 'vue-class-component';
+import Multiselect from 'vue-multiselect';
 
-import { getModule } from "vuex-module-decorators";
+import { getModule } from 'vuex-module-decorators';
 
-import AnnotationStore from "@/store/store.annotation";
+import AnnotationStore from '@/store/store.annotation';
 
-import Box from "@/models/geometry/box";
-import Size from "@/models/geometry/size";
-import { Annotation, AnnotationClass } from "@/models/annotation";
+import Box from '@/models/geometry/box';
+import Size from '@/models/geometry/size';
+import { Annotation, AnnotationClass } from '@/models/annotation';
 
 // register globally
 // Vue.component('multiselect', Multiselect);
@@ -78,21 +77,21 @@ import { Annotation, AnnotationClass } from "@/models/annotation";
 @Component({
   components: {
     XIcon,
-    Multiselect,
+    Multiselect
   },
-  props: ["id", "raw", "annotation"],
+  props: ['id', 'raw', 'annotation']
 })
 export default class BoundingBox extends Vue {
   /** */
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
   /** */
-  private annotationClassSelection = null;
+  private annotationClassSelection = { id: NaN, name: null };
   private hovered: boolean = false;
 
   get box(): Box {
     const id = this.$props.id;
-    if (id === "raw") {
+    if (id === 'raw') {
       return this.$props.raw;
     }
     // TODO: boundaries control.
@@ -100,13 +99,15 @@ export default class BoundingBox extends Vue {
   }
 
   get labelled(): boolean {
-    return this.state.annotations[this.$props.id] != undefined;
+    return this.state.annotations[this.$props.id] !== undefined;
   }
 
   get annotationClassId(): number {
-    if (this.annotationClassSelection) {
+    if (this.annotationClassSelection !== undefined) {
       return this.annotationClassSelection.id;
-    } else return NaN;
+    } else {
+      return NaN;
+    }
   }
 
   public get disabled(): boolean {
@@ -134,9 +135,6 @@ export default class BoundingBox extends Vue {
   }
 
   private onMouseEnter(event: MouseEvent): void {
-    console.log("onMouseEnter");
-    console.log(this.$props.id);
-
     if (this.$el === event.target) {
       this.hovered = true;
     }
@@ -155,11 +153,10 @@ export default class BoundingBox extends Vue {
   }
 
   private onSelectAnnotation(): void {
-    console.log("onSelectAnnotation");
-    let annotationClassId = this.annotationClassId; // this.annotationClassSelection;
-    let id = this.$props.id;
+    const annotationClassId = this.annotationClassId; // this.annotationClassSelection;
+    const id = this.$props.id;
     console.log(annotationClassId);
-    const edit = { id: id, annotationClassId: annotationClassId };
+    const edit = { id, annotationClassId };
     this.state.editAnnotationClass(edit);
   }
 

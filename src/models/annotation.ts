@@ -7,29 +7,35 @@
 import Box from './geometry/box';
 
 interface AnnotationClass {
-    id: number;
-    type: string;
+  id: number;
+  name: string;
+}
+
+interface EnvContextClass {
+  selected: string[];
+  options: object[];
 }
 
 interface ContextClass {
-    value: string;
-    label: string;
+  selected: string;
+  options: object[];
 }
 
 interface PictureContext {
-    environment: Array<string>;
-    quality: string;
-    pointOfView: string;
+  environment: string[];
+  quality: string;
+  pointOfView: string;
 }
 
 interface Annotation {
-    box: Box;
-    class?: AnnotationClass;
+  box: Box;
+  class?: AnnotationClass;
 }
 
 export {
-    AnnotationClass,
-    Annotation,
-    ContextClass,
-    PictureContext
+  AnnotationClass,
+  Annotation,
+  ContextClass,
+  PictureContext,
+  EnvContextClass,
 };

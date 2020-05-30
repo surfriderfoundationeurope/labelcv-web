@@ -19,28 +19,27 @@
         </b-nav-item>
       </b-navbar-nav>
 
-      <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto">
+      <!-- Right aligned nav avatar -->
+      <!-- <b-navbar-nav class="ml-auto">
         <b-nav-item-dropdown right no-caret>
-          <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
             <b-avatar />
           </template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
           <b-dropdown-item href="#">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
-      </b-navbar-nav>
+      </b-navbar-nav>-->
     </b-collapse>
   </b-navbar>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { getModule } from 'vuex-module-decorators';
 
 @Component({
-  components: {},
+  components: {}
 })
 export default class Annotate extends Vue {}
 </script>

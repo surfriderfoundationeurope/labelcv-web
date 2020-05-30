@@ -10,18 +10,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
-import Navbar from "./components/global/Navbar.vue";
+import { Component, Vue } from 'vue-property-decorator';
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+import Navbar from './components/global/Navbar.vue';
 
 @Component({ components: { Navbar } })
 export default class App extends Vue {
-  private transitionSide: string = "slide-right";
+  private transitionSide: string = 'slide-right';
 
   private beforeRouteUpdate(to: any, from: any, next: any): void {
-    this.transitionSide = to.order < from.order ? "slide-right" : "slide-left";
+    this.transitionSide = to.order < from.order ? 'slide-right' : 'slide-left';
     next();
   }
 }
