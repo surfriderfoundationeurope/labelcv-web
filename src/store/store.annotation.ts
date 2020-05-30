@@ -334,7 +334,7 @@ export default class AnnotationStore extends VuexModule {
           url: this.image,
           bbox: []};
       axios.post('/images/update', postImageLabel, this.axiosRequestConfig);
-    this.annotations.forEach(async (annotation) => {
+      this.annotations.forEach(async (annotation) => {
       // tslint:disable-next-line:no-shadowed-variable
       const postAnnotation = {
         id: '',

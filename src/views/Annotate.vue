@@ -145,8 +145,10 @@ export default class Annotate extends Vue {
         : this.state.annotations[this.state.annotations.length];
   }
 
-  get isComplete () {
-    return this.state.pictureContext.environment && this.state.pictureContext.quality && this.state.pictureContext.pointOfView ;
+  get isComplete() {
+    return this.state.pictureContext.environment &&
+           this.state.pictureContext.quality &&
+           this.state.pictureContext.pointOfView ;
   }
 
   private onSaveAnnotationClick() {
@@ -262,7 +264,7 @@ export default class Annotate extends Vue {
     }
   }
 
-  private onSelectEnv(optionsSelected: string[]): void {
+  private onSelectEnv(optionsSelected: string): void {
     this.state.addEnvPictureContext(optionsSelected);
   }
 
