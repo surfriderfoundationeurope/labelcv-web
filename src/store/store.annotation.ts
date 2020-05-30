@@ -323,13 +323,20 @@ export default class AnnotationStore extends VuexModule {
   // 'https://www.fccnn.com/news/article885023.ece/alternates/BASE_LANDSCAPE/Michael%20Anderson%27s%20canoe%20near%20Red%20Wing%20during%20the%20Three%20Rivers%20Expedition%20in%20September%202017.%20A%20year%20later%2C%20the%20adventure%20continues.%20Photo%20by%20Michael%20Anderson'
   @Action
   public postAnnotations(): void {
-    const post = {
-      annotations: this.annotations,
-      context: this.pictureContext,
-    };
+      const postImageLabel = {
+          imageId: '',
+          creatorId: '',
+          createdOn: '',
+          filename: '',
+          view: this.pictureContext.pointOfView,
+          imgQuality: this.pictureContext.quality,
+          context: this.pictureContext.environment,
+          url: this.image,
+          bbox: []};
+      axios.post('/images/update', postImageLabel, this.axiosRequestConfig);
     this.annotations.forEach(async (annotation) => {
       // tslint:disable-next-line:no-shadowed-variable
-      const post = {
+      const postAnnotation = {
         id: '',
         creatorId: '',
         createdOn: '',
@@ -340,7 +347,7 @@ export default class AnnotationStore extends VuexModule {
         width: annotation.box.width,
         height: annotation.box.height,
       };
-      await axios.post('/images/annotate', post, this.axiosRequestConfig);
+      await axios.post('/images/annotate', postAnnotation, this.axiosRequestConfig);
     });
     // console.log(post);
   }
