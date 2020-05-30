@@ -66,6 +66,7 @@
       <div id="annotation-action-buttons">
         <b-button
           variant="primary"
+          :disabled="!isComplete"
           @click="onValidateAnnotationsClick"
         >Validate {{ state.annotations.length }} annotations</b-button>
         <b-button variant="secondary" @click="onSkipPictureClick">Skip</b-button>
@@ -142,6 +143,10 @@ export default class Annotate extends Vue {
       !isNaN(index)
         ? this.state.annotations[index]
         : this.state.annotations[this.state.annotations.length];
+  }
+
+  get isComplete () {
+    return this.state.pictureContext.environment && this.state.pictureContext.quality && this.state.pictureContext.pointOfView ;
   }
 
   private onSaveAnnotationClick() {
