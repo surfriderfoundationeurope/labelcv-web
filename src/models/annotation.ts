@@ -22,7 +22,7 @@ interface ContextClass {
 }
 
 interface PictureContext {
-  environment: string[];
+  environment: string;
   quality: string;
   pointOfView: string;
 }

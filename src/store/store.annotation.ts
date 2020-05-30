@@ -49,7 +49,7 @@ export default class AnnotationStore extends VuexModule {
   public annotations: Annotation[] = [];
 
   public pictureContext: PictureContext = {
-    environment: [],
+    environment: '',
     quality: '',
     pointOfView: '',
   };
@@ -117,7 +117,7 @@ export default class AnnotationStore extends VuexModule {
 
   @Mutation
   public resetPictureContext(): void {
-    this.pictureContext.environment = [];
+    this.pictureContext.environment = '';
     this.pictureContext.quality = '';
     this.pictureContext.pointOfView = '';
   }
@@ -191,7 +191,7 @@ export default class AnnotationStore extends VuexModule {
   }
 
   @Mutation
-  public addEnvPictureContext(value: string[]): void {
+  public addEnvPictureContext(value: string): void {
     this.pictureContext.environment = value;
   }
 

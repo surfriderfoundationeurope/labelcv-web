@@ -19,8 +19,9 @@
           </div>
           <div class="annotation-group">
             <p>Context</p>
-            <b-form-checkbox-group
-              v-model="state.contextEnvClasses.selected"
+            <b-form-group>
+              <b-form-radio-group
+               v-model="state.contextEnvClasses.selected"
               :options="state.contextEnvClasses.options"
               name="env-buttons"
               buttons
@@ -28,6 +29,7 @@
               button-variant="dark"
               size="sm"
             />
+          </b-form-group>
           </div>
 
           <div class="annotation-group">
