@@ -345,7 +345,7 @@ export default class AnnotationStore extends VuexModule {
         id: '',
         creatorId: this.creatorId,
         createdOn: '',
-        idTrash: annotation.class != undefined ? annotation.class.id : -1,
+        idTrash: annotation.class !== undefined ? annotation.class.id : -1,
         idImg: this.imageId,
         location_x: annotation.box.x,
         location_y: annotation.box.y,
