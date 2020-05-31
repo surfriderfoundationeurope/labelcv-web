@@ -29,6 +29,8 @@ export default class AnnotationStore extends VuexModule {
   /** */
   // Note: consider using more complex structure like id.
   public image: string = '';
+  public imageId: string = '';
+  public creatorId: string = '';
 
   /** HTML <img> element used as image loader. */
   public imageLoader: HTMLImageElement | undefined;
@@ -139,11 +141,13 @@ export default class AnnotationStore extends VuexModule {
         .get('/images/random', this.axiosRequestConfig)
         .then((response) => {
           // console.log(response.data);
-          const src = response.data.url;
-          self.image = src;
+          const data = response.data;
+          self.image = data.url;
+          self.imageId = data.imageId;
+          self.creatorId = data.creatorId;
           self.imageLoaded = false;
           if (self.imageLoader) {
-            self.imageLoader.src = src;
+            self.imageLoader.src = data.url;
           }
         })
         .catch((error) => {
@@ -324,8 +328,8 @@ export default class AnnotationStore extends VuexModule {
   @Action
   public postAnnotations(): void {
       const postImageLabel = {
-          imageId: '',
-          creatorId: '',
+          imageId: this.imageId,
+          creatorId: this.creatorId,
           createdOn: '',
           filename: '',
           view: this.pictureContext.pointOfView,
@@ -336,12 +340,13 @@ export default class AnnotationStore extends VuexModule {
       axios.post('/images/update', postImageLabel, this.axiosRequestConfig);
       this.annotations.forEach(async (annotation) => {
       // tslint:disable-next-line:no-shadowed-variable
+
       const postAnnotation = {
         id: '',
-        creatorId: '',
+        creatorId: this.creatorId,
         createdOn: '',
-        idTrash: '',
-        idImg: '',
+        idTrash: annotation.class != undefined ? annotation.class.id : -1,
+        idImg: this.imageId,
         location_x: annotation.box.x,
         location_y: annotation.box.y,
         width: annotation.box.width,
