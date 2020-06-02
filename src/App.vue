@@ -1,19 +1,6 @@
 <template>
   <div id="app">
-    <div id="header">
-      <div class="header-brand">Plastic Origin</div>
-      <ul class="header-navigation">
-        <li>
-          <router-link to="/">About</router-link>
-        </li>
-        <li>
-          <router-link to="/upload">Upload</router-link>
-        </li>
-        <li>
-          <router-link to="/annotate">Annotate</router-link>
-        </li>
-      </ul>
-    </div>
+    <Navbar />
     <div id="router-view-container">
       <transition :name="transitionSide" mode="out-in">
         <router-view />
@@ -24,8 +11,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+import Navbar from './components/global/Navbar.vue';
 
-@Component({})
+@Component({ components: { Navbar } })
 export default class App extends Vue {
   private transitionSide: string = 'slide-right';
 
@@ -47,20 +38,19 @@ export default class App extends Vue {
   width: 100vw;
   height: 100vh;
   color: white;
+  background: black;
 }
 
 #router-view-container {
   width: 94%;
   height: 78%;
-  margin: 0% 3% 0% 3%;
+  margin: 0 1rem;
 }
 
-#header {
-  display: flex;
-  justify-content: space-between;
-  width: 94%;
-  height: 5%;
-  margin: 3% 3%;
+img.mx-auto {
+  bottom: 2px;
+  margin: 50% 10% 2% 10%;
+  width: 80%;
 }
 
 .image-loader {
@@ -75,40 +65,6 @@ export default class App extends Vue {
   background: rgba(0, 0, 0, 0.6) !important;
 }
 
-
-.header-brand {
-  font-weight: 900;
-}
-
-.header-navigation {
-  margin: 0;
-}
-
-.header-navigation li {
-  display: inline;
-  padding-left: 15px;
-}
-
-.header-navigation li a {
-  color: white;
-  font-size: 10pt;
-  text-decoration: none;
-  padding-bottom: 5px;
-  border-bottom: 3px solid transparent;
-}
-
-.header-navigation li a:hover {
-  color: white;
-  padding-bottom: 6px;
-  border-bottom: 1px solid white;
-}
-
-.header-navigation li a.router-link-exact-active,
-.header-navigation li a.router-link-exact-active:hover {
-  color: white;
-  padding-bottom: 5px;
-  border-bottom: 3px solid white;
-}
 .slide-left-enter-active,
 .slide-left-leave-active,
 .slide-right-enter-active,

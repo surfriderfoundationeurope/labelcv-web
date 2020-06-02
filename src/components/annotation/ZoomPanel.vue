@@ -3,11 +3,14 @@
     <div
       class="zoom-panel"
       :style="{
-        'background-image': state.imageLoaded ? 'url(' + state.image + ')' : 'none',
+        'background-image': state.imageLoaded
+          ? `url('${state.image}')`
+          : 'none',
         'background-position': `${viewportX}px ${viewportY}px`,
         'background-repeat': 'no-repeat',
       }"
-      v-if="state.imageLoaded && isNaN(state.selectedAnnotation)">
+      v-if="state.imageLoaded && isNaN(state.selectedAnnotation)"
+    >
       <div class="axis x-axis" v-if="state.imageLoaded"></div>
       <div class="axis y-axis" v-if="state.imageLoaded"></div>
       <div id="zoom-panel-coordinates" v-if="state.imageLoaded">
@@ -18,12 +21,16 @@
     <div
       class="zoom-panel"
       :style="{
-        'background-image': state.imageLoaded ? 'url(' + state.image + ')' : 'none',
-        'background-position': `-${state.annotations[state.selectedAnnotation].box.x}px -${state.annotations[state.selectedAnnotation].box.y}px`,
+        'background-image': state.imageLoaded
+          ? 'url(' + state.image + ')'
+          : 'none',
+        'background-position': `-${
+          state.annotations[state.selectedAnnotation].box.x
+        }px -${state.annotations[state.selectedAnnotation].box.y}px`,
         'background-repeat': 'no-repeat',
       }"
-      v-if="state.imageLoaded && !isNaN(state.selectedAnnotation)">
-    </div>
+      v-if="state.imageLoaded && !isNaN(state.selectedAnnotation)"
+    ></div>
     <div id="zoom-panal-state" v-if="!state.imageLoaded">
       Loading image from server
     </div>
@@ -41,7 +48,6 @@ import Size from '@/models/geometry/size';
 
 @Component({})
 export default class ZoomPanel extends Vue {
-
   /** */
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
@@ -49,11 +55,11 @@ export default class ZoomPanel extends Vue {
   private readonly size: Size = { width: 0, height: 0 };
 
   get viewportX(): number {
-    return (this.size.width / 2) - this.state.relativeCursor.x;
+    return this.size.width / 2 - this.state.relativeCursor.x;
   }
 
   get viewportY(): number {
-    return (this.size.height / 2) - this.state.relativeCursor.y;
+    return this.size.height / 2 - this.state.relativeCursor.y;
   }
 
   private mounted() {
@@ -65,8 +71,8 @@ export default class ZoomPanel extends Vue {
 
 <style scoped>
 #zoom-panel-container {
-  width: 100%;
-  height: 100%;
+  width: 400px;
+  height: 300px;
 }
 
 .zoom-panel {

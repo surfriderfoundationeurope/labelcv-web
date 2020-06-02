@@ -1,71 +1,78 @@
 <template>
-  <div
-    id="annotator"
-    @mousemove="onMouseMove">
-    <v-dialog/>
+  <div id="annotator" @mousemove="onMouseMove">
+    <v-dialog />
     <img class="image-loader" ref="imageLoader" />
-    <div
-      id="annotator-surface-container"
-      ref="surface"
-      :style="{ width: `${surfaceWidth}%`}">
+    <div id="annotator-surface-container" ref="surface" :style="{ width: `${surfaceWidth}%` }">
       <AnnotationSurface />
     </div>
-    <div 
-      id="annotator-sizer"
-      ref="sizer"
-      @mousedown="onMouseDown"
-      @mouseup="onMouseUp">
-    </div>
+    <div id="annotator-sizer" ref="sizer" @mousedown="onMouseDown()" @mouseup="onMouseUp()"></div>
     <div id="annotator-control-panel">
       <div id="annotator-zoom-panel-container">
         <ZoomPanel />
       </div>
       <div id="annotator-action-panel-container">
-        <button class="boundingbox-select-button" @click="onSelectPrevious">
-          <chevron-left-icon />
-        </button>
-        <div id="annotation-action-panel" v-if="!isNaN(state.selectedAnnotation)">
+        <div id="annotation-action-panel">
           <div id="annotation-class-selectors">
-            <div v-for="annotationClass in state.annotationClasses" :key="annotationClass.id">
-              <input
-                type="radio"
-                name="class"
-                :value="annotationClass.id" />
-              {{ annotationClass.label }}
-            </div>
+            <span>
+              <strong>{{ currentAnnotationLabel }}</strong>
+            </span>
           </div>
-          <div class="action-button-container">
-            <button
-              class="action-button action-button-success boundingbox-action-button"
-              @click="onSaveAnnotationClick">
-              <check-icon />
-              <span>Save</span>
-            </button>
-            <button
-              class="action-button action-button-danger boundingbox-action-button"
-              @click="onDeleteAnnotationClick">
-              <trash-2-icon />
-              <span>Delete</span>
-            </button>
+          <div class="annotation-group">
+            <p>Context</p>
+            <b-form-group>
+              <b-form-radio-group
+               v-model="state.contextEnvClasses.selected"
+              :options="state.contextEnvClasses.options"
+              name="env-buttons"
+              buttons
+              @change="onSelectEnv"
+              button-variant="dark"
+              size="sm"
+            />
+          </b-form-group>
+          </div>
+
+          <div class="annotation-group">
+            <p>View Point</p>
+            <b-form-group>
+              <b-form-radio-group
+                v-model="state.contextPovClasses.selected"
+                :options="state.contextPovClasses.options"
+                name="pov-buttons"
+                @change="onSelectPov"
+                buttons
+                button-variant="dark"
+                size="sm"
+              />
+            </b-form-group>
+          </div>
+
+          <div class="annotation-group">
+            <p>Photo quality</p>
+            <b-form-group>
+              <b-form-radio-group
+                v-model="state.contextQualityClasses.selected"
+                :options="state.contextQualityClasses.options"
+                buttons
+                @change="onSelectQuality"
+                name="quality-buttons"
+                button-variant="dark"
+                size="sm"
+              />
+            </b-form-group>
           </div>
         </div>
-        <button class="boundingbox-select-button" @click="onSelectNext">
-          <chevron-right-icon />
-        </button>
       </div>
       <div id="annotation-action-buttons">
-        <button
-          class="action-button action-button-danger annotation-action-button"
-          @click="onResetAnnotationsClick">
-          <trash-2-icon />
-          <span>Reset annotation</span>
-        </button>
-        <button
-          class="action-button action-button-success annotation-action-button"
-          @click="onValidateAnnotationsClick">
-          <check-icon />
-          <span>Validate annotation</span>
-        </button>
+        <b-button
+          variant="primary"
+          :disabled="!isComplete"
+          @click="onValidateAnnotationsClick"
+        >Validate {{ state.annotations.length }} annotations</b-button>
+        <b-button variant="secondary" @click="onSkipPictureClick">Skip</b-button>
+        <!-- <b-button class="reset-annotations" @click="onResetAnnotationsClick">
+                  Reset
+        </b-button>-->
       </div>
     </div>
   </div>
@@ -75,36 +82,36 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { getModule } from 'vuex-module-decorators';
-
-
-import { AnnotationClass } from '@/models/annotation';
+// import { AnnotationClass } from "@/models/annotation";
 import AnnotationStore from '@/store/store.annotation';
-
 import {
+  Edit2Icon,
   CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Trash2Icon,
+  AlertTriangleIcon
 } from 'vue-feather-icons';
-
-import VModal from 'vue-js-modal';
 
 import AnnotationSurface from '@/components/annotation/AnnotationSurface.vue';
 import ZoomPanel from '@/components/annotation/ZoomPanel.vue';
-import store from '../store/store';
+// import store from "../store/store";
+import { BButton } from 'bootstrap-vue';
 
 @Component({
   components: {
     AnnotationSurface,
     ZoomPanel,
     CheckIcon,
+    Edit2Icon,
     ChevronLeftIcon,
     ChevronRightIcon,
     Trash2Icon,
-  },
+    AlertTriangleIcon,
+    BButton
+  }
 })
 export default class Annotate extends Vue {
-
   /** */
   private readonly state: AnnotationStore = getModule(AnnotationStore);
 
@@ -114,19 +121,46 @@ export default class Annotate extends Vue {
   /** */
   private isResizing: boolean = false;
 
-  private mounted(): void {
-    this.state.registerImageLoader(this.$refs.imageLoader as HTMLImageElement);
+  /** */
+  private currentAnnotationClassInputId: number | null = null;
+
+  private created(): void {
     this.state.fetchState();
   }
 
-  private onDeleteAnnotationClick() {
-    this.state.deleteSelectedAnnotation();
+  private mounted(): void {
+    this.state.registerImageLoader(this.$refs.imageLoader as HTMLImageElement);
+  }
+
+  get currentAnnotationLabel() {
+    return !isNaN(this.state.selectedAnnotationClass)
+      ? this.state.annotationClasses[this.state.selectedAnnotationClass].name
+      : '';
+  }
+
+  get annotation() {
+    return (index: number) =>
+      !isNaN(index)
+        ? this.state.annotations[index]
+        : this.state.annotations[this.state.annotations.length];
+  }
+
+  get isComplete() {
+    return this.state.pictureContext.environment &&
+           this.state.pictureContext.quality &&
+           this.state.pictureContext.pointOfView ;
   }
 
   private onSaveAnnotationClick() {
-    // TODO: Ensure value is selected.
-    // TODO: retrieve input value.
-    this.state.saveSelectedAnnotation(0);
+    // Ensure value is selected
+    if (this.currentAnnotationClassInputId != null) {
+      // Retrieve input value.
+
+      this.state.saveSelectedAnnotation(this.currentAnnotationClassInputId);
+      this.state.resetSelectedAnnotation();
+      // reset v-model for input
+      //   this.selectedAnnotationClassInput = null ;
+    }
   }
 
   private onResetAnnotationsClick() {
@@ -140,37 +174,79 @@ export default class Annotate extends Vue {
           handler: () => {
             this.state.resetAnnotations();
             this.$modal.hide('dialog');
-          },
+          }
         },
-        { title: 'Cancel' },
-    ]});
+        { title: 'Cancel' }
+      ]
+    });
   }
 
   private onValidateAnnotationsClick() {
     this.$modal.show('dialog', {
       title: 'Annotation(s) confirmation',
       text: 'Would you like to validate annotation(s) ?',
+
       buttons: [
         {
           title: 'Validate',
           default: true,
           handler: () => {
             this.state.postAnnotations();
+            this.nextPicture();
             this.$modal.hide('dialog');
-          },
+          }
         },
-        { title: 'Cancel' },
-    ]});
+        { title: 'Cancel' }
+      ]
+    });
+  }
+
+  private onSkipPictureClick() {
+    this.$modal.show('dialog', {
+      title: 'Skip confirmation',
+      text: 'Would you like to skip this picture ?',
+      buttons: [
+        {
+          title: 'Yes',
+          default: true,
+          handler: () => {
+            this.nextPicture();
+            this.$modal.hide('dialog');
+          }
+        },
+        { title: 'Cancel' }
+      ]
+    });
+  }
+
+  private nextPicture() {
+    this.state.resetAnnotations();
+    this.state.resetPictureContext();
+    this.resetContextsSelected();
+
+    this.state.fetchState();
+  }
+
+  private resetContextsSelected() {
+    // todo !
+    const {
+      contextPovClasses,
+      contextEnvClasses,
+      contextQualityClasses
+    } = this.state;
+    contextEnvClasses.selected = [];
+    contextPovClasses.selected = '';
+    contextQualityClasses.selected = '';
   }
 
   private onMouseMove(event: MouseEvent): void {
     if (event.target === this.$refs.sizer && this.isResizing) {
       // Width threshold normalization.
       if (this.surfaceWidth <= 50) {
-          this.surfaceWidth = 50;
+        this.surfaceWidth = 50;
       }
       if (this.surfaceWidth >= 80) {
-          this.surfaceWidth = 80;
+        this.surfaceWidth = 80;
       }
     }
   }
@@ -188,14 +264,17 @@ export default class Annotate extends Vue {
     }
   }
 
-  private onSelectPrevious(): void {
-    this.state.selectPrevious();
+  private onSelectEnv(optionsSelected: string): void {
+    this.state.addEnvPictureContext(optionsSelected);
   }
 
-  private onSelectNext(): void {
-    this.state.selectNext();
+  private onSelectPov(optionsSelected: string): void {
+    this.state.addPovPictureContext(optionsSelected);
   }
 
+  private onSelectQuality(optionsSelected: string): void {
+    this.state.addQualityPictureContext(optionsSelected);
+  }
 }
 </script>
 
@@ -213,10 +292,9 @@ export default class Annotate extends Vue {
 }
 
 #annotator-sizer {
-  width: 1px;
+  width: 15px;
   height: 100%;
-  margin: 0 10px 0 12px;
-  border-left: 1px solid rgb(150, 150, 150);
+  margin: 0;
   cursor: ew-resize;
 }
 
@@ -250,13 +328,18 @@ export default class Annotate extends Vue {
   justify-content: space-between;
   width: 100%;
   padding: 0;
-  background-color: rgb(80, 80, 80);
-  border: 1px solid rgb(25, 25, 25);
+  background-color: black;
   color: white;
 }
 
 #annotation-action-buttons {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#annotation-action-buttons *:not(:last-child) {
+  margin-bottom: 0.25em;
 }
 
 #annotation-action-panel {
@@ -264,25 +347,21 @@ export default class Annotate extends Vue {
   flex-direction: column;
   justify-content: space-between;
   width: 94%;
-  margin: 3%;
+}
+
+.annotation-group {
+  margin-bottom: 0.5em;
+}
+
+.annotation-group p {
+  font-weight: bold;
+  margin: 0;
 }
 
 .action-button-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-}
-
-.action-button {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 5px;
-  padding-left: 10px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
 }
 
 .action-button:hover {
@@ -293,50 +372,27 @@ export default class Annotate extends Vue {
   padding-left: 10px;
 }
 
-.action-button-danger {
-  background: linear-gradient(
-    to right,
-    rgb(234, 64, 64) 50%,
-    rgb(168, 38, 38) 50%
-  );
-  background-size: 200% 100%;
-  background-position: right bottom;
-  transition: all 0.2s ease-out;
-  border: 1px solid rgb(101, 24, 24);
-}
-
-.action-button-success {
-  background: linear-gradient(
-    to right,
-    rgb(63, 169, 63) 50%,
-    rgb(46, 113, 46) 50%
-  );
-  background-size: 200% 100%;
-  background-position: right bottom;
-  transition: all 0.2s ease-out;
-  background-size: 200% 100%;
-  border: 1px solid rgb(26, 64, 26);
-}
-
-.boundingbox-select-button {
+.action-button {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  width: 32px;
-  margin: 0;
-  background: rgb(60, 60, 60);
-  border: 0;
+  margin: 6px;
   color: white;
   cursor: pointer;
+  background: linear-gradient(to right, #007dcd 50%, #0073be 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all 0.2s ease-out;
+  border: 0;
+  height: 25px;
+  font-weight: 500;
+  font-size: 15px;
 }
 
-.boundingbox-action-button {
-  width: 45%;
-}
-
-.annotation-action-button {
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 0;
+.reset-annotations {
+  color: grey;
+  cursor: pointer;
+  font-size: 0.6em;
+  margin-left: 0.5em;
 }
 </style>
