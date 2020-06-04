@@ -99,8 +99,12 @@ export default class AnnotationStore extends VuexModule {
   /** Current user cursor position (relative to real image size). */
   public readonly relativeCursor: Point = { x: 0, y: 0 };
 
+    /** App config */
+  public config = require("../../config.json");
+
+  /** Request config */
   public axiosRequestConfig: AxiosRequestConfig = {
-    baseURL: 'http://localhost:443/',
+    baseURL: this.config.url,//'http://localhost:443/',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
       'Access-Control-Allow-Origin': '*',
