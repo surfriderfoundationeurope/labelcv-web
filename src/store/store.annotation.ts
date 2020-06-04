@@ -100,11 +100,11 @@ export default class AnnotationStore extends VuexModule {
   public readonly relativeCursor: Point = { x: 0, y: 0 };
 
     /** App config */
-  public config = require("../../config.json");
+  public config = require('../../config.json');
 
   /** Request config */
   public axiosRequestConfig: AxiosRequestConfig = {
-    baseURL: this.config.url,//'http://localhost:443/',
+    baseURL: this.config.url,
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
       'Access-Control-Allow-Origin': '*',
