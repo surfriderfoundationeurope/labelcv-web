@@ -3,20 +3,32 @@
  * @author Felix Voituret <oss@voituret.fr>
  */
 
-import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators';
+import {
+  Module, VuexModule, Mutation, Action } from 'vuex-module-decorators';
 
+// eslint-disable-next-line no-unused-vars
 import axios, { AxiosRequestConfig } from 'axios';
+// eslint-disable-next-line no-unused-vars,import/no-unresolved
 import Box from '@/models/geometry/box';
+// eslint-disable-next-line import/no-unresolved,no-unused-vars
 import Size from '@/models/geometry/size';
+// eslint-disable-next-line no-unused-vars,import/no-unresolved
 import Point from '@/models/geometry/point';
 import {
+  // eslint-disable-next-line no-unused-vars
   Annotation,
+  // eslint-disable-next-line no-unused-vars
   AnnotationClass,
+  // eslint-disable-next-line no-unused-vars
   ContextClass,
+  // eslint-disable-next-line no-unused-vars
   PictureContext,
+  // eslint-disable-next-line no-unused-vars
   EnvContextClass,
+// eslint-disable-next-line import/no-unresolved
 } from '@/models/annotation';
 
+// eslint-disable-next-line import/extensions
 import store from './store';
 
 @Module({
@@ -99,21 +111,24 @@ export default class AnnotationStore extends VuexModule {
   /** Current user cursor position (relative to real image size). */
   public readonly relativeCursor: Point = { x: 0, y: 0 };
 
-    /** App config */
-  public config = require('../../config.json');
-
   /** Request config */
   public axiosRequestConfig: AxiosRequestConfig = {
-    baseURL: this.config.url,
+    baseURL: '',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
       'Access-Control-Allow-Origin': '*',
-      'Accept': '*/*',
     },
   };
 
   /** Limit size for trash (in pixels) */
   public minTrashSize: number = 20; // todo : un-hardcode this.
+
+  @Mutation
+  public setURL(url: string): void {
+    this.axiosRequestConfig.baseURL = url;
+    // eslint-disable-next-line no-console
+    console.log(`Successfuly set API URL to ${url}`);
+  }
 
   @Mutation
   public resetAnnotations(): void {
@@ -141,6 +156,7 @@ export default class AnnotationStore extends VuexModule {
       }
     } else {
       const self = this;
+      console.log(this.axiosRequestConfig);
       axios
         .get('/images/random', this.axiosRequestConfig)
         .then((response) => {
@@ -331,18 +347,20 @@ export default class AnnotationStore extends VuexModule {
   // 'https://www.fccnn.com/news/article885023.ece/alternates/BASE_LANDSCAPE/Michael%20Anderson%27s%20canoe%20near%20Red%20Wing%20during%20the%20Three%20Rivers%20Expedition%20in%20September%202017.%20A%20year%20later%2C%20the%20adventure%20continues.%20Photo%20by%20Michael%20Anderson'
   @Action
   public postAnnotations(): void {
-      const postImageLabel = {
-          imageId: this.imageId,
-          creatorId: this.creatorId,
-          createdOn: '',
-          filename: '',
-          view: this.pictureContext.pointOfView,
-          imgQuality: this.pictureContext.quality,
-          context: this.pictureContext.environment,
-          url: this.image,
-          bbox: []};
-      axios.post('/images/update', postImageLabel, this.axiosRequestConfig);
-      this.annotations.forEach(async (annotation) => {
+    const postImageLabel = {
+      imageId: this.imageId,
+      creatorId: this.creatorId,
+      createdOn: '',
+      filename: '',
+      view: this.pictureContext.pointOfView,
+      imgQuality: this.pictureContext.quality,
+      context: this.pictureContext.environment,
+      url: this.image,
+      bbox: [],
+    };
+    axios.post('/images/update', postImageLabel, this.axiosRequestConfig);
+
+    this.annotations.forEach(async (annotation) => {
       // tslint:disable-next-line:no-shadowed-variable
 
       const postAnnotation = {
