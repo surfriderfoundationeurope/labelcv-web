@@ -141,7 +141,7 @@ export default class Annotate extends Vue {
         console.log(devError);
       });
     });
-    this.state.fetchState();
+    setTimeout(this.state.fetchState, 6000);
   }
 
 
