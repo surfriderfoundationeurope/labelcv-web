@@ -112,7 +112,7 @@ import axios from 'axios';
     ChevronRightIcon,
     Trash2Icon,
     AlertTriangleIcon,
-    BButton,
+    BButton
   },
 })
 export default class Annotate extends Vue {
@@ -128,7 +128,7 @@ export default class Annotate extends Vue {
   /** */
   private currentAnnotationClassInputId: number | null = null;
 
-  private created(): void {
+  /*private created(): void {
     axios.get('config.prod.json').then((response: { data: { url: string; }; }) => {
       this.state.setURL(response.data.url);
     }).catch((prodError) => {
@@ -142,7 +142,7 @@ export default class Annotate extends Vue {
       });
     });
     setTimeout(this.state.fetchState, 6000);
-  }
+  }*/
 
 
   private mounted(): void {
