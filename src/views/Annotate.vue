@@ -83,6 +83,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { getModule } from 'vuex-module-decorators';
 // import { AnnotationClass } from "@/models/annotation";
+// eslint-disable-next-line import/no-unresolved
 import AnnotationStore from '@/store/store.annotation';
 import {
   Edit2Icon,
@@ -90,13 +91,16 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   Trash2Icon,
-  AlertTriangleIcon
+  AlertTriangleIcon,
 } from 'vue-feather-icons';
 
+// eslint-disable-next-line import/no-unresolved
 import AnnotationSurface from '@/components/annotation/AnnotationSurface.vue';
+// eslint-disable-next-line import/no-unresolved
 import ZoomPanel from '@/components/annotation/ZoomPanel.vue';
-// import store from "../store/store";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { BButton } from 'bootstrap-vue';
+import axios from 'axios';
 
 @Component({
   components: {
@@ -109,7 +113,7 @@ import { BButton } from 'bootstrap-vue';
     Trash2Icon,
     AlertTriangleIcon,
     BButton
-  }
+  },
 })
 export default class Annotate extends Vue {
   /** */
@@ -124,9 +128,22 @@ export default class Annotate extends Vue {
   /** */
   private currentAnnotationClassInputId: number | null = null;
 
-  private created(): void {
-    this.state.fetchState();
-  }
+  /*private created(): void {
+    axios.get('config.prod.json').then((response: { data: { url: string; }; }) => {
+      this.state.setURL(response.data.url);
+    }).catch((prodError) => {
+      // eslint-disable-next-line no-console
+      console.log(prodError);
+      axios.get('config.dev.json').then((response: { data: { url: string; }; }) => {
+        this.state.setURL(response.data.url);
+      }).catch((devError) => {
+      // eslint-disable-next-line no-console
+        console.log(devError);
+      });
+    });
+    setTimeout(this.state.fetchState, 6000);
+  }*/
+
 
   private mounted(): void {
     this.state.registerImageLoader(this.$refs.imageLoader as HTMLImageElement);
@@ -139,16 +156,15 @@ export default class Annotate extends Vue {
   }
 
   get annotation() {
-    return (index: number) =>
-      !isNaN(index)
-        ? this.state.annotations[index]
-        : this.state.annotations[this.state.annotations.length];
+    return (index: number) => (!isNaN(index)
+      ? this.state.annotations[index]
+      : this.state.annotations[this.state.annotations.length]);
   }
 
   get isComplete() {
-    return this.state.pictureContext.environment &&
-           this.state.pictureContext.quality &&
-           this.state.pictureContext.pointOfView ;
+    return this.state.pictureContext.environment
+           && this.state.pictureContext.quality
+           && this.state.pictureContext.pointOfView;
   }
 
   private onSaveAnnotationClick() {
@@ -174,10 +190,10 @@ export default class Annotate extends Vue {
           handler: () => {
             this.state.resetAnnotations();
             this.$modal.hide('dialog');
-          }
+          },
         },
-        { title: 'Cancel' }
-      ]
+        { title: 'Cancel' },
+      ],
     });
   }
 
@@ -194,10 +210,10 @@ export default class Annotate extends Vue {
             this.state.postAnnotations();
             this.nextPicture();
             this.$modal.hide('dialog');
-          }
+          },
         },
-        { title: 'Cancel' }
-      ]
+        { title: 'Cancel' },
+      ],
     });
   }
 
@@ -212,10 +228,10 @@ export default class Annotate extends Vue {
           handler: () => {
             this.nextPicture();
             this.$modal.hide('dialog');
-          }
+          },
         },
-        { title: 'Cancel' }
-      ]
+        { title: 'Cancel' },
+      ],
     });
   }
 
@@ -232,7 +248,7 @@ export default class Annotate extends Vue {
     const {
       contextPovClasses,
       contextEnvClasses,
-      contextQualityClasses
+      contextQualityClasses,
     } = this.state;
     contextEnvClasses.selected = [];
     contextPovClasses.selected = '';

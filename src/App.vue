@@ -12,13 +12,33 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import { getModule } from 'vuex-module-decorators';
+import AnnotationStore from '@/store/store.annotation';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import Navbar from './components/global/Navbar.vue';
+import axios from 'axios';
 
 @Component({ components: { Navbar } })
 export default class App extends Vue {
   private transitionSide: string = 'slide-right';
+  private readonly state: AnnotationStore = getModule(AnnotationStore);
+
+  private created(): void {
+    axios.get('config.prod.json').then((response: { data: { url: string; }; }) => {
+      this.state.setURL(response.data.url);
+    }).catch((prodError) => {
+      // eslint-disable-next-line no-console
+      console.log(prodError);
+      axios.get('config.dev.json').then((response: { data: { url: string; }; }) => {
+        this.state.setURL(response.data.url);
+      }).catch((devError) => {
+      // eslint-disable-next-line no-console
+        console.log(devError);
+      });
+    });
+    setTimeout(this.state.fetchState, 6000);
+  }
 
   private beforeRouteUpdate(to: any, from: any, next: any): void {
     this.transitionSide = to.order < from.order ? 'slide-right' : 'slide-left';
