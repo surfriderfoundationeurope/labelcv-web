@@ -20,10 +20,9 @@ jobs:
           submodules: true
       - name: Copy routes.json
         id: copyroutes
-        uses: canastro/copy-file-action@master
-        with:
-          source: "routes.json"
-          target: "dist/routes.json"    
+        run: |
+          mkdir dist/
+          cp routes.json dist/routes.json
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v0.0.1-preview
