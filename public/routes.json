@@ -2,7 +2,8 @@
     "routes": [
       {
         "route": "/config.prod.json",
-        "serve": "/api/getconfig"
+        "serve": "/api/getconfig",
+        "statusCode": 302
       }
     ]
   }
