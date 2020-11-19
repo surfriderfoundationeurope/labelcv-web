@@ -65,6 +65,7 @@ export default class App extends Vue {
   width: 94%;
   height: 78%;
   margin: 0 1rem;
+  margin-top:4.6rem;
 }
 
 img.mx-auto {
