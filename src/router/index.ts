@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 import About from '../views/About.vue';
 import Annotate from '../views/Annotate.vue';
 import Upload from '../views/Upload.vue';
+import Tutorial from '../views/Tutorial.vue';
 
 Vue.use(VueRouter);
 
@@ -15,16 +16,22 @@ const routes = [
     component: About,
   },
   {
-    path: '/upload',
-    name: 'upload',
+    path: '/tutorial',
+    name: 'tutorial',
     order: 1,
-    component: Upload,
+    component: Tutorial,
   },
   {
     path: '/annotate',
     name: 'annotate',
     order: 2,
     component: Annotate,
+  },
+  {
+    path: '/upload',
+    name: 'upload',
+    order: 3,
+    component: Upload,
   },
 ];
 
