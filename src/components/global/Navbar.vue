@@ -17,11 +17,14 @@
         <b-nav-item>
           <router-link to="/annotate">Annotate</router-link>
         </b-nav-item>
-        <b-nav-item href="/upload">
+
+        <!-- NOT YET BUILT -->
+        <!-- <b-nav-item href="/upload">
           <router-link to="/upload">Upload</router-link>
-        </b-nav-item>
+        </b-nav-item> -->
       </b-navbar-nav>
 
+      <!-- NOT YET BUILT -->
       <!-- Right aligned nav avatar -->
       <!-- <b-navbar-nav class="ml-auto">
         <b-nav-item-dropdown right no-caret>
