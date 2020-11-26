@@ -8,14 +8,11 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="/">
-          <router-link to="/">About</router-link>
+        <b-nav-item>
+          <router-link to="/">Annotate</router-link>
         </b-nav-item>
         <b-nav-item>
           <router-link to="/tutorial">Tutorial</router-link>
-        </b-nav-item>
-        <b-nav-item>
-          <router-link to="/annotate">Annotate</router-link>
         </b-nav-item>
 
         <!-- NOT YET BUILT -->
