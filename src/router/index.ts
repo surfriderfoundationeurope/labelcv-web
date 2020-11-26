@@ -11,28 +11,16 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'about',
+    name: 'annotate',
     order: 0,
-    component: About,
+    component: Annotate,
   },
   {
     path: '/tutorial',
     name: 'tutorial',
     order: 1,
     component: Tutorial,
-  },
-  {
-    path: '/annotate',
-    name: 'annotate',
-    order: 2,
-    component: Annotate,
-  },
-  {
-    path: '/upload',
-    name: 'upload',
-    order: 3,
-    component: Upload,
-  },
+  }
 ];
 
 const router = new VueRouter({
