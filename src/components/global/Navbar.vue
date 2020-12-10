@@ -1,6 +1,6 @@
 <template>
-  <b-navbar toggleable="sm" type="dark" class="navbar" >
-    <b-navbar-brand class='navbar-brand'>
+  <b-navbar toggleable="sm" type="dark" class="navbar">
+    <b-navbar-brand class="navbar-brand">
       <img src="images/surfrider.svg" alt="surfrider-logo" class="logo" />
     </b-navbar-brand>
 
@@ -9,16 +9,10 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-nav-item href="/">
-          <router-link to="/">About</router-link>
+          <router-link to="/">Annotate</router-link>
         </b-nav-item>
         <b-nav-item>
           <router-link to="/tutorial">Tutorial</router-link>
-        </b-nav-item>
-        <b-nav-item>
-          <router-link to="/annotate">Annotate</router-link>
-        </b-nav-item>
-        <b-nav-item href="/upload">
-          <router-link to="/upload">Upload</router-link>
         </b-nav-item>
       </b-navbar-nav>
 
@@ -39,25 +33,24 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { getModule } from 'vuex-module-decorators';
 
 @Component({
-  components: {}
+  components: {},
 })
 export default class Annotate extends Vue {}
 </script>
 
 <style scoped>
 .navbar {
-  position:fixed;
+  position: fixed;
   padding-top: 0;
   padding-bottom: 0;
-  z-index:2;
+  z-index: 2;
 }
 
 .navbar li a {
   text-decoration: none;
-  color:silver;
+  color: silver;
 }
 
 .navbar li a.router-link-exact-active,
@@ -74,7 +67,7 @@ a.router-link-exact-active:hover {
   width: 60%;
 }
 
-a{
-  text-shadow: 1px 2px 0px black;
+a {
+  text-shadow: 0px 1px 1px black;
 }
 </style>
