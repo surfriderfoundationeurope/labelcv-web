@@ -21,6 +21,7 @@ const routes = [
     order: 1,
     component: Tutorial,
   },
+
 ];
 
 const router = new VueRouter({

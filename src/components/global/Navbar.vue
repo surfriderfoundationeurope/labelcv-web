@@ -8,14 +8,21 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="/">
+        <b-nav-item>
           <router-link to="/">Annotate</router-link>
         </b-nav-item>
+
         <b-nav-item>
           <router-link to="/tutorial">Tutorial</router-link>
         </b-nav-item>
+
+        <!-- NOT YET BUILT -->
+        <!-- <b-nav-item href="/upload">
+          <router-link to="/upload">Upload</router-link>
+        </b-nav-item> -->
       </b-navbar-nav>
 
+      <!-- NOT YET BUILT -->
       <!-- Right aligned nav avatar -->
       <!-- <b-navbar-nav class="ml-auto">
         <b-nav-item-dropdown right no-caret>
