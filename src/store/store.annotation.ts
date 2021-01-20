@@ -4,7 +4,8 @@
  */
 
 import {
-  Module, VuexModule, Mutation, Action } from 'vuex-module-decorators';
+  Module, VuexModule, Mutation, Action
+} from 'vuex-module-decorators';
 
 // eslint-disable-next-line no-unused-vars
 import axios, { AxiosRequestConfig } from 'axios';
@@ -25,7 +26,7 @@ import {
   PictureContext,
   // eslint-disable-next-line no-unused-vars
   EnvContextClass,
-// eslint-disable-next-line import/no-unresolved
+  // eslint-disable-next-line import/no-unresolved
 } from '@/models/annotation';
 
 // eslint-disable-next-line import/extensions
@@ -236,14 +237,16 @@ export default class AnnotationStore extends VuexModule {
   }
 
   @Mutation
-  public editAnnotationClass(edit: any): void {
-    const id = edit.id;
-    const annotationClassId = edit.annotationClassId;
-    if (!isNaN(annotationClassId)) {
-      this.annotations[id].class = this.annotationClasses[annotationClassId];
-    } else {
-      console.log('Annotation class is undefined ');
-    }
+  public editAnnotationClass({
+    annotationIndex,
+    annotationClassId,
+  }: {
+    annotationIndex: number;
+    annotationClassId: number;
+  }): void {
+    this.annotations[annotationIndex].class =
+      this.annotationClasses.find(
+        (annotationClass) => annotationClass.id === annotationClassId);
   }
 
   @Mutation

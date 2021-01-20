@@ -153,13 +153,11 @@ export default class BoundingBox extends Vue {
   }
 
   private onSelectAnnotation(): void {
-    const annotationClassId = this.annotationClassId; // this.annotationClassSelection;
-    const id = this.$props.id;
-    console.log(annotationClassId);
-    const edit = { id, annotationClassId };
-    this.state.editAnnotationClass(edit);
+    this.state.editAnnotationClass({
+      annotationIndex: this.$props.id,
+      annotationClassId: this.annotationClassSelection.id,
+    });
   }
-
   private onClose(): void {
     this.state.deleteAnnotation(this.$props.id);
   }
