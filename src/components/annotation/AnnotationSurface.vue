@@ -56,7 +56,7 @@ export default class AnnotationSurface extends Vue {
   public mounted(): void {
     window.addEventListener('resize', () => {
       const imageLoader = document.getElementsByClassName('image-loader')[0] as HTMLElement;
-      
+
       // We have to briefly display the image loader to get dimensions on client screen
       imageLoader.style.display = 'inline-block';
       this.state.updateRatio(imageLoader);
@@ -65,8 +65,10 @@ export default class AnnotationSurface extends Vue {
       imageLoader.style.display = 'none';
 
       const annotatorSurface = document.getElementById('annotator-surface') as HTMLElement;
-      const boxOffset: Point = {x: (annotatorSurface.offsetWidth / 2) - (this.imageHolderClientWidth / 2),
-                                y: (annotatorSurface.offsetHeight / 2) - (this.imageHolderClientHeight / 2)};
+      const boxOffset: Point = {
+        x: (annotatorSurface.offsetWidth / 2) - (this.imageHolderClientWidth / 2),
+        y: (annotatorSurface.offsetHeight / 2) - (this.imageHolderClientHeight / 2)
+      };
       this.state.updateBoxOffset(boxOffset);
     });
   }
@@ -79,7 +81,6 @@ export default class AnnotationSurface extends Vue {
    */
   private onMouseMove(event: MouseEvent): void {
     const elem = this.$el as HTMLElement;
-    
     const offset = {
       left: elem.offsetLeft + (elem.offsetWidth / 2) - (this.imageHolderClientWidth / 2),
       top: elem.offsetTop + (elem.offsetHeight / 2) - (this.imageHolderClientHeight / 2)
