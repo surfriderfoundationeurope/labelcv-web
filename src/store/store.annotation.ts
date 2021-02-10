@@ -60,6 +60,9 @@ export default class AnnotationStore extends VuexModule {
   /** Reverse applied image ratio. */
   public readonly imageReverseRatio: Size = { width: 1, height: 1 };
 
+  // Offset between background left and top sides and effective background left and top sides
+  public readonly boxOffset: Point = { x: NaN, y: NaN};
+
   /** List of user's drawn annotations. */
   public annotations: Annotation[] = [];
 
@@ -174,8 +177,8 @@ export default class AnnotationStore extends VuexModule {
         .catch((error) => {
           console.log(error);
         });
+      }
     }
-  }
 
   @Mutation
   public loadAnnotationClasses(): void {
@@ -333,6 +336,12 @@ export default class AnnotationStore extends VuexModule {
       this.relativeCursor.x = Math.round(offset.x);
       this.relativeCursor.y = Math.round(offset.y);
     }
+  }
+
+  @Mutation
+  public updateBoxOffset(offset: Point): void {
+    this.boxOffset.x = offset.x;
+    this.boxOffset.y = offset.y;
   }
 
   @Action
