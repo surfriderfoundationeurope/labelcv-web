@@ -119,11 +119,15 @@ export default class BoundingBox extends Vue {
   }
 
   get x(): number {
-    return Math.round(this.state.imageReverseRatio.width * this.box.x);
+    console.log('x= ' + this.box.x);
+    console.log('y= ' + this.box.y);
+    console.log('width= ' + this.box.width);
+    console.log('height= ' + this.box.height);
+    return Math.round(this.state.imageReverseRatio.width * this.box.x + this.state.boxOffset.x);
   }
 
   get y(): number {
-    return Math.round(this.state.imageReverseRatio.height * this.box.y);
+    return Math.round(this.state.imageReverseRatio.height * this.box.y + this.state.boxOffset.y);
   }
 
   get width(): number {

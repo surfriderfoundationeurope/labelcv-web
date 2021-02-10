@@ -27,7 +27,6 @@ import AnnotationStore from '@/store/store.annotation';
 
 import Box from '@/models/geometry/box';
 import Point from '@/models/geometry/point';
-import Size from '@/models/geometry/size';
 
 import { GridLoader } from '@saeris/vue-spinners';
 import BoundingBox from './BoundingBox.vue';
@@ -51,9 +50,26 @@ export default class AnnotationSurface extends Vue {
   /** Current drawed. */
   private readonly drawed: Box = { x: NaN, y: NaN, width: NaN, height: NaN };
 
+  private imageHolderClientWidth: number;
+  private imageHolderClientHeight: number;
+
   public mounted(): void {
     window.addEventListener('resize', () => {
-      this.state.updateRatio(this.$el as HTMLElement);
+      const imageLoader = document.getElementsByClassName('image-loader')[0] as HTMLElement;
+
+      // We have to briefly display the image loader to get dimensions on client screen
+      imageLoader.style.display = 'inline-block';
+      this.state.updateRatio(imageLoader);
+      this.imageHolderClientWidth = imageLoader.clientWidth;
+      this.imageHolderClientHeight = imageLoader.clientHeight;
+      imageLoader.style.display = 'none';
+
+      const annotatorSurface = document.getElementById('annotator-surface') as HTMLElement;
+      const boxOffset: Point = {
+        x: (annotatorSurface.offsetWidth / 2) - (this.imageHolderClientWidth / 2),
+        y: (annotatorSurface.offsetHeight / 2) - (this.imageHolderClientHeight / 2)
+      };
+      this.state.updateBoxOffset(boxOffset);
     });
   }
 
@@ -64,10 +80,10 @@ export default class AnnotationSurface extends Vue {
    * @param offset Cursor offset relative to this component origin.
    */
   private onMouseMove(event: MouseEvent): void {
-    const elem = this.$el;
+    const elem = this.$el as HTMLElement;
     const offset = {
-      left: elem instanceof HTMLElement ? elem.offsetLeft : 0,
-      top: elem instanceof HTMLElement ? elem.offsetTop : 0
+      left: elem.offsetLeft + (elem.offsetWidth / 2) - (this.imageHolderClientWidth / 2),
+      top: elem.offsetTop + (elem.offsetHeight / 2) - (this.imageHolderClientHeight / 2)
     };
 
     const cursor = {
@@ -154,8 +170,8 @@ export default class AnnotationSurface extends Vue {
   border: 1px solid rgb(25, 25, 25);
   background-color: #003250;
   background-repeat: no-repeat;
-  background-position: 0 0;
-  background-size: 100% 100% !important;
+  background-position: center;
+  background-size: contain !important;
 }
 
 #loader-animation {
