@@ -151,7 +151,7 @@ export default class Annotate extends Vue {
 
   get currentAnnotationLabel() {
     return !isNaN(this.state.selectedAnnotationClass)
-      ? this.state.annotationClasses[this.state.selectedAnnotationClass].name
+      ? this.state.annotationClasses[this.state.selectedAnnotationClass - 1].name
       : '';
   }
 
