@@ -167,8 +167,6 @@ export default class AnnotationSurface extends Vue {
   position: relative;
   width: 100%;
   height: 100%;
-  border: 1px solid rgb(25, 25, 25);
-  background-color: #003250;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain !important;
