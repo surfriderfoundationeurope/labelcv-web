@@ -53,6 +53,8 @@ export default class AnnotationSurface extends Vue {
   private imageHolderClientWidth: number;
   private imageHolderClientHeight: number;
 
+  private crossHeightShift: number;
+
   public mounted(): void {
     window.addEventListener('resize', () => {
       const imageLoader = document.getElementsByClassName('image-loader')[0] as HTMLElement;
@@ -70,6 +72,7 @@ export default class AnnotationSurface extends Vue {
         y: (annotatorSurface.offsetHeight / 2) - (this.imageHolderClientHeight / 2)
       };
       this.state.updateBoxOffset(boxOffset);
+      this.crossHeightShift = 24 * this.state.imageRatio.height;
     });
   }
 
@@ -142,7 +145,7 @@ export default class AnnotationSurface extends Vue {
         width: this.drawed.width,
         height: this.drawed.height,
         x: this.drawed.x,
-        y: this.drawed.y
+        y: this.drawed.y - this.crossHeightShift
       };
       const limitSize = this.state.minTrashSize;
       if (box.width > limitSize && box.height > limitSize) {
