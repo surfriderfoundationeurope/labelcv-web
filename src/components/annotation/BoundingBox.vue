@@ -18,7 +18,9 @@
     @click="onMouseClick"
   >
     <div>
-      <x-icon class="close-cross" @click="onClose" v-show="selected" />
+      <div class="close-cross-container" v-show="!isBeingDrawn">
+        <x-icon class="close-cross" @click="onClose" v-show="selected" />
+      </div>
       <div
         class="bounding-box-content"
         :style="{
@@ -98,6 +100,10 @@ export default class BoundingBox extends Vue {
     return this.state.annotations[id].box;
   }
 
+  get isBeingDrawn(): boolean {
+    return this.$props.id === 'raw';
+  }
+
   get labelled(): boolean {
     return this.state.annotations[this.$props.id] !== undefined;
   }
@@ -119,10 +125,6 @@ export default class BoundingBox extends Vue {
   }
 
   get x(): number {
-    console.log('x= ' + this.box.x);
-    console.log('y= ' + this.box.y);
-    console.log('width= ' + this.box.width);
-    console.log('height= ' + this.box.height);
     return Math.round(this.state.imageReverseRatio.width * this.box.x + this.state.boxOffset.x);
   }
 
@@ -224,6 +226,10 @@ export default class BoundingBox extends Vue {
   display: inline-block;
   justify-content: space-between;
   width: 200px;
+}
+
+.close-cross-container {
+  height: 24px;
 }
 
 .close-cross {
