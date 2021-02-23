@@ -17,6 +17,9 @@
               <strong>{{ currentAnnotationLabel }}</strong>
             </span>
           </div>
+          <div>
+            <button class="btn btn-primary" @click="onClickCheckClassification()">Check classification</button>
+          </div>
           <div class="annotation-group">
             <p>Context</p>
             <b-form-group>
@@ -290,6 +293,11 @@ export default class Annotate extends Vue {
 
   private onSelectQuality(optionsSelected: string): void {
     this.state.addQualityPictureContext(optionsSelected);
+  }
+
+  onClickCheckClassification() {
+    const overlay = document.getElementById('overlay-classification-container')as HTMLElement;
+    overlay.style.display = "block";
   }
 }
 </script>
