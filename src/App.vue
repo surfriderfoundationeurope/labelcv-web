@@ -58,11 +58,6 @@ export default class App extends Vue {
         setTimeout(() => this.$store.dispatch("fetchState"), 6000);
     }
 
-    // private beforeRouteUpdate(to: any, from: any, next: any): void {
-    //   this.transitionSide = to.order < from.order ? "slide-right" : "slide-left";
-    //   next();
-    // }
-
     private destroy(): void {
         window.removeEventListener("resize", this.handleDesktopOnly);
     }
