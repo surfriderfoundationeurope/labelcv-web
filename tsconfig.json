@@ -3,17 +3,18 @@
     "target": "esnext",
     "module": "esnext",
     "strict": true,
-    "strictPropertyInitialization": false,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "jest"
     ],
     "paths": {
       "@/*": [
@@ -37,5 +38,4 @@
   "exclude": [
     "node_modules"
   ]
-  
 }
