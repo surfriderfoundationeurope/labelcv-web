@@ -55,22 +55,6 @@ export default class App extends Vue {
         window.addEventListener("resize", this.handleDesktopOnly);
         this.handleDesktopOnly();
         this.$store.dispatch("configurateAPI");
-        // axios
-        //     .get("config.prod.json")
-        //     .then((response: { data: { url: string } }) => {
-        //         this.$store.commit("setURL", response.data.url);
-        //     })
-        //     .catch(prodError => {
-        //         console.log(prodError);
-        //         axios
-        //             .get("config.dev.json")
-        //             .then((response: { data: { url: string } }) => {
-        //                 this.$store.commit("setURL", response.data.url);
-        //             })
-        //             .catch(devError => {
-        //                 console.log(devError);
-        //             });
-        //     });
         setTimeout(() => this.$store.dispatch("fetchState"), 6000);
     }
 
@@ -133,7 +117,7 @@ export default class App extends Vue {
 
 #overlay-classification .close-icon {
     align-self: flex-end;
-    font-size: 24px;
+    font-size: 12px;
     font-weight: bold;
     cursor: pointer;
 }
