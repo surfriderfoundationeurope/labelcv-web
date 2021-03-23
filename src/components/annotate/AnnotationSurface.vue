@@ -86,9 +86,6 @@ export default class AnnotationSurface extends Vue {
                 y: annotatorHeight / 2 - actualImageHeight / 2
             };
             this.$store.commit("updateBoxOffset", boxOffset);
-            // TODO : understand this magic number : why 24
-            // Whithout this shift, the bounding box gets shifted when mouse leaves
-            this.crossHeightShift = 24 * this.$store.state.image.ratio.height;
         });
     }
 
@@ -160,7 +157,7 @@ export default class AnnotationSurface extends Vue {
                 width: this.drawed.width,
                 height: this.drawed.height,
                 x: this.drawed.x,
-                y: this.drawed.y - this.crossHeightShift
+                y: this.drawed.y
             };
             const limitSize = this.$store.state.minTrashSize;
             if (box.width > limitSize && box.height > limitSize) {

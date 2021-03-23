@@ -10,8 +10,8 @@
         :style="{
             left: `${x - 2}px`,
             top: `${y - 5}px`,
-            width: `${width + 4}px`,
-            height: `${height + 9}px`
+            width: `${width}px`,
+            height: `${height}px`
         }"
         @mouseenter="onMouseEnter"
         @mouseleave="onMouseLeave"
@@ -25,7 +25,13 @@
                 }"
                 v-show="!isBeingDrawn"
             >
-                <x-icon @click="onClickCross" v-show="selected" />
+                <x-icon
+                    className="bounding-box-cross"
+                    height="16px"
+                    width="16px"
+                    @click="onClickCross"
+                    v-show="selected"
+                />
             </div>
             <div
                 class="bounding-box-content"
@@ -40,7 +46,9 @@
                 >
                     <p>{{ index }}</p>
                 </div>
-                <pre v-if="annotationLabel">{{ annotationLabel.name }}</pre>
+                <div class="bounding-box-label" v-if="annotationLabel">
+                    {{ annotationLabel.name }}
+                </div>
             </div>
 
             <div class="box-multiselect" v-show="selected">
@@ -189,9 +197,19 @@ export default class BoundingBox extends Vue {
     cursor: pointer;
     display: inline-block;
 }
-
+.close-cross-container {
+    position: absolute;
+    right: 0;
+    background: rgba(51, 207, 120, 0.7);
+    line-height: 1;
+}
+.bounding-box-cross {
+    position: absolute;
+}
 .bounding-box-content {
-    border: 2px solid #33cf78;
+    border: 2px solid rgb(51, 207, 120);
+    display: flex;
+    align-items: flex-end;
 }
 
 .bounding-box-labelled .bounding-box-content {
@@ -201,7 +219,15 @@ export default class BoundingBox extends Vue {
 .bounding-box-labelled .bounding-box-index {
     background-color: #fff;
 }
-
+.bounding-box-label {
+    background-color: rgba(255, 255, 255, 0.6);
+    color: black;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .bounding-box-index {
     border-radius: 50%;
     width: 10px;
@@ -235,10 +261,6 @@ export default class BoundingBox extends Vue {
     display: inline-block;
     justify-content: space-between;
     width: 200px;
-}
-
-.close-cross-container {
-    height: 24px;
 }
 
 .custom-multi >>> .multiselect__tag-icon:focus {
