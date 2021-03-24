@@ -51,7 +51,6 @@ import Classify from "../components/tutorial/Classify.vue";
 import Draw from "../components/tutorial/Draw.vue";
 import Annotate from "../components/tutorial/Annotate.vue";
 import Congrats from "../components/tutorial/Congrats.vue";
-
 @Component({
     components: {
         Introduction,
@@ -64,11 +63,9 @@ import Congrats from "../components/tutorial/Congrats.vue";
 })
 export default class Tutorial extends Vue {
     private step = 0;
-
     private handleNextStep() {
         this.step += 1;
     }
-
     private handlePreviousStep() {
         this.step -= 1;
     }
@@ -81,13 +78,11 @@ export default class Tutorial extends Vue {
     margin-left: auto;
     margin-bottom: 5rem;
 }
-
 .dots {
     margin-left: auto;
     width: 45%;
     margin-bottom: 1rem;
 }
-
 .dot {
     height: 0.5rem;
     width: 0.5rem;
@@ -96,11 +91,9 @@ export default class Tutorial extends Vue {
     border-radius: 50%;
     display: inline-block;
 }
-
 .blue {
     background-color: #0073be;
 }
-
 .fade-enter-active {
     transition: opacity 0.5s;
 }

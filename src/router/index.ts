@@ -9,20 +9,20 @@ import Tutorial from "../views/Tutorial.vue";
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/",
-    name: "annotate",
-    order: 0,
-    component: Annotate
-  },
-  {
-    path: "/tutorial",
-    name: "tutorial",
-    order: 1,
-    component: Tutorial
-  }
+    {
+        path: "/",
+        name: "annotate",
+        order: 0,
+        component: Annotate
+    },
+    {
+        path: "/tutorial",
+        name: "tutorial",
+        order: 1,
+        component: Tutorial
+    }
 ];
 
 export default new VueRouter({
-  routes
+    routes
 });

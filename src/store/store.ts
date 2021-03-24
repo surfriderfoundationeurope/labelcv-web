@@ -218,22 +218,6 @@ type WithUid = { uid: number };
 const findByUid = <T extends WithUid>(array: T[], uid: number) =>
     array.find(element => element.uid == uid);
 
-// function getAPIStatus(axiosRequestConfig?: AxiosRequestConfig) {
-//     if (!axiosRequestConfig) {
-//         return false;
-//     }
-//     axios
-//         .get("/images/status", axiosRequestConfig)
-//         .then(response => {
-//             return response.data as boolean;
-//         })
-//         .catch(error => {
-//             console.log(error);
-//             return false;
-//         });
-//     return false;
-// }
-
 const store = new Vuex.Store({
     state: initialState,
     mutations: mutations,
@@ -287,7 +271,7 @@ const store = new Vuex.Store({
                         this.state.useAxios = false;
                     }
                 })
-                .catch(error => {
+                .catch(() => {
                     console.log(
                         "API cannot be reached at url ",
                         this.state.axiosRequestConfig?.baseURL,
@@ -350,7 +334,7 @@ const store = new Vuex.Store({
                 }
             );
         },
-        async configurateAPI(context): Promise<void> {
+        async configurateAPI(): Promise<void> {
             axios
                 .get("config.prod.json")
                 .then((response: { data: { url: string } }) => {
