@@ -25,7 +25,7 @@
                 'background-image': state.image.loaded
                     ? 'url(' + state.image.url + ')'
                     : 'none',
-                'background-position': `-${box.x}px -${box.y}px`,
+                'background-position': `-${box.x - 2}px -${box.y - 5}px`,
                 'background-repeat': 'no-repeat'
             }"
             v-if="state.image.loaded && state.selectedBoxUid"

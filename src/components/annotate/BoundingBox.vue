@@ -8,7 +8,7 @@
             'bounding-box-selected': selected
         }"
         :style="{
-            left: `${x - 2}px`,
+            left: `${x - 2}px`, // # TODO : understand those magic numbers 2 and 5 ? (again in ZoomPanel)
             top: `${y - 5}px`,
             width: `${width}px`,
             height: `${height}px`
