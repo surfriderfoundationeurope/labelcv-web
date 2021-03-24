@@ -90,11 +90,16 @@ const mutations = {
     resetContextSelections(state: State) {
         state.contextSelections = undefined;
     },
-    updateRatio(state: State, imageLoader: HTMLElement): void {
-        state.image.ratio.width =
-            state.image.size.width / imageLoader.clientWidth;
-        state.image.ratio.height =
-            state.image.size.height / imageLoader.clientHeight;
+
+    updateRatio(
+        state: State,
+        {
+            actualImageWidth,
+            actualImageHeight
+        }: { actualImageWidth: number; actualImageHeight: number }
+    ): void {
+        state.image.ratio.width = state.image.size.width / actualImageWidth;
+        state.image.ratio.height = state.image.size.height / actualImageHeight;
         state.image.reverseRatio.width = 1 / state.image.ratio.width;
         state.image.reverseRatio.height = 1 / state.image.ratio.height;
     },
