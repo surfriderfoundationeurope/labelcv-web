@@ -33,7 +33,7 @@ export default class NavBar extends Vue {}
     padding-top: 0;
     padding-bottom: 0;
     z-index: 2;
-    font-size: 1.3rem;
+    font-size: 1rem;
 }
 
 .navbar li a {
@@ -52,7 +52,7 @@ a.router-link-exact-active:hover {
 
 .logo {
     box-sizing: content-box;
-    width: 70%;
+    width: 50%;
 }
 
 a {
