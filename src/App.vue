@@ -43,7 +43,6 @@ import { Component, Vue } from "vue-property-decorator";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import Navbar from "./components/global/Navbar.vue";
-import axios from "axios";
 
 @Component({ components: { Navbar } })
 export default class App extends Vue {
@@ -89,6 +88,7 @@ export default class App extends Vue {
     height: 100vh;
     color: white;
     background: black;
+    overflow: hidden;
 }
 
 #overlay-classification-container {
@@ -151,27 +151,5 @@ img.mx-auto {
 
 .v--modal-overlay {
     background: rgba(0, 0, 0, 0.6) !important;
-}
-
-.slide-left-enter-active,
-.slide-left-leave-active,
-.slide-right-enter-active,
-.slide-right-leave-active {
-    transition-duration: 0.5s;
-    transition-property: height, opacity, transform;
-    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
-    overflow: hidden;
-}
-
-.slide-left-enter,
-.slide-right-leave-active {
-    opacity: 0;
-    transform: translate(2em, 0);
-}
-
-.slide-left-leave-active,
-.slide-right-enter {
-    opacity: 0;
-    transform: translate(-2em, 0);
 }
 </style>
