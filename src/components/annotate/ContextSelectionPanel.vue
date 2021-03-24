@@ -9,7 +9,7 @@
                     name="env-buttons"
                     buttons
                     button-variant="dark"
-                    size="md"
+                    size="sm"
                 />
             </b-form-group>
         </div>
@@ -23,7 +23,7 @@
                     name="pov-buttons"
                     buttons
                     button-variant="dark"
-                    size="md"
+                    size="sm"
                 />
             </b-form-group>
         </div>
@@ -37,7 +37,7 @@
                     buttons
                     name="quality-buttons"
                     button-variant="dark"
-                    size="md"
+                    size="sm"
                 />
             </b-form-group>
         </div>
@@ -93,7 +93,7 @@ export default class ContextSelectionPanel extends Vue {
 <style scoped>
 .context-group-title p {
     margin-bottom: 0.2em;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .context-group p {

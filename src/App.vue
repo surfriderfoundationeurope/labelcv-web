@@ -107,6 +107,7 @@ export default class App extends Vue {
     margin: auto;
     top: 50%;
     left: 50%;
+    width: 100%;
     transform: translate(-50%, -50%);
 }
 

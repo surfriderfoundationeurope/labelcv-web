@@ -69,7 +69,7 @@ import ContextSelectionPanel from "@/components/annotate/ContextSelectionPanel.v
         ChevronLeftIcon,
         ChevronRightIcon,
         Trash2Icon,
-        AlertTriangleIcon,
+        AlertTriangleIcon
     }
 })
 export default class Annotate extends Vue {

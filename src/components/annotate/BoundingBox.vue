@@ -185,13 +185,11 @@ export default class BoundingBox extends Vue {
     }
 }
 </script>
-<style>
-.multiselect__content-wrapper {
+<style scoped>
+.custom-multi .multiselect__content-wrapper {
     overflow-y: scroll;
     width: unset;
 }
-</style>
-<style scoped>
 .bounding-box {
     position: absolute;
     cursor: pointer;
