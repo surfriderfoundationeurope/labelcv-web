@@ -142,10 +142,6 @@ img.mx-auto {
     width: 80%;
 }
 
-.image-loader {
-    display: none;
-}
-
 .v--modal-box {
     color: rgb(50, 50, 50);
 }
