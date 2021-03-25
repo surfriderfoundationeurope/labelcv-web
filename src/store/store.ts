@@ -262,24 +262,13 @@ const store = new Vuex.Store({
                     const statusOK = response.data;
                     if (statusOK) {
                         this.state.useAxios = true;
-                        console.log(
-                            "Successfully connected to API at url ",
-                            this.state.axiosRequestConfig?.baseURL
-                        );
                     } else {
-                        console.log(
-                            "API is not ready at url ",
-                            this.state.axiosRequestConfig?.baseURL,
-                            "\nFall back to development",
-                            "mode (with default images and trash-types)."
-                        );
                         this.state.useAxios = false;
                     }
                 })
                 .catch(() => {
                     console.log(
-                        "API cannot be reached at url ",
-                        this.state.axiosRequestConfig?.baseURL,
+                        "API cannot be reached.",
                         "\nFall back to development",
                         "mode (with default images and trash-types)."
                     );
