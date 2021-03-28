@@ -183,6 +183,7 @@ export default class Annotate extends Vue {
     justify-content: space-between;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 #annotator-surface-container {
@@ -217,7 +218,7 @@ export default class Annotate extends Vue {
 }
 #annotate-action-buttons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 #annotate-action-buttons *:not(:last-child) {
