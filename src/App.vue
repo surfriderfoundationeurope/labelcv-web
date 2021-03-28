@@ -88,7 +88,6 @@ export default class App extends Vue {
     height: 100vh;
     color: white;
     background: black;
-    overflow: hidden;
 }
 
 #overlay-classification-container {
