@@ -101,6 +101,8 @@ export default class BoundingBox extends Vue {
         if (id === "raw") {
             return this.$props.raw;
         }
+        this.$data.selected =
+            this.$store.state.selectedBoxUid === id ? true : false;
         return this.$store.getters.getAnnotationByUid(id).box;
     }
 
@@ -187,9 +189,11 @@ export default class BoundingBox extends Vue {
 </script>
 <style scoped>
 .custom-multi .multiselect__content-wrapper {
-    overflow-y: scroll;
-    width: unset;
+    /* overflow-y: hidden; */
+    /* width: unset; */
+    width: fit-content;
 }
+
 .bounding-box {
     position: absolute;
     cursor: pointer;
