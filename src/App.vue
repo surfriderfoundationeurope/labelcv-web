@@ -82,10 +82,8 @@ export default class App extends Vue {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 99%;
+    height: 100%;
     color: white;
     background: black;
 }
@@ -106,22 +104,20 @@ export default class App extends Vue {
     margin: auto;
     top: 50%;
     left: 50%;
-    width: 100%;
     transform: translate(-50%, -50%);
 }
 
 #overlay-classification .close-icon {
     align-self: flex-end;
-    font-size: 12px;
+    font-size: 24px;
     font-weight: bold;
     cursor: pointer;
 }
 
 #router-view-container {
-    width: 94%;
-    height: 78%;
-    margin: 0 1rem;
-    margin-top: 4.6rem;
+    width: 98%;
+    height: 98%;
+    margin: 0.5rem;
 }
 
 #desktop-only {
@@ -141,11 +137,37 @@ img.mx-auto {
     width: 80%;
 }
 
+.image-loader {
+    display: none;
+}
+
 .v--modal-box {
     color: rgb(50, 50, 50);
 }
 
 .v--modal-overlay {
     background: rgba(0, 0, 0, 0.6) !important;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+    transition-duration: 0.5s;
+    transition-property: height, opacity, transform;
+    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+    overflow: hidden;
+}
+
+.slide-left-enter,
+.slide-right-leave-active {
+    opacity: 0;
+    transform: translate(2em, 0);
+}
+
+.slide-left-leave-active,
+.slide-right-enter {
+    opacity: 0;
+    transform: translate(-2em, 0);
 }
 </style>

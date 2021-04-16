@@ -2,16 +2,17 @@
     <div id="annotator">
         <v-dialog />
         <img class="image-loader" ref="imageLoader" />
-        <div
-            id="annotator-surface-container"
-            ref="surface"
-            :style="{ width: `${surfaceWidth}%` }"
-        >
+        <div id="annotator-surface-container" ref="surface">
             <AnnotationSurface />
         </div>
         <div id="annotator-control-panel">
             <div id="annotator-zoom-panel-container">
                 <ZoomPanel />
+            </div>
+            <div class="flexColumnFullWidth">
+                <b-button variant="primary" @click="onClickToggleImageZoom()">
+                    Toggle Image Zoom
+                </b-button>
             </div>
             <div class="flexColumnFullWidth">
                 <b-button
@@ -78,7 +79,7 @@ export default class Annotate extends Vue {
             annotations: []
         };
     }
-    private surfaceWidth = 70;
+    // private surfaceWidth = 70;
     private mounted(): void {
         this.$store.commit(
             "registerImageLoader",
@@ -161,13 +162,63 @@ export default class Annotate extends Vue {
     private resetAnnotationsAndContextSelections() {
         this.$store.commit("resetAnnotations");
         this.$store.commit("resetSelectedBox");
+        this.$store.commit("resetImageSize");
         this.contextSelectionPanel.resetContextSelections();
+        this.resetImageZoom();
     }
+
     onClickCheckClassification() {
         const overlay = document.getElementById(
             "overlay-classification-container"
         ) as HTMLElement;
         overlay.style.display = "block";
+    }
+
+    onClickToggleImageZoom() {
+        this.$store.commit("toggleImageSize");
+
+        const imageLoader = document.getElementsByClassName(
+            "image-loader"
+        )[0] as HTMLElement;
+        imageLoader.style.display = "inline-block";
+
+        if (this.$store.state.imageIsFullSize) {
+            imageLoader.style.position = "absolute";
+        } else {
+            imageLoader.style.position = "relative";
+        }
+        this.setImageDimensions(imageLoader);
+
+        this.$store.commit("updateRatio", imageLoader);
+
+        imageLoader.style.display = "none";
+    }
+
+    setImageDimensions(imageLoader: HTMLElement) {
+        const targetElement = document.getElementById(
+            "annotation-surface-image"
+        ) as HTMLElement;
+
+        targetElement.style.width = this.$store.state.imageIsFullSize
+            ? imageLoader.clientWidth + "px"
+            : "";
+        targetElement.style.height = this.$store.state.imageIsFullSize
+            ? imageLoader.clientHeight + "px"
+            : "";
+    }
+
+    resetImageZoom() {
+        const imageLoader = document.getElementsByClassName(
+            "image-loader"
+        )[0] as HTMLElement;
+        imageLoader.style.display = "inline-block";
+        imageLoader.style.position = "relative";
+
+        this.$store.commit("updateRatio", imageLoader);
+
+        imageLoader.style.display = "none";
+
+        this.setImageDimensions(imageLoader);
     }
 }
 </script>
@@ -183,29 +234,30 @@ export default class Annotate extends Vue {
     justify-content: space-between;
     width: 100%;
     height: 100%;
-    overflow: hidden;
 }
 
 #annotator-surface-container {
     height: 100%;
+    position: relative;
     margin: 0;
     padding: 0;
+    float: left;
+    flex: 1;
+    overflow: auto;
 }
 
 #annotator-control-panel {
     display: flex;
-    flex: 1;
     margin-left: 15px;
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-    width: 100%;
     max-width: 400px;
+    float: right;
 }
 
 #annotator-zoom-panel-container {
     width: 100%;
-    flex-basis: 40%;
     margin-bottom: 10px;
     background: rgb(60, 60, 60);
     border: 1px solid rgb(25, 25, 25);
@@ -214,11 +266,10 @@ export default class Annotate extends Vue {
 .flexColumnFullWidth {
     display: flex;
     flex-direction: column;
-    width: 100%;
 }
 #annotate-action-buttons {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 #annotate-action-buttons *:not(:last-child) {

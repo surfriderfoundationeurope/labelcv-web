@@ -5,6 +5,11 @@
         @mousedown="onMouseDown"
         @mouseleave="onMouseLeave"
         id="annotation-surface-image"
+        :class="
+            $store.state.imageIsFullSize
+                ? 'annotation-surface-image-fullsize'
+                : 'annotation-surface-image-resized'
+        "
         :style="{
             'background-image': $store.state.image.loaded
                 ? `url('${$store.state.image.url}')`
@@ -74,25 +79,45 @@ export default class AnnotationSurface extends Vue {
             const annotatorSurface = document.getElementById(
                 "annotation-surface-image"
             ) as HTMLElement;
+            this.updateRatioFromImageLoader();
             const annotatorWidth = annotatorSurface.offsetWidth;
             const annotatorHeight = annotatorSurface.offsetHeight;
             const {
                 actualImageWidth,
                 actualImageHeight
             } = this.estimateActualImageSize(annotatorWidth, annotatorHeight);
-            this.$store.commit("updateRatio", {
-                actualImageWidth,
-                actualImageHeight
-            });
-
             const boxOffset: Point = {
                 x: annotatorWidth / 2 - actualImageWidth / 2,
                 y: annotatorHeight / 2 - actualImageHeight / 2
             };
             this.$store.commit("updateBoxOffset", boxOffset);
+            // TODO : understand this magic number : why 24
+            // Whithout this shift, the bounding box gets shifted when mouse leaves
+            this.crossHeightShift = 24 * this.$store.state.image.ratio.height;
         });
     }
 
+    private updateRatioFromImageLoader(): void {
+        const imageLoader = document.getElementsByClassName(
+            "image-loader"
+        )[0] as HTMLElement;
+        // We have to briefly display the image loader to get dimensions on client screen
+        // TODO : Do we actually have to ?
+        imageLoader.style.display = "inline-block";
+        if (this.$store.state.imageIsFullSize) {
+            imageLoader.style.position = "absolute";
+        } else {
+            imageLoader.style.position = "relative";
+        }
+
+        this.$store.commit("updateRatio", imageLoader);
+        imageLoader.style.display = "none";
+    }
+
+    /**
+     * Mouse move event listener with position relative
+     * to client coordinate system (effectively displayed background).
+     */
     private onMouseMove(event: MouseEvent): void {
         const elem = this.$el as HTMLElement;
         const offset = {
@@ -146,7 +171,7 @@ export default class AnnotationSurface extends Vue {
                 width: this.drawed.width,
                 height: this.drawed.height,
                 x: this.drawed.x,
-                y: this.drawed.y
+                y: this.drawed.y - this.crossHeightShift
             };
             const limitSize = this.$store.state.minTrashSize;
             if (box.width > limitSize && box.height > limitSize) {
@@ -169,13 +194,20 @@ export default class AnnotationSurface extends Vue {
 </script>
 <style scoped>
 #annotation-surface-image {
-    position: relative;
+    background-repeat: no-repeat;
+    display: flex;
+}
+
+.annotation-surface-image-resized {
     width: 100%;
     height: 100%;
-    background-repeat: no-repeat;
     background-position: center;
     background-size: contain !important;
-    /* border: solid 0.1px red; */
+}
+
+.annotation-surface-image-fullsize {
+    min-height: 1px;
+    min-width: 1px;
 }
 
 #loader-animation {
@@ -184,5 +216,9 @@ export default class AnnotationSurface extends Vue {
     align-items: center;
     width: 100%;
     height: 100%;
+}
+
+.image-loader {
+    display: none;
 }
 </style>

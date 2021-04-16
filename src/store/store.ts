@@ -54,6 +54,7 @@ export type State = {
     selectedAnnotationLabel?: AnnotationLabel;
     annotationLabels: AnnotationLabel[];
     minTrashSize: number;
+    imageIsFullSize: boolean;
 };
 export const initialState: State = {
     useAxios: false,
@@ -71,7 +72,8 @@ export const initialState: State = {
 
     annotations: [],
     annotationLabels: [],
-    minTrashSize: 20 // Limit size for trash (in pixels) */
+    minTrashSize: 20, // Limit size for trash (in pixels) */
+    imageIsFullSize: false
 };
 
 const mutations = {
@@ -90,16 +92,11 @@ const mutations = {
     resetContextSelections(state: State) {
         state.contextSelections = undefined;
     },
-
-    updateRatio(
-        state: State,
-        {
-            actualImageWidth,
-            actualImageHeight
-        }: { actualImageWidth: number; actualImageHeight: number }
-    ): void {
-        state.image.ratio.width = state.image.size.width / actualImageWidth;
-        state.image.ratio.height = state.image.size.height / actualImageHeight;
+    updateRatio(state: State, imageLoader: HTMLElement): void {
+        state.image.ratio.width =
+            state.image.size.width / imageLoader.clientWidth;
+        state.image.ratio.height =
+            state.image.size.height / imageLoader.clientHeight;
         state.image.reverseRatio.width = 1 / state.image.ratio.width;
         state.image.reverseRatio.height = 1 / state.image.ratio.height;
     },
@@ -216,6 +213,14 @@ const mutations = {
         if (state.image.url) {
             state.image.loader.src = state.image.url;
         }
+    },
+
+    toggleImageSize(state: State): void {
+        state.imageIsFullSize = !state.imageIsFullSize;
+    },
+
+    resetImageSize(state: State): void {
+        state.imageIsFullSize = false;
     }
 };
 
