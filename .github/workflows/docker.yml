@@ -8,5 +8,5 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build docker image
-      run: docker build -t labelcv-web .
+      run: docker build -t labelcv .
     # TODO: Consider deploying image.
