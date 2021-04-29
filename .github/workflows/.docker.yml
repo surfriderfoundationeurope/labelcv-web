@@ -5,7 +5,6 @@ on:
     branches:
       - master
       - develop
-      - fix-cd-api
 
 jobs:
   build:
@@ -21,5 +20,5 @@ jobs:
       run: docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
     - name: Build docker image
       run: docker build -t ${{ steps.prepare.outputs.tag }} .
-    # - name: Push to GitHub Packages
-    #   run: docker push ${{ steps.prepare.outputs.tag }}
+    - name: Push to GitHub Packages
+      run: docker push ${{ steps.prepare.outputs.tag }}
