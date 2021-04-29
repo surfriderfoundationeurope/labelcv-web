@@ -1,12 +1,24 @@
 name: docker
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - develop
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - name: Get image tag
+      id: prepare
+      uses: Surgo/docker-smart-tag-action@v1
+      with:
+        docker_image: 'docker.pkg.github.com/surfriderfoundationeurope/labelcv-web/labelcv-web'
+    - name: Login to GitHub Packages
+      run: docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
     - name: Build docker image
-      run: docker build -t labelcv-web .
-    # TODO: Consider deploying image.
+      run: docker build -t ${{ steps.prepare.outputs.tag }} .
+    - name: Push to GitHub Packages
+      run: docker push ${{ steps.prepare.outputs.tag }}
