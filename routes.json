@@ -1,8 +1,8 @@
 {
     "routes": [
-      {
-        "route": "/config.prod.json",
-        "serve": "/api/getconfig"
-      }
+        {
+            "route": "/config.prod.json",
+            "serve": "/api/getconfig"
+        }
     ]
-  }
+}
