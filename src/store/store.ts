@@ -313,8 +313,8 @@ const store = new Vuex.Store({
                         location_x: annotation.box.x,
                         // eslint-disable-next-line @typescript-eslint/camelcase
                         location_y: annotation.box.y,
-                        width: annotation.box.width,
-                        height: annotation.box.height
+                        width: Math.round(annotation.box.width),
+                        height: Math.round(annotation.box.height)
                     };
                     if (!this.state.axiosRequestConfig) {
                         console.log("[DEV] post annotation : ", postAnnotation);
