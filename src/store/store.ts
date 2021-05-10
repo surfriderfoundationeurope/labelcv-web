@@ -33,6 +33,10 @@ type ContextSelections = {
 };
 export type State = {
     axiosRequestConfig?: AxiosRequestConfig;
+    auth?: {
+        token: string;
+        expires: string;
+    };
     useAxios: boolean;
     contextSelections?: ContextSelections;
     image: {
@@ -216,6 +220,15 @@ const mutations = {
         if (state.image.url) {
             state.image.loader.src = state.image.url;
         }
+    },
+
+    login(state: State, payload: { token: string; expires: string }): void {
+        state.auth = payload;
+        if (state.axiosRequestConfig) {
+            state.axiosRequestConfig.headers[
+                "Authorization"
+            ] = `Bearer ${payload.token}`;
+        }
     }
 };
 
@@ -227,6 +240,7 @@ const store = new Vuex.Store({
     state: initialState,
     mutations: mutations,
     getters: {
+        getAxiosRequestConfig: state => state.axiosRequestConfig,
         getAnnotationsWithLabel: state => {
             return state.annotations.filter(
                 annotation => !!annotation.annotationLabel

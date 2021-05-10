@@ -1,5 +1,5 @@
 <template>
-    <b-form @submit="onSubmit" class="login">
+    <b-form v-on:submit.prevent="onSubmit" class="login">
         <div class="field">
             <label class="field__label" for="email">Email</label>
             <b-form-input
@@ -45,18 +45,23 @@
         </div>
         <button
             type="submit"
-            class="btn btn-primary"
-            v-bind:disabled="!isValid"
+            class="btn btn-primary mt-6"
+            v-bind:disabled="!isValid || status === 'loading'"
         >
-            Login
+            {{ status === "loading" ? "Loading" : "Login" }}
         </button>
+        <b-card class="bg-danger mt-3" v-if="status === 'error'">
+            <b-card-text>An error occurred. Please try again.</b-card-text>
+        </b-card>
+        <b-card class="bg-success mt-3" v-if="status === 'fulfilled'">
+            <b-card-text>Logged in. Please wait...</b-card-text>
+        </b-card>
     </b-form>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-
 @Component({})
 export default class LoginForm extends Vue {
     data() {
@@ -68,7 +73,8 @@ export default class LoginForm extends Vue {
             password: {
                 error: false,
                 value: ""
-            }
+            },
+            status: "idle"
         };
     }
 
@@ -87,8 +93,27 @@ export default class LoginForm extends Vue {
     }
 
     private onSubmit() {
-        console.log(this.$data.email);
-        // this.password && this.login;
+        this.$data.status = "loading";
+        this.axios
+            .post(
+                "/login",
+                {
+                    email: this.$data.email.value,
+                    password: this.$data.password.value
+                },
+                this.$store.getters.getAxiosRequestConfig
+            )
+            .then((response: { data: { token: string; expires: string } }) => {
+                this.$store.commit("login", {
+                    token: response.data.token,
+                    expires: response.data.expires
+                });
+                this.$data.status = "fulfilled";
+            })
+            .catch(prodError => {
+                this.$data.status = "error";
+                this.console.error(prodError);
+            });
     }
 }
 </script>
