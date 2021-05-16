@@ -112,7 +112,9 @@ export default class LoginForm extends Vue {
             })
             .catch(prodError => {
                 this.$data.status = "error";
-                this.console.error(prodError);
+                this.$router.push("/");
+
+                console.error(prodError);
             });
     }
 }
