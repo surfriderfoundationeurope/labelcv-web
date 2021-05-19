@@ -94,15 +94,11 @@ export default class LoginForm extends Vue {
 
     private onSubmit() {
         this.$data.status = "loading";
-        this.axios
-            .post(
-                "/login",
-                {
-                    email: this.$data.email.value,
-                    password: this.$data.password.value
-                },
-                this.$store.getters.getAxiosRequestConfig
-            )
+        const login = this.$store.dispatch("login", {
+            email: this.$data.email.value,
+            password: this.$data.password.value
+        });
+        login
             .then((response: { data: { token: string; expires: string } }) => {
                 this.$store.commit("login", {
                     token: response.data.token,

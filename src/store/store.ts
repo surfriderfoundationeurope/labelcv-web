@@ -386,6 +386,9 @@ const store = new Vuex.Store({
                 .catch(devError => {
                     console.log(devError);
                 });
+        },
+        async login(credentials): Promise<void> {
+            return axios.post("/login", credentials);
         }
     },
     modules: {}
