@@ -19,55 +19,44 @@
 
             <h1>Label bounding boxes</h1>
 
-            <h4>Bottles</h4>
+            <h4>Known categories</h4>
+            <p>Group containing a few categories which are frequently observed. Together they make a big part of what is usually found on our sites.</p>
             <ul class="box">
-                <p>This tag relates to drink related items:</p>
+                <p><strong>Rigid, in one piece:</strong> subgroup containing all objects which somehow have a definite shape and hold in place. They wouldn’t change shape so much if put somewhere else (as opposed to, for example, a plastic bag).</p>
                 <li>
-                    drink packaging (plastic bottles, glass bottles, metal cans,
-                    bricks)
+                    Insulating material: blocks of material (sometimes floating in water), used for insulation e.g. foam and polystyrene 
                 </li>
                 <li>
-                    cleaning and chemical products stored in plastic bottles,
-                    glass bottles or metal cans
-                </li>
-                <li>
-                    drums &#60; 5 Liters
-                    <p>
-                        Characteristics: any color, any shape, any size (&#60; 5
-                        Litersl) also count cleaning and chemical products
-                    </p>
+                    Tire: self-explanatory e.g. truck tire, car tire, bike tire.
                 </li>
                 <p>
-                    <strong>Labeling tips</strong> Do not label small fragments
-                    of bottles, label each bottle separately even if they are
-                    nearby
                 </p>
+                <p><U>Liquid containers:</U> objects having a hollow shape for liquid containing, of various size and type.</p>
+                <li>
+                    Bottle-shaped: liquid container with the typical shape of a bottle. Usually a drinking bottle, but not always e.g. coke bottle, bier bottle, detergent bottle, reusable water-bottle for sports.
+                </li>
+                <li>   
+                    Can-shaped: similarly, as for bottle-shaped but with cans. Could be crushed or smashed e.g. coke can, beer can.
+                </li>
+                <li>
+                    Drum: larger containers (generally of several dozens of liters), usually used in industry (but could also be a household product) e.g. oil container, barrel of beer, waterproof drum for a specific product, etc
+                </li>
+                <li>
+                    Other packaging: all other types of packaging that may not enter the previous categories e.g. milk pack, fast food box, yogurt pot, plastic cup, plastic plate, cleaning product container, etc
+                </li>
                 <p>
-                    ⚠️ This tag do NOT include corks, cups, small flasks (&#60;
-                    500 ml)
                 </p>
+                <p><strong>Soft, possibly in fragments:</strong> Group containing all objects which are soft and possibly broken in several pieces across the scene. As opposed to ‘rigid’ objects, they usually do not have a definite shape are just hanging on the background and/or falling under gravity.</p>
+                <li>Sheet / Tarps / Plastic bags / Fragments of soft plastic: trash in the form of a layer that is either spread all over the place or broken into pieces. Could be of any surface (sometimes very large sometimes just a fragment) and of different origin e.g. black sheets from fields for agriculture, empty garbage bag, plastic bag from supermarkets, chips/crackers wrapping or individual wrapping for biscuits</li>
+                <li>Fishing net / cords: filament-looking object from the fishing industry usually. Could also be something else as long as it has a similar aspect e.g. fishing net, fragments of a jumping rope</li>
+
             </ul>
-            <h4>Fragments</h4>
+            <h4>Other</h4>
+            <p>Group containing less frequently observed objects for which we do not define a proper class</p>
             <ul class="box">
-                <p>This tag relates to thin plastic fragments from:</p>
-                <li>plastic bags</li>
-                <li>tarps</li>
-                <li>clothes or textile</li>
-                <p>
-                    Characteristics: any color, often found in trees, various
-                    shapes
-                </p>
-            </ul>
-            <h4>Others</h4>
-            <ul class="box">
-                <p>This tag relates to all other litter items:</p>
-                <li>shoes</li>
-                <li>tires</li>
-                <li>packaging</li>
-                <li>balloons</li>
-                <li>pipes</li>
-                <li>inflatable unicorn</li>
-                <li>...</li>
+                <li>Easily nameable: anything that you recognize and would be able to describe. You know it has a name even though it was not proposed in our classes and would not be dubbed “packaging” e.g. tennis ball, water pipe, lighter</li>
+                <li>Unclear: something that really you don’t recognize or have a hard time identifying</li> 
+
             </ul>
             <b-button
                 class="btn-next-step"
