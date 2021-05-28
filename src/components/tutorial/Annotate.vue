@@ -31,7 +31,7 @@
                 </li>
                 <p>
                 </p>
-                <p><U>Liquid containers:</U> objects having a hollow shape for liquid containing, of various size and type.</p>
+                <li><p><u>Liquid containers:</u> objects having a hollow shape for liquid containing, of various size and type.</p></li>
                 <li>
                     Bottle-shaped: liquid container with the typical shape of a bottle. Usually a drinking bottle, but not always e.g. coke bottle, bier bottle, detergent bottle, reusable water-bottle for sports.
                 </li>
