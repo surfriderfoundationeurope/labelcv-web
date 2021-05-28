@@ -143,8 +143,8 @@ export default class AnnotationSurface extends Vue {
         if (this.drawing) {
             this.drawing = false;
             const box = {
-                width: this.drawed.width,
-                height: this.drawed.height,
+                width: Math.round(this.drawed.width),
+                height: Math.round(this.drawed.height),
                 x: this.drawed.x,
                 y: this.drawed.y
             };
