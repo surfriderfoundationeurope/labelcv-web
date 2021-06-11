@@ -1,16 +1,21 @@
-.btn{
+.btn {
     border-radius: 0;
 }
 
-.btn.btn-primary{
-
+.btn.btn-primary {
 }
 
-.btn.btn-secondary{
+.btn.btn-secondary {
     background-color: black;
     border: none;
     color: white;
 }
-.btn.btn-secondary:hover{
-     background-color: #313131;
- }
+.btn.btn-secondary:hover {
+    background-color: #313131;
+}
+
+input {
+    border: 0;
+    padding: 12px 16px;
+    border-radius: 4px;
+}
