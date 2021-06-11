@@ -227,11 +227,14 @@ const mutations = {
         }
     },
 
-    login(state: State, payload: { token: string; expires: string }): void {
+    authenticate(
+        state: State,
+        payload: { token: string; expires: string }
+    ): void {
         state.auth = payload;
         localStorage.setItem("auth", JSON.stringify(payload));
         if (state.axiosRequestConfig) {
-            state.axiosRequestConfig.headers.common[
+            state.axiosRequestConfig.headers[
                 "Authorization"
             ] = `Bearer ${payload.token}`;
         }
@@ -241,9 +244,7 @@ const mutations = {
         state.auth = {};
         localStorage.removeItem("auth");
         if (state.axiosRequestConfig) {
-            state.axiosRequestConfig.headers.common[
-                "Authorization"
-            ] = undefined;
+            state.axiosRequestConfig.headers["Authorization"] = undefined;
         }
     }
 };
@@ -387,8 +388,13 @@ const store = new Vuex.Store({
                     console.log(devError);
                 });
         },
-        async login(credentials): Promise<void> {
-            return axios.post("/login", credentials);
+        async login(context, credentials): Promise<void> {
+            console.log("login ~ credentials", credentials);
+            return axios.post(
+                "/login",
+                credentials,
+                this.state.axiosRequestConfig
+            );
         }
     },
     modules: {}

@@ -11,6 +11,7 @@
                 required
                 aria-required="true"
                 class="field__input"
+                @focus="resetError()"
                 @blur="check('email')"
                 v-model="email.value"
             />
@@ -32,6 +33,7 @@
                 required
                 aria-required="true"
                 class="field__input"
+                @focus="resetError()"
                 @blur="check('password')"
                 v-model="password.value"
             />
@@ -92,6 +94,10 @@ export default class LoginForm extends Vue {
         }
     }
 
+    private resetError() {
+        this.$data.status = "idle";
+    }
+
     private onSubmit() {
         this.$data.status = "loading";
         const login = this.$store.dispatch("login", {
@@ -100,16 +106,17 @@ export default class LoginForm extends Vue {
         });
         login
             .then((response: { data: { token: string; expires: string } }) => {
-                this.$store.commit("login", {
+                this.$store.commit("authenticate", {
                     token: response.data.token,
                     expires: response.data.expires
                 });
                 this.$data.status = "fulfilled";
+                setTimeout(() => {
+                    this.$router.push("/");
+                }, 3000);
             })
             .catch(prodError => {
                 this.$data.status = "error";
-                this.$router.push("/");
-
                 console.error(prodError);
             });
     }
