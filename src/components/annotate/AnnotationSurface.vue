@@ -45,8 +45,8 @@ export default class AnnotationSurface extends Vue {
     private drawing = false;
 
     /** Current drawed. */
+    private readonly drawedMouseDown: Point = { x: NaN, y: NaN };
     private readonly drawed: Box = { x: NaN, y: NaN, width: NaN, height: NaN };
-    private crossHeightShift!: number;
 
     private estimateActualImageSize(
         annotatorWidth: number,
@@ -109,11 +109,23 @@ export default class AnnotationSurface extends Vue {
             x: (cursor.x - offset.left) * this.$store.state.image.ratio.width,
             y: (cursor.y - offset.top) * this.$store.state.image.ratio.height
         };
-
         this.$store.commit("updateRelativeCursor", relativeCursor);
         if (this.drawing) {
-            this.drawed.width = relativeCursor.x - this.drawed.x;
-            this.drawed.height = relativeCursor.y - this.drawed.y;
+            this.drawed.width = Math.abs(
+                this.$store.state.relativeCursor.x - this.drawedMouseDown.x
+            );
+            this.drawed.height = Math.abs(
+                this.$store.state.relativeCursor.y - this.drawedMouseDown.y
+            );
+
+            this.drawed.x =
+                this.$store.state.relativeCursor.x - this.drawedMouseDown.x < 0
+                    ? this.$store.state.relativeCursor.x
+                    : this.drawedMouseDown.x;
+            this.drawed.y =
+                this.$store.state.relativeCursor.y - this.drawedMouseDown.y < 0
+                    ? this.$store.state.relativeCursor.y
+                    : this.drawedMouseDown.y;
         }
     }
 
@@ -133,6 +145,10 @@ export default class AnnotationSurface extends Vue {
             event.preventDefault();
             this.drawed.width = 0;
             this.drawed.height = 0;
+
+            this.drawedMouseDown.x = this.$store.state.relativeCursor.x;
+            this.drawedMouseDown.y = this.$store.state.relativeCursor.y;
+
             this.drawed.x = this.$store.state.relativeCursor.x;
             this.drawed.y = this.$store.state.relativeCursor.y;
             this.drawing = true;

@@ -8,7 +8,7 @@
             'bounding-box-selected': selected
         }"
         :style="{
-            left: `${x - 2}px`, // # TODO : understand those magic numbers 2 and 5 ? (again in ZoomPanel)
+            left: `${x - 2}px`, // # TODO : understand those magic numbers 2 and 5 ? (Probably the cross-cursor size )
             top: `${y - 5}px`,
             width: `${width}px`,
             height: `${height}px`
@@ -189,8 +189,6 @@ export default class BoundingBox extends Vue {
 </script>
 <style scoped>
 .custom-multi .multiselect__content-wrapper {
-    /* overflow-y: hidden; */
-    /* width: unset; */
     width: fit-content;
 }
 

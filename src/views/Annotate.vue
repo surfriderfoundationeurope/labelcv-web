@@ -183,13 +183,13 @@ export default class Annotate extends Vue {
     justify-content: space-between;
     width: 100%;
     height: 100%;
-    overflow: hidden;
 }
 
 #annotator-surface-container {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 #annotator-control-panel {
@@ -201,6 +201,7 @@ export default class Annotate extends Vue {
     height: 100%;
     width: 100%;
     max-width: 400px;
+    overflow: scroll;
 }
 
 #annotator-zoom-panel-container {
