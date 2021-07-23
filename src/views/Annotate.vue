@@ -201,7 +201,6 @@ export default class Annotate extends Vue {
     height: 100%;
     width: 100%;
     max-width: 400px;
-    overflow: scroll;
 }
 
 #annotator-zoom-panel-container {
