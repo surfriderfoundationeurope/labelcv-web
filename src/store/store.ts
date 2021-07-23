@@ -25,6 +25,7 @@ const developmentAnnotationLabels: AnnotationLabel[] = [
     { id: 2, name: "paper" },
     { id: 3, name: "some super long trash name" }
 ]; // TODO : Should be fetch from API
+const savedAuth = localStorage.getItem("auth");
 
 type ContextSelections = {
     quality: QualityValue | null;
@@ -33,6 +34,10 @@ type ContextSelections = {
 };
 export type State = {
     axiosRequestConfig?: AxiosRequestConfig;
+    auth: {
+        token?: string;
+        expires?: string;
+    };
     useAxios: boolean;
     contextSelections?: ContextSelections;
     image: {
@@ -57,6 +62,7 @@ export type State = {
 };
 export const initialState: State = {
     useAxios: false,
+    auth: savedAuth ? JSON.parse(savedAuth) : {},
     image: {
         loader: undefined,
         loaded: false,
@@ -80,7 +86,10 @@ const mutations = {
             baseURL: url,
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                Authorization: state.auth.token
+                    ? `Bearer ${state.auth.token}`
+                    : undefined
             }
         };
     },
@@ -216,6 +225,27 @@ const mutations = {
         if (state.image.url) {
             state.image.loader.src = state.image.url;
         }
+    },
+
+    authenticate(
+        state: State,
+        payload: { token: string; expires: string }
+    ): void {
+        state.auth = payload;
+        localStorage.setItem("auth", JSON.stringify(payload));
+        if (state.axiosRequestConfig) {
+            state.axiosRequestConfig.headers[
+                "Authorization"
+            ] = `Bearer ${payload.token}`;
+        }
+    },
+
+    logout(state: State): void {
+        state.auth = {};
+        localStorage.removeItem("auth");
+        if (state.axiosRequestConfig) {
+            state.axiosRequestConfig.headers["Authorization"] = undefined;
+        }
     }
 };
 
@@ -227,6 +257,8 @@ const store = new Vuex.Store({
     state: initialState,
     mutations: mutations,
     getters: {
+        getAxiosRequestConfig: state => state.axiosRequestConfig,
+        isLoggedIn: state => !!(state.auth && state.auth.token),
         getAnnotationsWithLabel: state => {
             return state.annotations.filter(
                 annotation => !!annotation.annotationLabel
@@ -355,6 +387,14 @@ const store = new Vuex.Store({
                 .catch(devError => {
                     console.log(devError);
                 });
+        },
+        async login(context, credentials): Promise<void> {
+            console.log("login ~ credentials", credentials);
+            return axios.post(
+                "/login",
+                credentials,
+                this.state.axiosRequestConfig
+            );
         }
     },
     modules: {}

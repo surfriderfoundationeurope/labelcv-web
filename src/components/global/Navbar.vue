@@ -1,18 +1,29 @@
 <template>
-    <b-navbar toggleable="sm" type="dark" class="navbar">
+    <b-navbar toggleable="sm" type="dark" class="navbar w-100">
         <b-navbar-brand class="navbar-brand">
             <img src="images/surfrider.svg" alt="surfrider-logo" class="logo" />
         </b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-        <b-collapse id="nav-collapse" is-nav>
-            <b-navbar-nav>
+        <b-collapse id="nav-collapse" class="w-100" is-nav>
+            <b-navbar-nav class="d-flex align-items-center w-100">
                 <b-nav-item href="/">
                     <router-link to="/">Annotate</router-link>
                 </b-nav-item>
                 <b-nav-item>
                     <router-link to="/tutorial">Tutorial</router-link>
+                </b-nav-item>
+                <b-nav-item v-if="isLoggedIn">
+                    <router-link to="/upload">Upload</router-link>
+                </b-nav-item>
+                <b-nav-item v-if="isLoggedIn" class="ml-auto">
+                    <b-button variant="outline-primary" @click="logout">
+                        Logout
+                    </b-button>
+                </b-nav-item>
+                <b-nav-item v-if="!isLoggedIn" class="ml-auto">
+                    <router-link to="/login">Login</router-link>
                 </b-nav-item>
             </b-navbar-nav>
         </b-collapse>
@@ -22,8 +33,16 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+import { mapGetters, mapMutations } from "vuex";
 
-@Component({})
+@Component({
+    computed: {
+        ...mapGetters(["isLoggedIn"])
+    },
+    methods: {
+        ...mapMutations(["logout"])
+    }
+})
 export default class NavBar extends Vue {}
 </script>
 
