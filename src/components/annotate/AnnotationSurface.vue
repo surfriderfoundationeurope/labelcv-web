@@ -84,7 +84,8 @@ export default class AnnotationSurface extends Vue {
     private readonly drawed: Box = { x: NaN, y: NaN, width: NaN, height: NaN };
     private crossHeightShift!: number;
     private store = this.$store;
-    private lineConfig = { lineWidth: 2, cursorOffset: 20 };
+    private lineConfig = { lineWidth: 1, cursorOffset: 20 };
+    private linesActivated = false;
     private estimateActualImageSize(
         annotatorWidth: number,
         annotatorHeight: number
@@ -147,6 +148,13 @@ export default class AnnotationSurface extends Vue {
             y: (cursor.y - offset.top) * this.$store.state.image.ratio.height
         };
 
+        if (!this.linesActivated) {
+            this.stylehorizontalline1.height = this.lineConfig.lineWidth + "px";
+            this.stylehorizontalline2.height = this.lineConfig.lineWidth + "px";
+            this.styleverticalline1.width = this.lineConfig.lineWidth + "px";
+            this.styleverticalline2.width = this.lineConfig.lineWidth + "px";
+            this.linesActivated = true;
+        }
         this.plotHelperLines(cursor, elem, offset);
 
         this.$store.commit("updateRelativeCursor", relativeCursor);
@@ -156,11 +164,17 @@ export default class AnnotationSurface extends Vue {
         }
     }
 
+    /** Update the Helper Lines position */
     private plotHelperLines(cursor, elem, offset) {
+        //TODO : limiter query au store
         this.stylehorizontalline1.top =
             Math.min(
-                Math.max(0, cursor.y - elem.offsetTop),
-                this.$store.state.actualImageHeight + this.$store.state.boxOffset.y
+                Math.max(
+                    offset.top - elem.offsetTop,
+                    cursor.y - elem.offsetTop
+                ),
+                this.$store.state.actualImageHeight +
+                    this.$store.state.boxOffset.y
             ) + "px";
         this.stylehorizontalline1.left = this.$store.state.boxOffset.x + "px";
         this.stylehorizontalline1.width =
@@ -171,38 +185,63 @@ export default class AnnotationSurface extends Vue {
                     cursor.x - offset.left - this.lineConfig.cursorOffset
                 )
             ) + "px";
-        this.stylehorizontalline1.height = this.lineConfig.lineWidth + "px";
 
         this.stylehorizontalline2.top =
             Math.min(
-                cursor.y - elem.offsetTop,
+                Math.max(
+                    cursor.y - elem.offsetTop,
+                    offset.top - elem.offsetTop
+                ),
                 this.$store.state.actualImageHeight +
                     this.$store.state.boxOffset.y
             ) + "px";
         this.stylehorizontalline2.left =
-            cursor.x - elem.offsetLeft + this.lineConfig.cursorOffset + "px";
-        this.stylehorizontalline2.width = Math.max(
-                0,
-                this.$store.state.actualImageWidth -
-                    (cursor.x - offset.left + this.lineConfig.cursorOffset)
+            Math.max(
+                offset.left - elem.offsetLeft,
+                cursor.x - elem.offsetLeft + this.lineConfig.cursorOffset
             ) + "px";
-        this.stylehorizontalline2.height = this.lineConfig.lineWidth + "px";
+        this.stylehorizontalline2.width =
+            Math.max(
+                0,
+                Math.min(
+                    this.$store.state.actualImageWidth,
+                    this.$store.state.actualImageWidth -
+                    (cursor.x - offset.left + this.lineConfig.cursorOffset)
+                )
+            ) + "px";
 
         this.styleverticalline1.top = this.$store.state.boxOffset.y + "px";
-        this.styleverticalline1.left = cursor.x - elem.offsetLeft + "px";
-        this.styleverticalline1.width = this.lineConfig.lineWidth + "px";
-        this.styleverticalline1.height = Math.min(
+        this.styleverticalline1.left =
+            Math.max(
+                offset.left - elem.offsetLeft,
+                Math.min(
+                    cursor.x - elem.offsetLeft,
+                    this.$store.state.actualImageWidth +
+                        offset.left -
+                        elem.offsetLeft
+                )
+            ) + "px";
+        this.styleverticalline1.height =
+            Math.min(
                 this.$store.state.actualImageHeight,
                 Math.max(
                     0,
                     cursor.y - offset.top - this.lineConfig.cursorOffset
                 )
-            ) + "px"; //this.$store.state.image.size.width + "px";
+            ) + "px";
 
         this.styleverticalline2.top =
             cursor.y - elem.offsetTop + this.lineConfig.cursorOffset + "px";
-        this.styleverticalline2.left = cursor.x - elem.offsetLeft + "px";
-        this.styleverticalline2.width = this.lineConfig.lineWidth + "px";
+        this.styleverticalline2.left =
+            Math.max(
+                offset.left - elem.offsetLeft,
+                Math.min(
+                    cursor.x - elem.offsetLeft,
+                    this.$store.state.actualImageWidth +
+                        offset.left -
+                        elem.offsetLeft
+                )
+            ) + "px";
         this.styleverticalline2.height =
             Math.max(
                 0,
