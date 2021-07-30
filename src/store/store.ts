@@ -35,6 +35,8 @@ export type State = {
     axiosRequestConfig?: AxiosRequestConfig;
     useAxios: boolean;
     contextSelections?: ContextSelections;
+    actualImageWidth: number;
+    actualImageHeight: number;
     image: {
         loader: HTMLImageElement | undefined;
         loaded: boolean;
@@ -57,6 +59,8 @@ export type State = {
 };
 export const initialState: State = {
     useAxios: false,
+    actualImageWidth: 1,
+    actualImageHeight: 1,
     image: {
         loader: undefined,
         loaded: false,
@@ -98,6 +102,8 @@ const mutations = {
             actualImageHeight
         }: { actualImageWidth: number; actualImageHeight: number }
     ): void {
+        state.actualImageWidth = actualImageWidth;
+        state.actualImageHeight = actualImageHeight;
         state.image.ratio.width = state.image.size.width / actualImageWidth;
         state.image.ratio.height = state.image.size.height / actualImageHeight;
         state.image.reverseRatio.width = 1 / state.image.ratio.width;

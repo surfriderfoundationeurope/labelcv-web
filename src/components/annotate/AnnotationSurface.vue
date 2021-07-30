@@ -20,6 +20,10 @@
             :key="annotatedTrash.uid"
             v-for="annotatedTrash in $store.state.annotations"
         />
+        <div id="horizontal-line-1" v-bind:style="stylehorizontalline1"></div>
+        <div id="horizontal-line-2" v-bind:style="stylehorizontalline2"></div>
+        <div id="vertical-line-1" v-bind:style="styleverticalline1"></div>
+        <div id="vertical-line-2" v-bind:style="styleverticalline2"></div>
         <BoundingBox id="raw" ref="raw" :raw="drawed" v-if="drawing" />
     </div>
 </template>
@@ -44,10 +48,43 @@ export default class AnnotationSurface extends Vue {
     /** Boolean flag indicating if a drawed is active. */
     private drawing = false;
 
+    private stylehorizontalline1 = {
+        position: "absolute",
+        top: null,
+        left: null,
+        height: null,
+        width: null,
+        backgroundColor: "rgba( 245,30,20,0.7)"
+    };
+    private stylehorizontalline2 = {
+        position: "absolute",
+        top: null,
+        left: null,
+        height: null,
+        width: null,
+        backgroundColor: "rgba( 245,30,20,0.7)"
+    };
+    private styleverticalline1 = {
+        position: "absolute",
+        top: null,
+        left: null,
+        height: null,
+        width: null,
+        backgroundColor: "rgba( 245,30,20,0.7)"
+    };
+    private styleverticalline2 = {
+        position: "absolute",
+        top: null,
+        left: null,
+        height: null,
+        width: null,
+        backgroundColor: "rgba( 245,30,20,0.7)"
+    };
     /** Current drawed. */
     private readonly drawed: Box = { x: NaN, y: NaN, width: NaN, height: NaN };
     private crossHeightShift!: number;
-
+    private store = this.$store;
+    private lineConfig = { lineWidth: 2, cursorOffset: 20 };
     private estimateActualImageSize(
         annotatorWidth: number,
         annotatorHeight: number
@@ -110,11 +147,68 @@ export default class AnnotationSurface extends Vue {
             y: (cursor.y - offset.top) * this.$store.state.image.ratio.height
         };
 
+        this.plotHelperLines(cursor, elem, offset);
+
         this.$store.commit("updateRelativeCursor", relativeCursor);
         if (this.drawing) {
             this.drawed.width = relativeCursor.x - this.drawed.x;
             this.drawed.height = relativeCursor.y - this.drawed.y;
         }
+    }
+
+    private plotHelperLines(cursor, elem, offset) {
+        this.stylehorizontalline1.top =
+            Math.min(
+                Math.max(0, cursor.y - elem.offsetTop),
+                this.$store.state.actualImageHeight + this.$store.state.boxOffset.y
+            ) + "px";
+        this.stylehorizontalline1.left = this.$store.state.boxOffset.x + "px";
+        this.stylehorizontalline1.width =
+            Math.min(
+                this.$store.state.actualImageWidth,
+                Math.max(
+                    0,
+                    cursor.x - offset.left - this.lineConfig.cursorOffset
+                )
+            ) + "px";
+        this.stylehorizontalline1.height = this.lineConfig.lineWidth + "px";
+
+        this.stylehorizontalline2.top =
+            Math.min(
+                cursor.y - elem.offsetTop,
+                this.$store.state.actualImageHeight +
+                    this.$store.state.boxOffset.y
+            ) + "px";
+        this.stylehorizontalline2.left =
+            cursor.x - elem.offsetLeft + this.lineConfig.cursorOffset + "px";
+        this.stylehorizontalline2.width = Math.max(
+                0,
+                this.$store.state.actualImageWidth -
+                    (cursor.x - offset.left + this.lineConfig.cursorOffset)
+            ) + "px";
+        this.stylehorizontalline2.height = this.lineConfig.lineWidth + "px";
+
+        this.styleverticalline1.top = this.$store.state.boxOffset.y + "px";
+        this.styleverticalline1.left = cursor.x - elem.offsetLeft + "px";
+        this.styleverticalline1.width = this.lineConfig.lineWidth + "px";
+        this.styleverticalline1.height = Math.min(
+                this.$store.state.actualImageHeight,
+                Math.max(
+                    0,
+                    cursor.y - offset.top - this.lineConfig.cursorOffset
+                )
+            ) + "px"; //this.$store.state.image.size.width + "px";
+
+        this.styleverticalline2.top =
+            cursor.y - elem.offsetTop + this.lineConfig.cursorOffset + "px";
+        this.styleverticalline2.left = cursor.x - elem.offsetLeft + "px";
+        this.styleverticalline2.width = this.lineConfig.lineWidth + "px";
+        this.styleverticalline2.height =
+            Math.max(
+                0,
+                this.$store.state.actualImageHeight -
+                    (cursor.y - offset.top + this.lineConfig.cursorOffset)
+            ) + "px";
     }
 
     /** Deactivate surface when leaved. */
@@ -177,7 +271,6 @@ export default class AnnotationSurface extends Vue {
     background-size: contain !important;
     /* border: solid 0.1px red; */
 }
-
 #loader-animation {
     display: flex;
     justify-content: center;
