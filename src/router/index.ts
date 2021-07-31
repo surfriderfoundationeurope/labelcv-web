@@ -5,6 +5,7 @@ import VueRouter from "vue-router";
 import Annotate from "../views/Annotate.vue";
 // import Upload from "../views/Upload.vue";
 import Tutorial from "../views/Tutorial.vue";
+import Login from "../views/Login.vue";
 
 Vue.use(VueRouter);
 
@@ -20,6 +21,12 @@ const routes = [
         name: "tutorial",
         order: 1,
         component: Tutorial
+    },
+    {
+        path: "/login",
+        name: "login",
+        order: 1,
+        component: Login
     }
 ];
 

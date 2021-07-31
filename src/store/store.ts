@@ -15,8 +15,12 @@ import {
 Vue.use(Vuex);
 
 const developmentImages = [
-    "https://thumbs.dreamstime.com/b/pollution-lake-fresh-water-plastic-trash-dirty-waste-beach-summer-day-beautiful-nature-peoplelessness-150318217.jpg",
-    "https://www.europarl.europa.eu/resources/library/images/20181008PHT15277/20181008PHT15277-cl.jpg"
+    "./images/tutorial/tuto-fragment.png",
+    "./images/tutorial/tuto-beach.png",
+    "./images/tutorial/tuto-bottle.png",
+    "./images/tutorial/tuto-othher.png"
+    // "https://thumbs.dreamstime.com/b/pollution-lake-fresh-water-plastic-trash-dirty-waste-beach-summer-day-beautiful-nature-peoplelessness-150318217.jpg",
+    // "https://www.europarl.europa.eu/resources/library/images/20181008PHT15277/20181008PHT15277-cl.jpg"
 ]; // TODO : Should be fetch from API
 const pickRandom = (array: string[]) =>
     array[Math.floor(Math.random() * array.length)];
@@ -25,6 +29,7 @@ const developmentAnnotationLabels: AnnotationLabel[] = [
     { id: 2, name: "paper" },
     { id: 3, name: "some super long trash name" }
 ]; // TODO : Should be fetch from API
+const savedAuth = localStorage.getItem("auth");
 
 type ContextSelections = {
     quality: QualityValue | null;
@@ -33,6 +38,10 @@ type ContextSelections = {
 };
 export type State = {
     axiosRequestConfig?: AxiosRequestConfig;
+    auth: {
+        token?: string;
+        expires?: string;
+    };
     useAxios: boolean;
     contextSelections?: ContextSelections;
     actualImageWidth: number;
@@ -59,8 +68,12 @@ export type State = {
 };
 export const initialState: State = {
     useAxios: false,
+<<<<<<< HEAD
     actualImageWidth: 1,
     actualImageHeight: 1,
+=======
+    auth: savedAuth ? JSON.parse(savedAuth) : {},
+>>>>>>> upstream/develop
     image: {
         loader: undefined,
         loaded: false,
@@ -84,7 +97,10 @@ const mutations = {
             baseURL: url,
             headers: {
                 "Content-Type": "application/json;charset=utf-8",
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                Authorization: state.auth.token
+                    ? `Bearer ${state.auth.token}`
+                    : undefined
             }
         };
     },
@@ -111,8 +127,8 @@ const mutations = {
     },
     updateRelativeCursor(state: State, offset: Point): void {
         if (
-            offset.x >= 0 &&
-            offset.y >= 0 &&
+            offset.x > 0 &&
+            offset.y > 0 &&
             offset.x <= state.image.size.width &&
             offset.y <= state.image.size.height
         ) {
@@ -222,6 +238,27 @@ const mutations = {
         if (state.image.url) {
             state.image.loader.src = state.image.url;
         }
+    },
+
+    authenticate(
+        state: State,
+        payload: { token: string; expires: string }
+    ): void {
+        state.auth = payload;
+        localStorage.setItem("auth", JSON.stringify(payload));
+        if (state.axiosRequestConfig) {
+            state.axiosRequestConfig.headers[
+                "Authorization"
+            ] = `Bearer ${payload.token}`;
+        }
+    },
+
+    logout(state: State): void {
+        state.auth = {};
+        localStorage.removeItem("auth");
+        if (state.axiosRequestConfig) {
+            state.axiosRequestConfig.headers["Authorization"] = undefined;
+        }
     }
 };
 
@@ -233,6 +270,8 @@ const store = new Vuex.Store({
     state: initialState,
     mutations: mutations,
     getters: {
+        getAxiosRequestConfig: state => state.axiosRequestConfig,
+        isLoggedIn: state => !!(state.auth && state.auth.token),
         getAnnotationsWithLabel: state => {
             return state.annotations.filter(
                 annotation => !!annotation.annotationLabel
@@ -361,6 +400,14 @@ const store = new Vuex.Store({
                 .catch(devError => {
                     console.log(devError);
                 });
+        },
+        async login(context, credentials): Promise<void> {
+            console.log("login ~ credentials", credentials);
+            return axios.post(
+                "/login",
+                credentials,
+                this.state.axiosRequestConfig
+            );
         }
     },
     modules: {}

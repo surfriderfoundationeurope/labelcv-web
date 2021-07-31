@@ -81,11 +81,16 @@ export default class AnnotationSurface extends Vue {
         backgroundColor: "rgba( 245,30,20,0.7)"
     };
     /** Current drawed. */
+    private readonly drawedMouseDown: Point = { x: NaN, y: NaN };
     private readonly drawed: Box = { x: NaN, y: NaN, width: NaN, height: NaN };
+<<<<<<< HEAD
     private crossHeightShift!: number;
     private store = this.$store;
     private lineConfig = { lineWidth: 1, cursorOffset: 20 };
     private linesActivated = false;
+=======
+
+>>>>>>> upstream/develop
     private estimateActualImageSize(
         annotatorWidth: number,
         annotatorHeight: number
@@ -147,6 +152,7 @@ export default class AnnotationSurface extends Vue {
             x: (cursor.x - offset.left) * this.$store.state.image.ratio.width,
             y: (cursor.y - offset.top) * this.$store.state.image.ratio.height
         };
+<<<<<<< HEAD
 
         if (!this.linesActivated) {
             this.stylehorizontalline1.height = this.lineConfig.lineWidth + "px";
@@ -157,10 +163,25 @@ export default class AnnotationSurface extends Vue {
         }
         this.plotHelperLines(cursor, elem, offset);
 
+=======
+>>>>>>> upstream/develop
         this.$store.commit("updateRelativeCursor", relativeCursor);
         if (this.drawing) {
-            this.drawed.width = relativeCursor.x - this.drawed.x;
-            this.drawed.height = relativeCursor.y - this.drawed.y;
+            this.drawed.width = Math.abs(
+                this.$store.state.relativeCursor.x - this.drawedMouseDown.x
+            );
+            this.drawed.height = Math.abs(
+                this.$store.state.relativeCursor.y - this.drawedMouseDown.y
+            );
+
+            this.drawed.x =
+                this.$store.state.relativeCursor.x - this.drawedMouseDown.x < 0
+                    ? this.$store.state.relativeCursor.x
+                    : this.drawedMouseDown.x;
+            this.drawed.y =
+                this.$store.state.relativeCursor.y - this.drawedMouseDown.y < 0
+                    ? this.$store.state.relativeCursor.y
+                    : this.drawedMouseDown.y;
         }
     }
 
@@ -266,6 +287,10 @@ export default class AnnotationSurface extends Vue {
             event.preventDefault();
             this.drawed.width = 0;
             this.drawed.height = 0;
+
+            this.drawedMouseDown.x = this.$store.state.relativeCursor.x;
+            this.drawedMouseDown.y = this.$store.state.relativeCursor.y;
+
             this.drawed.x = this.$store.state.relativeCursor.x;
             this.drawed.y = this.$store.state.relativeCursor.y;
             this.drawing = true;
