@@ -50,47 +50,44 @@ export default class AnnotationSurface extends Vue {
 
     private stylehorizontalline1 = {
         position: "absolute",
-        top: null,
-        left: null,
-        height: null,
-        width: null,
+        top: "",
+        left: "",
+        height: "",
+        width: "",
         backgroundColor: "rgba( 245,30,20,0.7)"
     };
     private stylehorizontalline2 = {
         position: "absolute",
-        top: null,
-        left: null,
-        height: null,
-        width: null,
+        top: "",
+        left: "",
+        height: "",
+        width: "",
         backgroundColor: "rgba( 245,30,20,0.7)"
     };
     private styleverticalline1 = {
         position: "absolute",
-        top: null,
-        left: null,
-        height: null,
-        width: null,
+        top: "",
+        left: "",
+        height: "",
+        width: "",
         backgroundColor: "rgba( 245,30,20,0.7)"
     };
     private styleverticalline2 = {
         position: "absolute",
-        top: null,
-        left: null,
-        height: null,
-        width: null,
+        top: "",
+        left: "",
+        height: "",
+        width: "",
         backgroundColor: "rgba( 245,30,20,0.7)"
     };
     /** Current drawed. */
     private readonly drawedMouseDown: Point = { x: NaN, y: NaN };
     private readonly drawed: Box = { x: NaN, y: NaN, width: NaN, height: NaN };
-<<<<<<< HEAD
     private crossHeightShift!: number;
     private store = this.$store;
     private lineConfig = { lineWidth: 1, cursorOffset: 20 };
     private linesActivated = false;
-=======
 
->>>>>>> upstream/develop
     private estimateActualImageSize(
         annotatorWidth: number,
         annotatorHeight: number
@@ -152,7 +149,6 @@ export default class AnnotationSurface extends Vue {
             x: (cursor.x - offset.left) * this.$store.state.image.ratio.width,
             y: (cursor.y - offset.top) * this.$store.state.image.ratio.height
         };
-<<<<<<< HEAD
 
         if (!this.linesActivated) {
             this.stylehorizontalline1.height = this.lineConfig.lineWidth + "px";
@@ -163,8 +159,6 @@ export default class AnnotationSurface extends Vue {
         }
         this.plotHelperLines(cursor, elem, offset);
 
-=======
->>>>>>> upstream/develop
         this.$store.commit("updateRelativeCursor", relativeCursor);
         if (this.drawing) {
             this.drawed.width = Math.abs(
@@ -186,7 +180,7 @@ export default class AnnotationSurface extends Vue {
     }
 
     /** Update the Helper Lines position */
-    private plotHelperLines(cursor, elem, offset) {
+    private plotHelperLines(cursor: Point, elem: any, offset: any) { //TODO : correct the unknown
         //TODO : limiter query au store
         this.stylehorizontalline1.top =
             Math.min(
