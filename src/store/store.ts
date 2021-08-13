@@ -16,9 +16,9 @@ Vue.use(Vuex);
 
 const developmentImages = [
     "./images/tutorial/tuto-fragment.png",
-    "./images/tutorial/tuto-beach.png",
-    "./images/tutorial/tuto-bottle.png",
-    "./images/tutorial/tuto-othher.png"
+    //"./images/tutorial/tuto-beach.png",
+    // "./images/tutorial/tuto-bottle.png",
+    //"./images/tutorial/tuto-other.png"
     // "https://thumbs.dreamstime.com/b/pollution-lake-fresh-water-plastic-trash-dirty-waste-beach-summer-day-beautiful-nature-peoplelessness-150318217.jpg",
     // "https://www.europarl.europa.eu/resources/library/images/20181008PHT15277/20181008PHT15277-cl.jpg"
 ]; // TODO : Should be fetch from API
@@ -323,7 +323,7 @@ const store = new Vuex.Store({
                 url: this.state.image.url,
                 bbox: []
             };
-            if (!this.state.axiosRequestConfig) {
+            if (!this.state.useAxios) {
                 console.log("[DEV] post image context : ", postImageContext);
             } else {
                 axios.post(
@@ -352,7 +352,7 @@ const store = new Vuex.Store({
                         width: Math.round(annotation.box.width),
                         height: Math.round(annotation.box.height)
                     };
-                    if (!this.state.axiosRequestConfig) {
+                    if (!this.state.useAxios) {
                         console.log("[DEV] post annotation : ", postAnnotation);
                     } else {
                         await axios.post(
