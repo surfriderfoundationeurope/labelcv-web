@@ -8,8 +8,8 @@
             'bounding-box-selected': selected
         }"
         :style="{
-            left: `${x - 2}px`, // # TODO : understand those magic numbers 2 and 5 ? (Probably the cross-cursor size )
-            top: `${y - 5}px`,
+            left: `${x}px`, //-2 // # TODO : understand those magic numbers 2 and 5 ? (Probably the cross-cursor size )
+            top: `${y}px`, //-5     # EDIT : Deleted it because it was missleading for users to have a shifted box. The numbers are still available in case they were useful for somenot explicit reason.
             width: `${width}px`,
             height: `${height}px`
         }"

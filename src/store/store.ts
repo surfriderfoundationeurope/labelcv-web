@@ -329,7 +329,7 @@ const store = new Vuex.Store({
                 url: this.state.image.url,
                 bbox: []
             };
-            if (!this.state.axiosRequestConfig) {
+            if (!this.state.useAxios) {
                 console.log("[DEV] post image context : ", postImageContext);
             } else {
                 axios.post(
@@ -358,7 +358,7 @@ const store = new Vuex.Store({
                         width: Math.round(annotation.box.width),
                         height: Math.round(annotation.box.height)
                     };
-                    if (!this.state.axiosRequestConfig) {
+                    if (!this.state.useAxios) {
                         console.log("[DEV] post annotation : ", postAnnotation);
                     } else {
                         await axios.post(
