@@ -79,6 +79,7 @@ export default class Annotate extends Vue {
         };
     }
     private surfaceWidth = 70;
+    private DEVstore = this.$store.state;
     private mounted(): void {
         this.$store.commit(
             "registerImageLoader",
@@ -118,22 +119,36 @@ export default class Annotate extends Vue {
     }
 
     private onClickValidateButton() {
-        this.$modal.show("dialog", {
-            title: "Annotation(s) confirmation",
-            text: "Would you like to validate annotation(s) ?",
-            buttons: [
-                {
-                    title: "Validate",
-                    default: true,
-                    handler: () => {
-                        this.$store.dispatch("postAnnotationsAndContext"); // TODO : action
-                        this.nextPicture();
-                        this.$modal.hide("dialog");
-                    }
-                },
-                { title: "Cancel" }
-            ]
-        });
+        const contextSelectionPanel = this.$store.state.contextSelections;
+        console.log(contextSelectionPanel);
+        if (
+            contextSelectionPanel.environment === null ||
+            contextSelectionPanel.viewPoint === null ||
+            contextSelectionPanel.quality === null
+        ) {
+            this.$modal.show("dialog", {
+                title: "Invalid information",
+                text: "Please fill in the context information",
+                buttons: [{ title: "Cancel" }]
+            });
+        } else {
+            this.$modal.show("dialog", {
+                title: "Annotation(s) confirmation",
+                text: "Would you like to validate annotation(s) ?",
+                buttons: [
+                    {
+                        title: "Validate",
+                        default: true,
+                        handler: () => {
+                            this.$store.dispatch("postAnnotationsAndContext"); // TODO : action
+                            this.nextPicture();
+                            this.$modal.hide("dialog");
+                        }
+                    },
+                    { title: "Cancel" }
+                ]
+            });
+        }
     }
 
     private onClickSkipButton() {
