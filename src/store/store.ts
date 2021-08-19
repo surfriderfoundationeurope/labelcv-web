@@ -18,7 +18,7 @@ const developmentImages = [
     "./images/tutorial/tuto-fragment.png",
     "./images/tutorial/tuto-beach.png",
     "./images/tutorial/tuto-bottle.png",
-    "./images/tutorial/tuto-othher.png"
+    "./images/tutorial/tuto-other.png"
     // "https://thumbs.dreamstime.com/b/pollution-lake-fresh-water-plastic-trash-dirty-waste-beach-summer-day-beautiful-nature-peoplelessness-150318217.jpg",
     // "https://www.europarl.europa.eu/resources/library/images/20181008PHT15277/20181008PHT15277-cl.jpg"
 ]; // TODO : Should be fetch from API
@@ -44,6 +44,8 @@ export type State = {
     };
     useAxios: boolean;
     contextSelections?: ContextSelections;
+    actualImageWidth: number;
+    actualImageHeight: number;
     image: {
         loader: HTMLImageElement | undefined;
         loaded: boolean;
@@ -67,6 +69,8 @@ export type State = {
 export const initialState: State = {
     useAxios: false,
     auth: savedAuth ? JSON.parse(savedAuth) : {},
+    actualImageWidth: 0,
+    actualImageHeight: 0,
     image: {
         loader: undefined,
         loaded: false,
@@ -111,6 +115,8 @@ const mutations = {
             actualImageHeight
         }: { actualImageWidth: number; actualImageHeight: number }
     ): void {
+        state.actualImageWidth = actualImageWidth;
+        state.actualImageHeight = actualImageHeight;
         state.image.ratio.width = state.image.size.width / actualImageWidth;
         state.image.ratio.height = state.image.size.height / actualImageHeight;
         state.image.reverseRatio.width = 1 / state.image.ratio.width;
@@ -323,7 +329,7 @@ const store = new Vuex.Store({
                 url: this.state.image.url,
                 bbox: []
             };
-            if (!this.state.axiosRequestConfig) {
+            if (!this.state.useAxios) {
                 console.log("[DEV] post image context : ", postImageContext);
             } else {
                 axios.post(
@@ -352,7 +358,7 @@ const store = new Vuex.Store({
                         width: Math.round(annotation.box.width),
                         height: Math.round(annotation.box.height)
                     };
-                    if (!this.state.axiosRequestConfig) {
+                    if (!this.state.useAxios) {
                         console.log("[DEV] post annotation : ", postAnnotation);
                     } else {
                         await axios.post(

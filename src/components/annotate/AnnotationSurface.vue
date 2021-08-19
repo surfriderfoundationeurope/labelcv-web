@@ -20,6 +20,7 @@
             :key="annotatedTrash.uid"
             v-for="annotatedTrash in $store.state.annotations"
         />
+        <CrosshairGuide :cursor-information="cursorInformation" />
         <BoundingBox id="raw" ref="raw" :raw="drawed" v-if="drawing" />
     </div>
 </template>
@@ -29,12 +30,14 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { Box, Point } from "@/models";
 import BoundingBox from "./BoundingBox.vue";
+import CrosshairGuide from "./CrosshairGuide.vue";
 import GridLoader from "vue-spinner/src/PulseLoader.vue";
 
 @Component({
     components: {
         BoundingBox,
-        GridLoader
+        GridLoader,
+        CrosshairGuide
     }
 })
 export default class AnnotationSurface extends Vue {
@@ -43,6 +46,13 @@ export default class AnnotationSurface extends Vue {
 
     /** Boolean flag indicating if a drawed is active. */
     private drawing = false;
+
+    /** Information about the cursor to be passed to CrosshairGuide*/
+    private cursorInformation = {
+        cursor: { x: 0, y: 0 },
+        elem: this.$el,
+        offset: { left: 0, top: 0 }
+    };
 
     /** Current drawed. */
     private readonly drawedMouseDown: Point = { x: NaN, y: NaN };
@@ -109,6 +119,10 @@ export default class AnnotationSurface extends Vue {
             x: (cursor.x - offset.left) * this.$store.state.image.ratio.width,
             y: (cursor.y - offset.top) * this.$store.state.image.ratio.height
         };
+
+        this.cursorInformation.cursor = cursor;
+        this.cursorInformation.offset = offset;
+        this.cursorInformation.elem = elem;
         this.$store.commit("updateRelativeCursor", relativeCursor);
         if (this.drawing) {
             this.drawed.width = Math.abs(
