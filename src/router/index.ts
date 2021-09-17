@@ -24,6 +24,12 @@ const routes = [
         component: Tutorial
     },
     {
+        path: "/upload",
+        name: "upload",
+        order: 1,
+        component: Upload
+    },
+    {
         path: "/login",
         name: "login",
         order: 1,
