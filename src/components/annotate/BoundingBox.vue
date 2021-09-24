@@ -9,7 +9,7 @@
         }"
         :style="{
             left: `${x}px`, //-2 // # TODO : understand those magic numbers 2 and 5 ? (Probably the cross-cursor size )
-            top: `${y}px`, //-5     # EDIT : Deleted it because it was missleading for users to have a shifted box. The numbers are still available in case they were useful for somenot explicit reason.
+            top: `${y}px`, //-5     # EDIT : Deleted it because it was missleading for users to have a shifted box. The numbers are still available in case they were useful for some not explicit reason.
             width: `${width}px`,
             height: `${height}px`
         }"
@@ -65,6 +65,11 @@
                             :show-labels="false"
                             :allow-empty="false"
                             :searchable="false"
+                            :style="DEVstyle"
+                            :openDirection="openDirection"
+                            :max-height="
+                                $store.state.actualImageHeight - (y + height)
+                            "
                         ></multiselect>
                     </div>
                 </template>
@@ -95,7 +100,19 @@ export default class BoundingBox extends Vue {
             selected: false
         };
     }
-
+    get openDirection(): string {
+        if (
+            this.y + this.height >=
+            (2 * this.$store.state.actualImageHeight) / 3
+        ) {
+            return "top";
+        } else {
+            return "bottom";
+        }
+    }
+    get DEVstyle(): Record<string, string> {
+        return { "min-width": this.width + "px" };
+    }
     get box(): Box {
         const id = this.$props.id;
         if (id === "raw") {
@@ -191,7 +208,9 @@ export default class BoundingBox extends Vue {
 .custom-multi .multiselect__content-wrapper {
     width: fit-content;
 }
-
+.custom-multi .multiselect__option {
+    width: 100%;
+}
 .bounding-box {
     position: absolute;
     cursor: pointer;

@@ -27,7 +27,14 @@ const pickRandom = (array: string[]) =>
 const developmentAnnotationLabels: AnnotationLabel[] = [
     { id: 1, name: "bottle" },
     { id: 2, name: "paper" },
-    { id: 3, name: "some super long trash name" }
+    { id: 3, name: "some super long trash name" },
+    { id: 4, name: "bad trash name" },
+    { id: 5, name: "fragments" },
+    { id: 6, name: "tire" },
+    { id: 7, name: "unclear" },
+    { id: 8, name: "insulating material" },
+    { id: 9, name: "drum" },
+    { id: 10, name: "trash #10" }
 ]; // TODO : Should be fetch from API
 const savedAuth = localStorage.getItem("auth");
 
