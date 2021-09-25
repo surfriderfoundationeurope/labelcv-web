@@ -34,7 +34,10 @@ const developmentAnnotationLabels: AnnotationLabel[] = [
     { id: 7, name: "unclear" },
     { id: 8, name: "insulating material" },
     { id: 9, name: "drum" },
-    { id: 10, name: "trash #10" }
+    { id: 10, name: "trash #10" },
+    { id: 11, name: "trash #11" },
+    { id: 12, name: "trash #12" },
+    { id: 13, name: "trash #13" }
 ]; // TODO : Should be fetch from API
 const savedAuth = localStorage.getItem("auth");
 
