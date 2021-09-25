@@ -66,10 +66,8 @@
                             :allow-empty="false"
                             :searchable="false"
                             :style="DEVstyle"
-                            :openDirection="openDirection"
-                            :max-height="
-                                $store.state.actualImageHeight - (y + height)
-                            "
+                            :open-direction="openDirection"
+                            :max-height="optionMaxHeight"
                         ></multiselect>
                     </div>
                 </template>
@@ -100,10 +98,22 @@ export default class BoundingBox extends Vue {
             selected: false
         };
     }
+    get optionMaxHeight(): number {
+        if (this.openDirection == "top") {
+            return this.y + this.height;
+        } else {
+            return (
+                this.$store.state.boxOffset.y +
+                this.$store.state.actualImageHeight -
+                (this.y + this.height)
+            );
+        }
+    }
     get openDirection(): string {
         if (
             this.y + this.height >=
-            (2 * this.$store.state.actualImageHeight) / 3
+            this.$store.state.actualImageHeight / 2 +
+                this.$store.state.boxOffset.y
         ) {
             return "top";
         } else {
