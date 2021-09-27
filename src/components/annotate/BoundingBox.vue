@@ -105,7 +105,7 @@ export default class BoundingBox extends Vue {
             return (
                 this.$store.state.boxOffset.y +
                 this.$store.state.actualImageHeight -
-                (this.y + this.height)
+                (this.y + this.height + 43) // 43 corresponds to the closed multiselect box height
             );
         }
     }
