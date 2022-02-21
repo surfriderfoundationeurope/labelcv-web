@@ -17,6 +17,7 @@ import { mapGetters } from "vuex";
     }
 })
 export default class Upload extends Vue {
+    isLoggedIn = this.$store.getters.isLoggedIn;
     private mounted(): void {
         if (!this.isLoggedIn) {
             this.$router.push("login");
