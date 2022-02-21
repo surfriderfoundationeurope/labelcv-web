@@ -11,6 +11,7 @@ import {
     AnnotationLabel,
     Box
 } from "@/models";
+import router from "@/router";
 
 Vue.use(Vuex);
 
@@ -276,6 +277,7 @@ const mutations = {
         if (state.axiosRequestConfig) {
             state.axiosRequestConfig.headers["Authorization"] = undefined;
         }
+        router.push('/')
     }
 };
 
