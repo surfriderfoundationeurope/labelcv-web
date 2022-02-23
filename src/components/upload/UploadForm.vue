@@ -1,7 +1,7 @@
 <template>
     <b-form v-on:submit.prevent="onSubmit" class="upload">
         <div class="field">
-            <label class="field__label" for="file-upload">Select a photo</label>
+            <label class="field__label" for="file-upload">Select images</label>
 
             <b-form-file
                 id="file-upload"
@@ -14,7 +14,7 @@
                 multiple
             />
             <div class="mt-3" v-if="Boolean(files)">
-                Selected file:
+                Selected file(s):
                 <span v-for="(file, index) in files" v-bind:key="index">
                     {{
                         index !== files.length - 1
