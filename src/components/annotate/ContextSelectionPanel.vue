@@ -41,6 +41,20 @@
                 />
             </b-form-group>
         </div>
+
+        <div class="context-group">
+            <b-form-group>
+                <b-form-checkbox
+                    id="containsTrash"
+                    v-model="containsTrash"
+                    name="containsTrash"
+                    value="true"
+                    unchecked-value="false"
+                >
+                    This image contains trash
+                </b-form-checkbox>
+            </b-form-group>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -56,6 +70,7 @@ export default class ContextSelectionPanel extends Vue {
             environmentSelection: null,
             viewPointSelection: null,
             qualitySelection: null,
+            containsTrash: true,
 
             environmentOptions: environmentOptions,
             viewPointOptions: viewPointOptions,
@@ -73,12 +88,14 @@ export default class ContextSelectionPanel extends Vue {
     @Watch("environmentSelection")
     @Watch("viewPointSelection")
     @Watch("qualitySelection")
+    @Watch("containsTrash")
     private onSelectionChange() {
         if (this.isComplete) {
             this.$store.commit("setContextSelections", {
                 quality: this.$data.qualitySelection,
                 viewPoint: this.$data.viewPointSelection,
-                environment: this.$data.environmentSelection
+                environment: this.$data.environmentSelection,
+                containsTrash: this.$data.containsTrash
             });
         }
     }

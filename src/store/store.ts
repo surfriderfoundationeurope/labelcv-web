@@ -325,6 +325,7 @@ const store = new Vuex.Store({
                 filename: "",
                 view: this.state.contextSelections?.viewPoint,
                 imgQuality: this.state.contextSelections?.quality,
+                containsTrash: this.state.contextSelections?.containsTrash,
                 context: this.state.contextSelections?.environment,
                 url: this.state.image.url,
                 bbox: []
