@@ -35,6 +35,7 @@ type ContextSelections = {
     quality: QualityValue | null;
     viewPoint: ViewPoint | null;
     environment: EnvironmentValue | null;
+    containsTrash: boolean;
 };
 export type State = {
     axiosRequestConfig?: AxiosRequestConfig;
