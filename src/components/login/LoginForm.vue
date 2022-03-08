@@ -45,6 +45,12 @@
                 Password is required
             </p>
         </div>
+        <div>
+            <p class="card__subtitle">
+                You don't have an account yet ?
+                <a class="card__action" href="#/register">Create one here !</a>
+            </p>
+        </div>
         <button
             type="submit"
             class="btn btn-primary mt-6"
@@ -59,6 +65,7 @@
             <b-card-text>Logged in. Please wait...</b-card-text>
         </b-card>
     </b-form>
+
 </template>
 
 <script lang="ts">
