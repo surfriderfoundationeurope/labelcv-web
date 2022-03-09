@@ -48,7 +48,9 @@
         <div>
             <p class="card__subtitle">
                 You don't have an account yet ?
-                <a class="card__action" href="#/register">Create one here !</a>
+                <router-link to="/register" class="card__action"
+                    >Create one here !</router-link
+                >
             </p>
         </div>
         <button

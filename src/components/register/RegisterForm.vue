@@ -5,45 +5,38 @@
             <label class="field__label" for="first_name">First name</label>
             <b-form-input
                 id="first_name"
-                type="name"
-                placeholder=" "
-                autocomplete=" "
-                aria-describedby="first_name-constraints"
-                aria-required="true"
+                type="text"
+                autocomplete
                 class="field__input"
                 @focus="resetError()"
                 @blur="check('first_name')"
-                v-model="name.value"
+                v-model="firstname.value"
             />
         </div>
         <div class="field">
             <label class="field__label" for="last_name">Last name</label>
             <b-form-input
-                id="first_name"
-                type="name"
+                id="last_name"
+                type="text"
                 placeholder=" "
-                autocomplete=" "
-                aria-describedby="last_name-constraints"
-                aria-required="true"
+                autocomplete
                 class="field__input"
                 @focus="resetError()"
                 @blur="check('last_name')"
-                v-model="name2.value"
+                v-model="lastname.value"
             />
         </div>
         <div class="field">
             <label class="field__label" for="birth">Date of birth</label>
-            <b-form-input
+            <b-form-datepicker
                 id="birth"
-                type="number"
-                placeholder=" "
-                autocomplete=" "
-                aria-describedby="first_name-constraints"
-                aria-required="true"
-                class="field__input"
+                type="text"
+                placeholder="DD-MM-YYYY"
+                autocomplete
+                class="mb-3"
                 @focus="resetError()"
                 @blur="check('birth')"
-                v-model="number.value"
+                v-model="birthday.value"
             />
         </div>
 
@@ -103,8 +96,8 @@
                 aria-required="true"
                 class="field__input"
                 @focus="resetError()"
-                @blur="check('password')"
-                v-model="password.value"
+                @blur="check('confirm_password')"
+                v-model="confirmpassword.value"
             />
             <p
                 id="password-constraints"
@@ -157,16 +150,19 @@ export default class RegistreForm extends Vue {
                 error: false,
                 value: ""
             },
-            name: {
+            firstname: {
                 error: false,
                 value: ""
             },
-            name2: {
+            lastname: {
                 error: false,
                 value: ""
             },
-            number: {
+            birthday: {
                 error: false,
+                value: ""
+            },
+            confirmpassword: {
                 value: ""
             },
             status: "idle"
@@ -177,19 +173,34 @@ export default class RegistreForm extends Vue {
         return !!(
             this.$data.email.value &&
             this.$data.password.value &&
-            this.$data.name.value &&
-            this.$data.name2.value &&
-            this.$data.number.value
+            this.$data.firstname.value &&
+            this.$data.lastname.value &&
+            this.$data.birthday.value &&
+            this.$data.confirmpassword.value
         );
     }
 
     private hasError(
-        input: "email" | "password" | "name" | "name2" | "number"
+        input:
+            | "email"
+            | "password"
+            | "firstname"
+            | "lastname"
+            | "birthday"
+            | "confirmpassword"
     ): boolean {
         return !!(this.$data[input].error && !this.$data[input].value);
     }
 
-    private check(input: "email" | "password" | "name" | "name2" | "number") {
+    private check(
+        input:
+            | "email"
+            | "password"
+            | "firstname"
+            | "lastname"
+            | "birthday"
+            | "confirmpassword"
+    ) {
         if (this.$data[input].value === "") {
             this.$data[input].error = true;
         }
@@ -227,7 +238,7 @@ export default class RegistreForm extends Vue {
 </script>
 
 <style>
-.login {
+.register {
     min-height: 100%;
     max-width: 320px;
     margin: 0 auto;
