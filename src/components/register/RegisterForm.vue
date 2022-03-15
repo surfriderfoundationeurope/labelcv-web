@@ -18,7 +18,6 @@
             <b-form-input
                 id="last_name"
                 type="text"
-                placeholder=" "
                 autocomplete
                 class="field__input"
                 @focus="resetError()"
@@ -45,7 +44,6 @@
             <b-form-input
                 id="email"
                 type="email"
-                placeholder=" "
                 autocomplete="username"
                 aria-describedby="email-constraints"
                 required
@@ -89,7 +87,7 @@
             <label class="field__label" for="password2">Confirm password</label>
             <b-form-input
                 id="password2"
-                type="password2"
+                type="password"
                 autocomplete="current-password"
                 aria-describedby="password-constraints"
                 required
@@ -130,7 +128,7 @@
             <b-card-text>An error occurred. Please try again.</b-card-text>
         </b-card>
         <b-card class="bg-success mt-3" v-if="status === 'fulfilled'">
-            <b-card-text>Register in. Please wait...</b-card-text>
+            <b-card-text>Logged in. Please wait...</b-card-text>
         </b-card>
     </b-form>
 </template>
@@ -216,7 +214,7 @@ export default class RegistreForm extends Vue {
             email: this.$data.email.value,
             password: this.$data.password.value,
             name: this.$data.name.value,
-            number: this.$data.number.value
+            birthday: this.$data.birthday.value
         });
         register
             .then((response: { data: { token: string; expires: string } }) => {
