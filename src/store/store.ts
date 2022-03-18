@@ -277,7 +277,7 @@ const mutations = {
         if (state.axiosRequestConfig) {
             state.axiosRequestConfig.headers["Authorization"] = undefined;
         }
-        router.push('/')
+        router.push("/");
     }
 };
 
@@ -429,7 +429,6 @@ const store = new Vuex.Store({
             );
         },
         async upload(context, files): Promise<void> {
-            console.log("login ~ files", files);
             return axios.post("/upload", files, this.state.axiosRequestConfig);
         },
         async register(context, credentials): Promise<void> {

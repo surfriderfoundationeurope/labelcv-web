@@ -1,26 +1,21 @@
 <template>
     <b-form v-on:submit.prevent="onSubmit" class="upload">
         <div class="field">
-            <label class="field__label" for="file-upload">Select images</label>
+            <label class="field__label" for="file-upload">Select image</label>
 
             <b-form-file
                 id="file-upload"
-                v-model="files"
-                :state="Boolean(files)"
+                v-model="file"
+                :state="Boolean(file)"
                 placeholder="Choose a file or drop it here..."
                 drop-placeholder="Drop file here..."
                 accept=".jpg, .png, .gif"
                 required
-                multiple
             />
-            <div class="mt-3" v-if="Boolean(files)">
-                Selected file(s):
-                <span v-for="(file, index) in files" v-bind:key="index">
-                    {{
-                        index !== files.length - 1
-                            ? file.name + ", "
-                            : file.name
-                    }}
+            <div class="mt-3" v-if="Boolean(file)">
+                Selected file:
+                <span v-if="file">
+                    {{ file.name }}
                 </span>
             </div>
         </div>
@@ -48,7 +43,7 @@ import Component from "vue-class-component";
 export default class UploadForm extends Vue {
     data() {
         return {
-            files: [],
+            file: null,
             status: "idle"
         };
     }
@@ -59,9 +54,7 @@ export default class UploadForm extends Vue {
 
     private onSubmit() {
         this.$data.status = "loading";
-        const upload = this.$store.dispatch("upload", {
-            photo: this.$data.files
-        });
+        const upload = this.$store.dispatch("upload", this.$data.file);
         upload
             .then(() => {
                 this.$data.status = "fulfilled";
