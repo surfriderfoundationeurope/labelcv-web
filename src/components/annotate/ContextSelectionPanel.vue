@@ -45,13 +45,12 @@
         <div class="context-group">
             <b-form-group>
                 <b-form-checkbox
-                    id="containsTrash"
-                    v-model="containsTrash"
-                    name="containsTrash"
+                    id="containsNoTrash"
+                    v-model="containsNoTrash"
+                    name="containsNoTrash"
                     value="true"
-                    unchecked-value="false"
                 >
-                    This image contains trash
+                    This image does not contain trash or is inappropriate
                 </b-form-checkbox>
             </b-form-group>
         </div>
@@ -70,34 +69,25 @@ export default class ContextSelectionPanel extends Vue {
             environmentSelection: null,
             viewPointSelection: null,
             qualitySelection: null,
-            containsTrash: true,
+            containsNoTrash: false,
 
             environmentOptions: environmentOptions,
             viewPointOptions: viewPointOptions,
             qualityOptions: qualityOptions
         };
     }
-    get isComplete() {
-        return (
-            !!this.$data.environmentSelection &&
-            !!this.$data.viewPointSelection &&
-            !!this.$data.qualitySelection
-        );
-    }
 
     @Watch("environmentSelection")
     @Watch("viewPointSelection")
     @Watch("qualitySelection")
-    @Watch("containsTrash")
+    @Watch("containsNoTrash")
     private onSelectionChange() {
-        if (this.isComplete) {
-            this.$store.commit("setContextSelections", {
-                quality: this.$data.qualitySelection,
-                viewPoint: this.$data.viewPointSelection,
-                environment: this.$data.environmentSelection,
-                containsTrash: this.$data.containsTrash
-            });
-        }
+        this.$store.commit("setContextSelections", {
+            quality: this.$data.qualitySelection,
+            viewPoint: this.$data.viewPointSelection,
+            environment: this.$data.environmentSelection,
+            containsTrash: this.$data.containsNoTrash === false
+        });
     }
     public resetContextSelections() {
         this.$data.environmentSelection = null;

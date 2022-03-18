@@ -120,11 +120,11 @@ export default class Annotate extends Vue {
 
     private onClickValidateButton() {
         const contextSelectionPanel = this.$store.state.contextSelections;
-        console.log(contextSelectionPanel);
         if (
-            contextSelectionPanel.environment === null ||
-            contextSelectionPanel.viewPoint === null ||
-            contextSelectionPanel.quality === null
+            (contextSelectionPanel.environment === null ||
+                contextSelectionPanel.viewPoint === null ||
+                contextSelectionPanel.quality === null) &&
+            contextSelectionPanel.containsTrash === true
         ) {
             this.$modal.show("dialog", {
                 title: "Invalid information",

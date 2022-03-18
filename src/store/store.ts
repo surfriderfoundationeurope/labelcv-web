@@ -86,7 +86,13 @@ export const initialState: State = {
 
     annotations: [],
     annotationLabels: [],
-    minTrashSize: 20 // Limit size for trash (in pixels) */
+    minTrashSize: 20, // Limit size for trash (in pixels) */
+    contextSelections: {
+        quality: null,
+        viewPoint: null,
+        environment: null,
+        containsTrash: true
+    }
 };
 
 const mutations = {
