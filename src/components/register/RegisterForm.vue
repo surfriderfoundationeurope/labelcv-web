@@ -199,6 +199,15 @@ export default class RegistreForm extends Vue {
             | "birthday"
             | "confirmpassword"
     ) {
+        switch (input) {
+            case "confirmpassword":
+                if (
+                    this.$data[input].value === "" ||
+                    this.$data[input].value !== this.$data.password.value
+                ) {
+                    this.$data[input].error = true;
+                }
+        }
         if (this.$data[input].value === "") {
             this.$data[input].error = true;
         }
