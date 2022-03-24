@@ -207,9 +207,12 @@ export default class RegistreForm extends Vue {
                 ) {
                     this.$data[input].error = true;
                 }
-        }
-        if (this.$data[input].value === "") {
-            this.$data[input].error = true;
+                break;
+            default:
+                if (this.$data[input].value === "") {
+                    this.$data[input].error = true;
+                }
+                break;
         }
     }
 
