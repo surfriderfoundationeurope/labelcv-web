@@ -89,7 +89,7 @@
                 id="password2"
                 type="password"
                 autocomplete="current-password"
-                aria-describedby="password-constraints"
+                aria-describedby="confirm-password-constraints"
                 required
                 aria-required="true"
                 class="field__input"
@@ -98,7 +98,7 @@
                 v-model="confirmpassword.value"
             />
             <p
-                id="password-constraints"
+                id="confirm-password-constraints"
                 class="field__error"
                 v-if="hasError('password')"
             >
