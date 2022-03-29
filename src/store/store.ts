@@ -407,7 +407,6 @@ const store = new Vuex.Store({
             );
         },
         async register(context, credentials): Promise<void> {
-            console.log("register ~ credentials", credentials);
             return axios.post(
                 "/register",
                 credentials,
