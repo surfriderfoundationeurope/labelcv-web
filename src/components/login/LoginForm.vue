@@ -67,7 +67,6 @@
             <b-card-text>Logged in. Please wait...</b-card-text>
         </b-card>
     </b-form>
-
 </template>
 
 <script lang="ts">
