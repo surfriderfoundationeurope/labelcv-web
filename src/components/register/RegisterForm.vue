@@ -2,41 +2,68 @@
     <b-form v-on:submit.prevent="onSubmit" class="register">
         <h1 class="field_title">Create my account</h1>
         <div class="field">
-            <label class="field__label" for="first_name">First name</label>
+            <label class="field__label" for="firstname">First name</label>
             <b-form-input
-                id="first_name"
+                id="firstname"
                 type="text"
                 autocomplete
                 class="field__input"
+                aria-required="true"
+                aria-describedby="firstname-constraints"
                 @focus="resetError()"
-                @blur="check('first_name')"
+                @blur="check('firstname')"
                 v-model="firstname.value"
             />
+            <p
+                id="firstname-constraints"
+                class="field__error"
+                v-if="hasError('firstname')"
+            >
+                Firstname is required
+            </p>
         </div>
         <div class="field">
-            <label class="field__label" for="last_name">Last name</label>
+            <label class="field__label" for="lastname">Last name</label>
             <b-form-input
-                id="last_name"
+                id="lastname"
                 type="text"
                 autocomplete
                 class="field__input"
+                aria-required="true"
+                aria-describedby="lastname-constraints"
                 @focus="resetError()"
-                @blur="check('last_name')"
+                @blur="check('lastname')"
                 v-model="lastname.value"
             />
+            <p
+                id="lastname-constraints"
+                class="field__error"
+                v-if="hasError('lastname')"
+            >
+                Lastname is required
+            </p>
         </div>
         <div class="field">
-            <label class="field__label" for="birth">Date of birth</label>
+            <label class="field__label" for="birthday">Date of birth</label>
             <b-form-datepicker
-                id="birth"
+                id="birthday"
                 type="text"
                 placeholder="DD-MM-YYYY"
+                aria-required="true"
+                aria-describedby="birthday-constraints"
                 autocomplete
                 class="mb-3"
                 @focus="resetError()"
-                @blur="check('birth')"
+                @blur="check('birthday')"
                 v-model="birthday.value"
             />
+            <p
+                id="birthday-constraints"
+                class="field__error"
+                v-if="hasError('birthday')"
+            >
+                Birthdate is required
+            </p>
         </div>
 
         <div class="field">
@@ -45,9 +72,9 @@
                 id="email"
                 type="email"
                 autocomplete="username"
+                aria-required="true"
                 aria-describedby="email-constraints"
                 required
-                aria-required="true"
                 class="field__input"
                 @focus="resetError()"
                 @blur="check('email')"
@@ -84,30 +111,41 @@
             </p>
         </div>
         <div class="field">
-            <label class="field__label" for="password2">Confirm password</label>
+            <label class="field__label" for="confirmpassword"
+                >Confirm password</label
+            >
             <b-form-input
-                id="password2"
+                id="confirmpassword"
                 type="password"
                 autocomplete="current-password"
-                aria-describedby="confirm-password-constraints"
-                required
                 aria-required="true"
+                aria-describedby="confirmpassword-constraints"
+                required
                 class="field__input"
                 @focus="resetError()"
-                @blur="check('confirm_password')"
+                @blur="check('confirmpassword')"
                 v-model="confirmpassword.value"
             />
             <p
-                id="confirm-password-constraints"
+                id="confirmpassword-constraints"
                 class="field__error"
-                v-if="hasError('password')"
+                v-if="hasError('confirmpassword')"
             >
-                Please, confirm your password
+                Password must be the same
             </p>
         </div>
         <div class="field">
-            <input type="checkbox" id="checkbox" v-model="checked" />
-            <label>
+            <b-form-checkbox
+                id="cgu"
+                v-model="cgu.value"
+                name="cgu"
+                required
+                unchecked-value="false"
+                aria-required="true"
+                aria-describedby="cgu-constraints"
+                @focus="resetError()"
+                @blur="check('cgu')"
+            >
                 I have read and accept the
                 <a
                     target="_blank"
@@ -115,7 +153,10 @@
                     href="https://www.plasticorigins.eu/CGU"
                     >Terms of use and Privacy Policy
                 </a>
-            </label>
+            </b-form-checkbox>
+            <p id="cgu-constraints" class="field__error" v-if="hasError('cgu')">
+                You must accept our terms and privacy policy
+            </p>
         </div>
         <button
             type="submit"
@@ -161,7 +202,12 @@ export default class RegistreForm extends Vue {
                 value: ""
             },
             confirmpassword: {
+                error: false,
                 value: ""
+            },
+            cgu: {
+                error: false,
+                value: "false"
             },
             status: "idle"
         };
@@ -174,7 +220,8 @@ export default class RegistreForm extends Vue {
             this.$data.firstname.value &&
             this.$data.lastname.value &&
             this.$data.birthday.value &&
-            this.$data.confirmpassword.value
+            this.$data.confirmpassword.value &&
+            this.$data.cgu.value === true
         );
     }
 
@@ -186,8 +233,16 @@ export default class RegistreForm extends Vue {
             | "lastname"
             | "birthday"
             | "confirmpassword"
+            | "cgu"
     ): boolean {
-        return !!(this.$data[input].error && !this.$data[input].value);
+        switch (input) {
+            case "cgu":
+                return !!(
+                    this.$data[input].error && this.$data[input].value !== true
+                );
+            default:
+                return !!(this.$data[input].error && !this.$data[input].value);
+        }
     }
 
     private check(
@@ -198,6 +253,7 @@ export default class RegistreForm extends Vue {
             | "lastname"
             | "birthday"
             | "confirmpassword"
+            | "cgu"
     ) {
         switch (input) {
             case "confirmpassword":
@@ -205,6 +261,11 @@ export default class RegistreForm extends Vue {
                     this.$data[input].value === "" ||
                     this.$data[input].value !== this.$data.password.value
                 ) {
+                    this.$data[input].error = true;
+                }
+                break;
+            case "cgu":
+                if (this.$data[input].value !== true) {
                     this.$data[input].error = true;
                 }
                 break;
@@ -225,7 +286,8 @@ export default class RegistreForm extends Vue {
         const register = this.$store.dispatch("register", {
             email: this.$data.email.value,
             password: this.$data.password.value,
-            name: this.$data.name.value,
+            lastname: this.$data.lastname.value,
+            firstname: this.$data.firstname.value,
             birthday: this.$data.birthday.value
         });
         register
@@ -239,7 +301,7 @@ export default class RegistreForm extends Vue {
                     this.$router.push("/");
                 }, 3000);
             })
-            .catch(prodError => {
+            .catch((prodError) => {
                 this.$data.status = "error";
                 console.error(prodError);
             });
