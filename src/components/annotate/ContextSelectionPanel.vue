@@ -10,6 +10,7 @@
                     buttons
                     button-variant="dark"
                     size="sm"
+                    :disabled="!!containsNoTrash"
                 />
             </b-form-group>
         </div>
@@ -24,6 +25,7 @@
                     buttons
                     button-variant="dark"
                     size="sm"
+                    :disabled="!!containsNoTrash"
                 />
             </b-form-group>
         </div>
@@ -38,6 +40,7 @@
                     name="quality-buttons"
                     button-variant="dark"
                     size="sm"
+                    :disabled="!!containsNoTrash"
                 />
             </b-form-group>
         </div>
