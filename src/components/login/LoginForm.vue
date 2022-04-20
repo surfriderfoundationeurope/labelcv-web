@@ -45,6 +45,14 @@
                 Password is required
             </p>
         </div>
+        <div>
+            <p class="card__subtitle">
+                You don't have an account yet ?
+                <router-link to="/register" class="card__action"
+                    >Create one here !</router-link
+                >
+            </p>
+        </div>
         <button
             type="submit"
             class="btn btn-primary mt-6"

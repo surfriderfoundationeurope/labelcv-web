@@ -415,9 +415,15 @@ const store = new Vuex.Store({
                 credentials,
                 this.state.axiosRequestConfig
             );
+        },
+        async register(context, credentials): Promise<void> {
+            return axios.post(
+                "/register",
+                credentials,
+                this.state.axiosRequestConfig
+            );
         }
-    },
-    modules: {}
+    }
 });
 
 export { store, mutations };
