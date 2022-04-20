@@ -43,28 +43,6 @@
                 Lastname is required
             </p>
         </div>
-        <div class="field">
-            <label class="field__label" for="birthday">Date of birth</label>
-            <b-form-datepicker
-                id="birthday"
-                type="text"
-                placeholder="DD-MM-YYYY"
-                aria-required="true"
-                aria-describedby="birthday-constraints"
-                autocomplete
-                class="mb-3"
-                @focus="resetError()"
-                @blur="check('birthday')"
-                v-model="birthday.value"
-            />
-            <p
-                id="birthday-constraints"
-                class="field__error"
-                v-if="hasError('birthday')"
-            >
-                Birthdate is required
-            </p>
-        </div>
 
         <div class="field">
             <label class="field__label" for="email">Email</label>
@@ -197,10 +175,6 @@ export default class RegistreForm extends Vue {
                 error: false,
                 value: ""
             },
-            birthday: {
-                error: false,
-                value: ""
-            },
             confirmpassword: {
                 error: false,
                 value: ""
@@ -219,7 +193,6 @@ export default class RegistreForm extends Vue {
             this.$data.password.value &&
             this.$data.firstname.value &&
             this.$data.lastname.value &&
-            this.$data.birthday.value &&
             this.$data.confirmpassword.value &&
             this.$data.cgu.value === true
         );
@@ -231,7 +204,6 @@ export default class RegistreForm extends Vue {
             | "password"
             | "firstname"
             | "lastname"
-            | "birthday"
             | "confirmpassword"
             | "cgu"
     ): boolean {
@@ -251,7 +223,6 @@ export default class RegistreForm extends Vue {
             | "password"
             | "firstname"
             | "lastname"
-            | "birthday"
             | "confirmpassword"
             | "cgu"
     ) {
@@ -288,7 +259,6 @@ export default class RegistreForm extends Vue {
             password: this.$data.password.value,
             lastname: this.$data.lastname.value,
             firstname: this.$data.firstname.value,
-            birthday: this.$data.birthday.value
         });
         register
             .then((response: { data: { token: string; expires: string } }) => {
@@ -301,7 +271,7 @@ export default class RegistreForm extends Vue {
                     this.$router.push("/");
                 }, 3000);
             })
-            .catch((prodError) => {
+            .catch(prodError => {
                 this.$data.status = "error";
                 console.error(prodError);
             });
