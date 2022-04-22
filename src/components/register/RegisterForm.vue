@@ -87,6 +87,14 @@
             >
                 Password is required
             </p>
+
+            <p
+                id="password-constraints"
+                class="field__error"
+                v-if="password.value.length < 8 && password.value.length > 0"
+            >
+                Password must be at least 8 characters
+            </p>
         </div>
         <div class="field">
             <label class="field__label" for="confirmpassword"
