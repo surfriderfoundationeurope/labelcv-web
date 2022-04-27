@@ -26,7 +26,7 @@
                 <!-- TODO : disable the button if !state.contextSelections  -->
                 <b-button
                     variant="primary"
-                    :disabled="false"
+                    :disabled="!this.canSubmitAnnotation()"
                     @click="onClickValidateButton"
                     >Validate
                     {{ this.$store.getters.numberOfAnnotations }}
@@ -116,6 +116,13 @@ export default class Annotate extends Vue {
                 { title: "Cancel" }
             ]
         });
+    }
+
+    private canSubmitAnnotation() {
+        return (
+            this.$store.state.annotations.length >= 1 ||
+            this.$store.state.contextSelections.containsTrash === false
+        );
     }
 
     private onClickValidateButton() {
