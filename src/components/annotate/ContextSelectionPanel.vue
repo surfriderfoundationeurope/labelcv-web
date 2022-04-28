@@ -96,6 +96,7 @@ export default class ContextSelectionPanel extends Vue {
         this.$data.environmentSelection = null;
         this.$data.qualitySelection = null;
         this.$data.viewPointSelection = null;
+        this.$data.containsNoTrash = false;
         this.$store.commit("resetContextSelections");
     }
 }
