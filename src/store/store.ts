@@ -110,6 +110,9 @@ const mutations = {
     },
     setContextSelections(state: State, contextSelections: ContextSelections) {
         state.contextSelections = contextSelections;
+        if (!contextSelections.containsTrash) {
+            state.annotations = [];
+        }
     },
     resetContextSelections(state: State) {
         state.contextSelections = undefined;
