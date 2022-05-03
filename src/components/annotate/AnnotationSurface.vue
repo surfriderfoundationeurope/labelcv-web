@@ -86,10 +86,8 @@ export default class AnnotationSurface extends Vue {
             ) as HTMLElement;
             const annotatorWidth = annotatorSurface.offsetWidth;
             const annotatorHeight = annotatorSurface.offsetHeight;
-            const {
-                actualImageWidth,
-                actualImageHeight
-            } = this.estimateActualImageSize(annotatorWidth, annotatorHeight);
+            const { actualImageWidth, actualImageHeight } =
+                this.estimateActualImageSize(annotatorWidth, annotatorHeight);
             this.$store.commit("updateRatio", {
                 actualImageWidth,
                 actualImageHeight
@@ -154,7 +152,8 @@ export default class AnnotationSurface extends Vue {
         if (
             this.$el === event.target &&
             !this.drawing &&
-            isNaN(this.$store.state.selectedAnnotationIndex)
+            isNaN(this.$store.state.selectedAnnotationIndex) &&
+            this.$store.state.contextSelections.containsTrash
         ) {
             event.preventDefault();
             this.drawed.width = 0;

@@ -26,7 +26,7 @@
                 <!-- TODO : disable the button if !state.contextSelections  -->
                 <b-button
                     variant="primary"
-                    :disabled="false"
+                    :disabled="!this.canSubmitAnnotation()"
                     @click="onClickValidateButton"
                     >Validate
                     {{ this.$store.getters.numberOfAnnotations }}
@@ -118,13 +118,20 @@ export default class Annotate extends Vue {
         });
     }
 
+    private canSubmitAnnotation() {
+        return (
+            this.$store.state.annotations.length >= 1 ||
+            this.$store.state.contextSelections.containsTrash === false
+        );
+    }
+
     private onClickValidateButton() {
         const contextSelectionPanel = this.$store.state.contextSelections;
-        console.log(contextSelectionPanel);
         if (
-            contextSelectionPanel.environment === null ||
-            contextSelectionPanel.viewPoint === null ||
-            contextSelectionPanel.quality === null
+            (contextSelectionPanel.environment === null ||
+                contextSelectionPanel.viewPoint === null ||
+                contextSelectionPanel.quality === null) &&
+            contextSelectionPanel.containsTrash === true
         ) {
             this.$modal.show("dialog", {
                 title: "Invalid information",

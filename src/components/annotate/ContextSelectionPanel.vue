@@ -10,6 +10,7 @@
                     buttons
                     button-variant="dark"
                     size="sm"
+                    :disabled="!!containsNoTrash"
                 />
             </b-form-group>
         </div>
@@ -24,6 +25,7 @@
                     buttons
                     button-variant="dark"
                     size="sm"
+                    :disabled="!!containsNoTrash"
                 />
             </b-form-group>
         </div>
@@ -38,7 +40,21 @@
                     name="quality-buttons"
                     button-variant="dark"
                     size="sm"
+                    :disabled="!!containsNoTrash"
                 />
+            </b-form-group>
+        </div>
+
+        <div class="context-group">
+            <b-form-group>
+                <b-form-checkbox
+                    id="containsNoTrash"
+                    v-model="containsNoTrash"
+                    name="containsNoTrash"
+                    value="true"
+                >
+                    This image does not contain trash or is inappropriate
+                </b-form-checkbox>
             </b-form-group>
         </div>
     </div>
@@ -56,36 +72,31 @@ export default class ContextSelectionPanel extends Vue {
             environmentSelection: null,
             viewPointSelection: null,
             qualitySelection: null,
+            containsNoTrash: false,
 
             environmentOptions: environmentOptions,
             viewPointOptions: viewPointOptions,
             qualityOptions: qualityOptions
         };
     }
-    get isComplete() {
-        return (
-            !!this.$data.environmentSelection &&
-            !!this.$data.viewPointSelection &&
-            !!this.$data.qualitySelection
-        );
-    }
 
     @Watch("environmentSelection")
     @Watch("viewPointSelection")
     @Watch("qualitySelection")
+    @Watch("containsNoTrash")
     private onSelectionChange() {
-        if (this.isComplete) {
-            this.$store.commit("setContextSelections", {
-                quality: this.$data.qualitySelection,
-                viewPoint: this.$data.viewPointSelection,
-                environment: this.$data.environmentSelection
-            });
-        }
+        this.$store.commit("setContextSelections", {
+            quality: this.$data.qualitySelection,
+            viewPoint: this.$data.viewPointSelection,
+            environment: this.$data.environmentSelection,
+            containsTrash: this.$data.containsNoTrash === false
+        });
     }
     public resetContextSelections() {
         this.$data.environmentSelection = null;
         this.$data.qualitySelection = null;
         this.$data.viewPointSelection = null;
+        this.$data.containsNoTrash = false;
         this.$store.commit("resetContextSelections");
     }
 }
