@@ -6,6 +6,7 @@ import Annotate from "../views/Annotate.vue";
 // import Upload from "../views/Upload.vue";
 import Tutorial from "../views/Tutorial.vue";
 import Login from "../views/Login.vue";
+import Register from "../views/Register.vue";
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,12 @@ const routes = [
         name: "login",
         order: 1,
         component: Login
+    },
+    {
+        path: "/register",
+        name: "register",
+        order: 1,
+        component: Register
     }
 ];
 
