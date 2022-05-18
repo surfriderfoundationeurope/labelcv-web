@@ -47,12 +47,13 @@
         </div>
         <div>
             <p class="card__subtitle">
-                You don't have an account yet ?
-                <router-link to="/register" class="card__action"
-                    >Create one here !</router-link
+                <router-link to="/register">Create an account </router-link>
+                <a href="https://api-mobile.plasticorigins.eu/auth/reset">
+                    Forgot password</a
                 >
             </p>
         </div>
+
         <button
             type="submit"
             class="btn btn-primary mt-6"
@@ -151,5 +152,10 @@ export default class LoginForm extends Vue {
 .field__error {
     color: var(--danger);
     margin: 4px 0 0 0;
+}
+
+.card__subtitle {
+    display: flex;
+    justify-content: space-between;
 }
 </style>
