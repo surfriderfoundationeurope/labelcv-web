@@ -45,6 +45,7 @@ type ContextSelections = {
     quality: QualityValue | null;
     viewPoint: ViewPoint | null;
     environment: EnvironmentValue | null;
+    containsTrash: boolean;
 };
 export type State = {
     axiosRequestConfig?: AxiosRequestConfig;
@@ -95,7 +96,13 @@ export const initialState: State = {
 
     annotations: [],
     annotationLabels: [],
-    minTrashSize: 20 // Limit size for trash (in pixels) */
+    minTrashSize: 20, // Limit size for trash (in pixels) */
+    contextSelections: {
+        quality: null,
+        viewPoint: null,
+        environment: null,
+        containsTrash: true
+    }
 };
 
 const mutations = {
@@ -113,6 +120,9 @@ const mutations = {
     },
     setContextSelections(state: State, contextSelections: ContextSelections) {
         state.contextSelections = contextSelections;
+        if (!contextSelections.containsTrash) {
+            state.annotations = [];
+        }
     },
     resetContextSelections(state: State) {
         state.contextSelections = undefined;
@@ -335,6 +345,7 @@ const store = new Vuex.Store({
                 filename: "",
                 view: this.state.contextSelections?.viewPoint,
                 imgQuality: this.state.contextSelections?.quality,
+                containsTrash: this.state.contextSelections?.containsTrash,
                 context: this.state.contextSelections?.environment,
                 url: this.state.image.url,
                 bbox: []
