@@ -428,8 +428,12 @@ const store = new Vuex.Store({
                 this.state.axiosRequestConfig
             );
         },
-        async upload(context, files): Promise<void> {
-            return axios.post("/upload", files, this.state.axiosRequestConfig);
+        async upload(context, file: File): Promise<void> {
+            return axios.post(
+                `/images/upload/${file.name}`,
+                file,
+                this.state.axiosRequestConfig
+            );
         },
         async register(context, credentials): Promise<void> {
             return axios.post(
