@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 
 // import About from "../views/About.vue";
 import Annotate from "../views/Annotate.vue";
-// import Upload from "../views/Upload.vue";
+import Upload from "../views/Upload.vue";
 import Tutorial from "../views/Tutorial.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
@@ -22,6 +22,12 @@ const routes = [
         name: "tutorial",
         order: 1,
         component: Tutorial
+    },
+    {
+        path: "/upload",
+        name: "upload",
+        order: 1,
+        component: Upload
     },
     {
         path: "/login",

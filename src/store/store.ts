@@ -11,6 +11,7 @@ import {
     AnnotationLabel,
     Box
 } from "@/models";
+import router from "@/router";
 
 Vue.use(Vuex);
 
@@ -276,6 +277,7 @@ const mutations = {
         if (state.axiosRequestConfig) {
             state.axiosRequestConfig.headers["Authorization"] = undefined;
         }
+        router.push("/");
     }
 };
 
@@ -420,10 +422,16 @@ const store = new Vuex.Store({
                 });
         },
         async login(context, credentials): Promise<void> {
-            console.log("login ~ credentials", credentials);
             return axios.post(
                 "/login",
                 credentials,
+                this.state.axiosRequestConfig
+            );
+        },
+        async upload(context, file: File): Promise<void> {
+            return axios.post(
+                `/images/upload/${file.name}`,
+                file,
                 this.state.axiosRequestConfig
             );
         },
