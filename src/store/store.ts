@@ -11,6 +11,7 @@ import {
     AnnotationLabel,
     Box
 } from "@/models";
+import router from "@/router";
 
 Vue.use(Vuex);
 
@@ -45,6 +46,7 @@ type ContextSelections = {
     quality: QualityValue | null;
     viewPoint: ViewPoint | null;
     environment: EnvironmentValue | null;
+    containsTrash: boolean;
 };
 export type State = {
     axiosRequestConfig?: AxiosRequestConfig;
@@ -95,7 +97,13 @@ export const initialState: State = {
 
     annotations: [],
     annotationLabels: [],
-    minTrashSize: 20 // Limit size for trash (in pixels) */
+    minTrashSize: 20, // Limit size for trash (in pixels) */
+    contextSelections: {
+        quality: null,
+        viewPoint: null,
+        environment: null,
+        containsTrash: true
+    }
 };
 
 const mutations = {
@@ -113,6 +121,9 @@ const mutations = {
     },
     setContextSelections(state: State, contextSelections: ContextSelections) {
         state.contextSelections = contextSelections;
+        if (!contextSelections.containsTrash) {
+            state.annotations = [];
+        }
     },
     resetContextSelections(state: State) {
         state.contextSelections = undefined;
@@ -266,6 +277,7 @@ const mutations = {
         if (state.axiosRequestConfig) {
             state.axiosRequestConfig.headers["Authorization"] = undefined;
         }
+        router.push("/");
     }
 };
 
@@ -335,6 +347,7 @@ const store = new Vuex.Store({
                 filename: "",
                 view: this.state.contextSelections?.viewPoint,
                 imgQuality: this.state.contextSelections?.quality,
+                containsTrash: this.state.contextSelections?.containsTrash,
                 context: this.state.contextSelections?.environment,
                 url: this.state.image.url,
                 bbox: []
@@ -409,15 +422,27 @@ const store = new Vuex.Store({
                 });
         },
         async login(context, credentials): Promise<void> {
-            console.log("login ~ credentials", credentials);
             return axios.post(
                 "/login",
                 credentials,
                 this.state.axiosRequestConfig
             );
+        },
+        async upload(context, file: File): Promise<void> {
+            return axios.post(
+                `/images/upload/${file.name}`,
+                file,
+                this.state.axiosRequestConfig
+            );
+        },
+        async register(context, credentials): Promise<void> {
+            return axios.post(
+                "/register",
+                credentials,
+                this.state.axiosRequestConfig
+            );
         }
-    },
-    modules: {}
+    }
 });
 
 export { store, mutations };
