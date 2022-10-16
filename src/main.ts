@@ -1,4 +1,5 @@
 import Vue from "vue";
+import VueAppInsights from "vue-application-insights";
 import App from "./App.vue";
 import { store } from "./store/store";
 import router from "./router";
@@ -15,6 +16,10 @@ Vue.use(VueAxios, axios);
 Vue.use(VModal, { dialog: true });
 Vue.use(BootstrapVue);
 Vue.use(VueSpinners);
+Vue.use(VueAppInsights, {
+    id: "3395299a-f4ec-4eae-a627-cdc46ddb2a55",
+    router
+});
 
 new Vue({
     router,
