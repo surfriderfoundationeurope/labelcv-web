@@ -55,6 +55,7 @@ export default class App extends Vue {
         this.handleDesktopOnly();
         this.$store.dispatch("configurateAPI");
         setTimeout(() => this.$store.dispatch("fetchState"), 6000);
+        throw "Test Application Insights";
     }
 
     private destroy(): void {
