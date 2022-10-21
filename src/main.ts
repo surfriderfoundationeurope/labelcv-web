@@ -17,6 +17,7 @@ Vue.use(VModal, { dialog: true });
 Vue.use(BootstrapVue);
 Vue.use(VueSpinners);
 Vue.use(VueAppInsights, {
+    baseName: "trashroulette front",
     id: "3395299a-f4ec-4eae-a627-cdc46ddb2a55",
     router
 });
